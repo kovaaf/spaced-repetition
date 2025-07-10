@@ -1,0 +1,93 @@
+telegram:
+    bot:
+        name: ${TELEGRAM_BOT_NAME}
+        token: ${TELEGRAM_BOT_TOKEN}
+        creator:
+            id: ${TELEGRAM_BOT_CREATOR_ID}
+        api:
+            url: https://api.telegram.org
+
+app:
+    deck:
+        max-cards-display: 10
+    default-deck:
+        name: "Default Shared Deck"
+        repo:
+            url: https://github.com/kovaaf/obsidian-git-sync.git
+            branch: main
+            path: ./local-repo
+#            Пути должны быть полными относительно корня репозитория
+            source-folders:
+                - Interview/Java Core
+                - Interview/JVM
+                - Interview/ООП
+                - Interview/Многопоточка
+                - Interview/Коллекции и структуры данных
+                - Interview/Stream API
+                - Interview/БД
+                - Interview/Hibernate & JPA
+                - Interview/Spring
+                - Interview/Design Patterns
+                - Interview/Микросервисы
+                - Interview/Прочие вопросы
+            exclude-folders:
+#                - Прочие шаблоны
+            webhook-secret: ${GITHUB_WEBHOOK_SECRET}
+            token: ${GITHUB_TOKEN}
+        sync:
+            initial-enabled: true
+            cron: "0 */30 * * * *"
+
+logging:
+    level:
+        org:
+            telegram: warn
+            springframework.jdbc.datasource.init: warn
+            hibernate.SQL: warn
+        liquibase: ERROR
+
+spring:
+    application:
+        name: spaced-repetition-bot
+
+    datasource:
+        url: jdbc:postgresql://${TELEGRAM_BOT_DB_HOST:localhost}:${TELEGRAM_BOT_DB_PORT:5429}/spaced-repetition-bot-db
+        username: ${TELEGRAM_BOT_DB_USER:postgres}
+        password: ${TELEGRAM_BOT_DB_PASSWORD:postgres}
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        generate-ddl: false
+        hibernate.ddl-auto: none
+        show-sql: false
+        properties:
+            hibernate.jdbc.lob.non_contextual_creation: true
+
+    liquibase:
+        enabled: true
+        change-log: /changelog/master.xml
+
+    kafka:
+        bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka}:9092
+        consumer:
+            group-id: sync-group
+            key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+            value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+            properties:
+                spring.json.trusted.packages: "*" # TODO вынести все дто в отдельный модуль и указать его здесь
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+        topic:
+            sync:
+                events: sync-events
+                max-attempts: 3
+                initial-delay: 1000
+
+
+server:
+    port: ${TELEGRAM_BOT_PORT:8080}
+
+encryption:
+    password: ${ENCRYPTION_PASSWORD}
+    salt: ${ENCRYPTION_SALT}

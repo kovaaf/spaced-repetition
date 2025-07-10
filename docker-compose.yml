@@ -1,0 +1,94 @@
+services:
+
+  spaced-repetition-bot-db:
+    container_name: spaced-repetition-bot-db
+    image: postgres:17.5-alpine
+    ports:
+      - '5429:5432'
+    environment:
+      POSTGRES_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${TELEGRAM_BOT_DB_PASSWORD:-postgres}
+      POSTGRES_DB: spaced-repetition-bot-db
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 50m
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.0.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 50m
+
+  kafka:
+    image: confluentinc/cp-kafka:7.0.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_INTERNAL://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 50m
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8082:8080"
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    restart: always
+
+  spaced-repetition-bot:
+    image: ouidockeruser/spaced-repetition-bot:latest
+    container_name: spaced-repetition-bot
+    labels:
+      - "maintainer=ouidockeruser"
+    restart: unless-stopped
+    environment:
+      _JAVA_OPTIONS: -Xmx256m
+      TELEGRAM_BOT_DB_HOST: spaced-repetition-bot-db
+      TELEGRAM_BOT_DB_PORT: 5432
+      TELEGRAM_BOT_DB_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
+      TELEGRAM_BOT_DB_PASSWORD: ${TELEGRAM_BOT_DB_PASSWORD:-postgres}
+      TELEGRAM_BOT_PORT: ${TELEGRAM_BOT_PORT:-8080}
+      TELEGRAM_BOT_NAME: ${TELEGRAM_BOT_NAME:-SpacedRepetitionBot}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_BOT_CREATOR_ID: ${TELEGRAM_BOT_CREATOR_ID}
+      GIT_SSH_PASSPHRASE: ${GIT_SSH_PASSPHRASE}
+      GITHUB_WEBHOOK_SECRET: ${GITHUB_WEBHOOK_SECRET}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      ENCRYPTION_PASSWORD: ${ENCRYPTION_PASSWORD}
+      ENCRYPTION_SALT: ${ENCRYPTION_SALT}
+    ports:
+      - "9100:8080"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 50m
+    depends_on:
+      - spaced-repetition-bot-db
+      - kafka
