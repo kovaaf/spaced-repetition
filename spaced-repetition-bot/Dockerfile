@@ -6,21 +6,18 @@ COPY .git/refs /workspace/.git/refs
 
 WORKDIR /workspace
 
-# Копируем корневой pom.xml
-COPY pom.xml .
+# Копируем pom.xml
+COPY ./pom.xml .
+COPY ./spaced-repetition-bot/pom.xml ./spaced-repetition-bot/pom.xml
 
-WORKDIR /workspace/spaced-repetition-bot
-
-# Копируем pom.xml модуля
-COPY /spaced-repetition-bot/pom.xml /workspace/spaced-repetition-bot
 # Скачиваем зависимости для модуля
-RUN mvn -B dependency:go-offline
+RUN mvn -B -f ./spaced-repetition-bot/pom.xml dependency:go-offline
 
 # Копируем исходный код модуля
-COPY /spaced-repetition-bot/src /workspace/spaced-repetition-bot/src
+COPY ./spaced-repetition-bot/src ./spaced-repetition-bot/src
 
 # Собираем приложение
-RUN mvn -B package -DskipTests -Dcheckstyle.skip
+RUN mvn -B -f ./spaced-repetition-bot/pom.xml  package -DskipTests -Dcheckstyle.skip
 
 # Финальный образ
 FROM openjdk:17-jdk-slim

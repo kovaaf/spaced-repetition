@@ -3,7 +3,7 @@ name: Generate and commit badges
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   code-coverage-badges:
