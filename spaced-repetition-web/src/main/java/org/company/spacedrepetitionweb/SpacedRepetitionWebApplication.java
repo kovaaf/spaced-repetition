@@ -9,5 +9,4 @@ public class SpacedRepetitionWebApplication {
     public static void main(String[] args) {
         SpringApplication.run(SpacedRepetitionWebApplication.class, args);
     }
-
 }

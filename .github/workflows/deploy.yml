@@ -58,7 +58,7 @@ jobs:
         if: ${{ needs.detect-changes.outputs.spaced-repetition-bot == 'true' }}
         uses: docker/build-push-action@v3
         with:
-          context: ./spaced-repetition-bot
+          file: spaced-repetition-bot/Dockerfile
           push: true
           tags: ouidockeruser/spaced-repetition-bot:latest
           cache-from: type=gha
@@ -68,7 +68,7 @@ jobs:
         if: ${{ needs.detect-changes.outputs.spaced-repetition-web == 'true' }}
         uses: docker/build-push-action@v3
         with:
-          context: ./spaced-repetition-web
+          file: spaced-repetition-web/Dockerfile
           push: true
           tags: ouidockeruser/spaced-repetition-web:latest
           cache-from: type=gha
