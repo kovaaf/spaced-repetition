@@ -1,8 +1,8 @@
 package org.company.spacedrepetitionbot.command.learning;
 
 import lombok.extern.slf4j.Slf4j;
-import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.command.general.SpacedRepetitionCommand;
+import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.service.LearningService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -19,12 +19,7 @@ public class AgainCommand extends SpacedRepetitionCommand {
     private final LearningService learningService;
 
     public AgainCommand(LearningService learningService) {
-        super(
-                AGAIN.getAlias(),
-                AGAIN.getDescription(),
-                AGAIN.getExtendedDescription(),
-                AGAIN.getValidArgumentCounts()
-        );
+        super(AGAIN.getAlias(), AGAIN.getDescription(), AGAIN.getExtendedDescription(), AGAIN.getValidArgumentCounts());
         this.learningService = learningService;
     }
 
@@ -32,8 +27,8 @@ public class AgainCommand extends SpacedRepetitionCommand {
      * Выполняет действие команды: отмечает карточку как изученную с качеством "снова".
      *
      * @param arguments массив аргументов команды, где:
-     *                 arguments[0] - название колоды
-     *                 arguments[1] - лицевая сторона карточки
+     *                  arguments[0] - название колоды
+     *                  arguments[1] - лицевая сторона карточки
      */
     @Override
     protected void performAction(TelegramClient telegramClient, String[] arguments) {

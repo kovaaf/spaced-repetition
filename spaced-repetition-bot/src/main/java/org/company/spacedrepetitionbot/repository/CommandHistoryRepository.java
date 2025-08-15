@@ -7,5 +7,8 @@ import java.util.Optional;
 
 public interface CommandHistoryRepository extends JpaRepository<ExecutedCommand, Long> {
     Optional<ExecutedCommand> findTopByUserInfoUserChatIdOrderByExecutedAtDesc(Long userChatId);
-    Optional<ExecutedCommand> findTopByUserInfoUserChatIdAndCommandIdentifierOrderByExecutedAtDesc(Long userChatId, String commandIdentifier);
+
+    Optional<ExecutedCommand> findTopByUserInfoUserChatIdAndCommandIdentifierOrderByExecutedAtDesc(
+            Long userChatId,
+            String commandIdentifier);
 }

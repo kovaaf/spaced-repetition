@@ -18,8 +18,10 @@ class ChangedFilesProcessor {
 
     public List<String> getChangedFiles(WebhookPayload payload, AppProperties.DefaultDeckConfig deckConfig) {
         List<String> changedFiles = extractAllChangedFiles(payload);
-        List<String> sourceFolders = deckConfig.getRepo().getSourceFolders();
-        List<String> excludeFolders = deckConfig.getRepo().getExcludeFolders();
+        List<String> sourceFolders = deckConfig.getRepo()
+                .getSourceFolders();
+        List<String> excludeFolders = deckConfig.getRepo()
+                .getExcludeFolders();
 
         return changedFiles.stream()
                 .filter(file -> file.endsWith(MD_FILE_EXTENSION))
@@ -32,21 +34,27 @@ class ChangedFilesProcessor {
 
         if (payload.commits() != null) {
             for (WebhookPayload.Commit commit : payload.commits()) {
-                if (commit.added() != null) files.addAll(commit.added());
-                if (commit.modified() != null) files.addAll(commit.modified());
-                if (commit.removed() != null) files.addAll(commit.removed());
+                if (commit.added() != null) {
+                    files.addAll(commit.added());
+                }
+                if (commit.modified() != null) {
+                    files.addAll(commit.modified());
+                }
+                if (commit.removed() != null) {
+                    files.addAll(commit.removed());
+                }
             }
         }
 
         return files;
     }
 
-//    private boolean isInSourceFolder(String filePath, List<String> sourceFolders) {
-//        if (sourceFolders == null || sourceFolders.isEmpty()) {
-//            return true;
-//        }
-//        return sourceFolders.stream().anyMatch(folder ->
-//                filePath.startsWith(folder + "/") || filePath.equals(folder)
-//        );
-//    }
+    //    private boolean isInSourceFolder(String filePath, List<String> sourceFolders) {
+    //        if (sourceFolders == null || sourceFolders.isEmpty()) {
+    //            return true;
+    //        }
+    //        return sourceFolders.stream().anyMatch(folder ->
+    //                filePath.startsWith(folder + "/") || filePath.equals(folder)
+    //        );
+    //    }
 }

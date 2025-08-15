@@ -18,8 +18,7 @@ public class DeleteDeckCommand extends SpacedRepetitionCommand {
                 DELETE_DECK.getAlias(),
                 DELETE_DECK.getDescription(),
                 DELETE_DECK.getExtendedDescription(),
-                DELETE_DECK.getValidArgumentCounts()
-        );
+                DELETE_DECK.getValidArgumentCounts());
         this.deckService = deckService;
     }
 

@@ -18,10 +18,8 @@ import java.util.Map;
 
 @Configuration
 public class KafkaConfig {
-    @Value("${spring.kafka.topic.sync.events}")
-    private String syncTopic;
-    @Value("${spring.kafka.bootstrap-servers}")
-    private String bootstrapServers;
+    @Value("${spring.kafka.topic.sync.events}") private String syncTopic;
+    @Value("${spring.kafka.bootstrap-servers}") private String bootstrapServers;
 
     @Bean
     public NewTopic syncTopic() {

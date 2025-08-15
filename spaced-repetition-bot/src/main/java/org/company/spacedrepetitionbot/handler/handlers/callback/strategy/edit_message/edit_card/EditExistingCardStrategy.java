@@ -15,10 +15,11 @@ public class EditExistingCardStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
 
-    public EditExistingCardStrategy(TelegramClient telegramClient,
-                                    MessageStateService messageStateService,
-                                    CardService cardService,
-                                    KeyboardManager keyboardManager) {
+    public EditExistingCardStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardService cardService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardService = cardService;
         this.keyboardManager = keyboardManager;
@@ -34,7 +35,8 @@ public class EditExistingCardStrategy extends BaseEditCallbackStrategy {
     @Override
     protected InlineKeyboardMarkup getKeyboard(CallbackQuery callbackQuery) {
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
-        Long deckId = cardService.getDeckIdByCardId(cardId).orElseThrow();
+        Long deckId = cardService.getDeckIdByCardId(cardId)
+                .orElseThrow();
         return keyboardManager.getExistingCardEditKeyboard(cardId, deckId);
     }
 

@@ -6,19 +6,8 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record WebhookPayload(
-        Repository repository,
-        String ref,
-        List<Commit> commits
-) {
-    public record Repository(
-            @JsonProperty("full_name")
-            String fullName
-    ) {}
+public record WebhookPayload(Repository repository, String ref, List<Commit> commits) {
+    public record Repository(@JsonProperty("full_name") String fullName) { }
 
-    public record Commit(
-            List<String> added,
-            List<String> modified,
-            List<String> removed
-    ) {}
+    public record Commit(List<String> added, List<String> modified, List<String> removed) { }
 }

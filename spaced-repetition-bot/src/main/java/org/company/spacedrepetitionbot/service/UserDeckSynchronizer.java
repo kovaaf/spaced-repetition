@@ -30,10 +30,12 @@ public class UserDeckSynchronizer {
     }
 
     private void syncSingleUserDeck(Deck userDeck, Deck defaultDeck) {
-        Map<Long, Card> defaultCardsMap = defaultDeck.getCards().stream()
+        Map<Long, Card> defaultCardsMap = defaultDeck.getCards()
+                .stream()
                 .collect(Collectors.toMap(Card::getCardId, c -> c));
 
-        Map<Long, Card> userCardsMap = userDeck.getCards().stream()
+        Map<Long, Card> userCardsMap = userDeck.getCards()
+                .stream()
                 .filter(card -> card.getOriginalCardId() != null)
                 .collect(Collectors.toMap(Card::getOriginalCardId, c -> c));
 
@@ -49,15 +51,18 @@ public class UserDeckSynchronizer {
 
         // Удаление отсутствующих карточек
         Set<Long> currentIds = defaultCardsMap.keySet();
-        userDeck.getCards().stream()
+        userDeck.getCards()
+                .stream()
                 .filter(card -> card.getOriginalCardId() != null)
                 .filter(card -> !currentIds.contains(card.getOriginalCardId()))
                 .forEach(cardService::deleteCard);
     }
 
     private void updateCardIfChanged(Card userCard, Card defaultCard) {
-        if (!userCard.getFront().equals(defaultCard.getFront()) ||
-                !userCard.getBack().equals(defaultCard.getBack())) {
+        if (!userCard.getFront()
+                .equals(defaultCard.getFront()) ||
+                !userCard.getBack()
+                        .equals(defaultCard.getBack())) {
 
             userCard.setFront(defaultCard.getFront());
             userCard.setBack(defaultCard.getBack());

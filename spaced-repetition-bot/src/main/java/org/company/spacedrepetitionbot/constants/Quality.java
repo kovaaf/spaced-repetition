@@ -4,7 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum Quality {
-    AGAIN(0), HARD(3), GOOD(4), EASY(5);
+    AGAIN(0),
+    HARD(3),
+    GOOD(4),
+    EASY(5);
 
     private final int quality;
 

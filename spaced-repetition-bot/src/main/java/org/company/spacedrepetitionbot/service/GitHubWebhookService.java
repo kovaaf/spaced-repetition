@@ -2,11 +2,11 @@ package org.company.spacedrepetitionbot.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.company.spacedrepetitionbot.model.Deck;
 import org.company.spacedrepetitionbot.config.AppProperties;
 import org.company.spacedrepetitionbot.dto.WebhookPayload;
 import org.company.spacedrepetitionbot.kafka.consumer_producer.KafkaSyncEventProducer;
 import org.company.spacedrepetitionbot.kafka.event.SyncEventDTO;
+import org.company.spacedrepetitionbot.model.Deck;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +34,8 @@ public class GitHubWebhookService {
 
         if (!isExpectedRepoAndBranch(payload, defaultDeck)) {
             log.debug("Webhook ignored for repository: {}, branch: {}",
-                    payload.repository().fullName(),
+                    payload.repository()
+                            .fullName(),
                     payload.ref());
             return;
         }
@@ -54,10 +55,13 @@ public class GitHubWebhookService {
     }
 
     private boolean isExpectedRepoAndBranch(WebhookPayload payload, AppProperties.DefaultDeckConfig defaultDeck) {
-        String expectedRepo = repoUrlNormalizer.normalize(defaultDeck.getRepo().getUrl());
-        String expectedBranch = REF_PREFIX + defaultDeck.getRepo().getBranch();
+        String expectedRepo = repoUrlNormalizer.normalize(defaultDeck.getRepo()
+                .getUrl());
+        String expectedBranch = REF_PREFIX +
+                defaultDeck.getRepo()
+                        .getBranch();
 
-        return expectedRepo.equals(payload.repository().fullName()) &&
-                expectedBranch.equals(payload.ref());
+        return expectedRepo.equals(payload.repository()
+                .fullName()) && expectedBranch.equals(payload.ref());
     }
 }

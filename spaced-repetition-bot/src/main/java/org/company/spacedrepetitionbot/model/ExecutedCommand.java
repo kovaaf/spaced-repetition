@@ -14,15 +14,8 @@ import java.time.LocalDateTime;
 @Entity
 public class ExecutedCommand {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "command_seq"
-    )
-    @SequenceGenerator(
-            name = "command_seq",
-            sequenceName = "command_seq",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "command_seq")
+    @SequenceGenerator(name = "command_seq", sequenceName = "command_seq", allocationSize = 1)
     private Long id;
     @ManyToOne
     @JoinColumn(name = "user_chat_id", referencedColumnName = "userChatId")
@@ -30,8 +23,7 @@ public class ExecutedCommand {
 
     private String commandIdentifier;
 
-    @Convert(converter = StringArrayConverter.class)
-    private String[] arguments;
+    @Convert(converter = StringArrayConverter.class) private String[] arguments;
 
     private LocalDateTime executedAt;
 }

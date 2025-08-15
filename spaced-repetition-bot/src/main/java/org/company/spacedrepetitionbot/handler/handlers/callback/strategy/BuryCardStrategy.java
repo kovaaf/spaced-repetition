@@ -18,10 +18,11 @@ public class BuryCardStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
 
-    public BuryCardStrategy(TelegramClient telegramClient,
-                            MessageStateService messageStateService,
-                            CardService cardService,
-                            KeyboardManager keyboardManager) {
+    public BuryCardStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardService cardService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardService = cardService;
         this.keyboardManager = keyboardManager;
@@ -32,8 +33,7 @@ public class BuryCardStrategy extends BaseEditCallbackStrategy {
         Long cardId = Long.valueOf(getCallbackDataByIndex(callbackQuery.getData(), 1));
         Card card = cardService.getCardById(cardId);
 
-        return "Статус карточки: " +
-                (card.getStatus() == Status.BURIED ? "Откопана" : "Закопана");
+        return "Статус карточки: " + (card.getStatus() == Status.BURIED ? "Откопана" : "Закопана");
     }
 
     @Override
@@ -48,7 +48,8 @@ public class BuryCardStrategy extends BaseEditCallbackStrategy {
             card.setStatus(Status.REVIEW_YOUNG);
         } else {
             card.setStatus(Status.BURIED);
-            card.setNextReviewTime(LocalDateTime.now().plusDays(1));
+            card.setNextReviewTime(LocalDateTime.now()
+                    .plusDays(1));
         }
         cardService.save(card);
 

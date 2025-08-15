@@ -32,11 +32,14 @@ public class CallbackQueryHandler implements NonCommandHandler {
 
     @Override
     public void handle(Update update) {
-        if (!update.hasCallbackQuery()) return;
+        if (!update.hasCallbackQuery()) {
+            return;
+        }
 
         CallbackQuery callbackQuery = update.getCallbackQuery();
         String callbackData = callbackQuery.getData();
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
 
         try {
             CallbackStrategy strategy = getCallbackStrategy(callbackData);

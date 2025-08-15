@@ -18,8 +18,7 @@ public class ShowDeckCommand extends SpacedRepetitionCommand {
                 SHOW_DECK.getAlias(),
                 SHOW_DECK.getDescription(),
                 SHOW_DECK.getExtendedDescription(),
-                SHOW_DECK.getValidArgumentCounts()
-        );
+                SHOW_DECK.getValidArgumentCounts());
         this.deckService = deckService;
     }
 

@@ -1,8 +1,8 @@
 package org.company.spacedrepetitionbot.command.learning;
 
 import lombok.extern.slf4j.Slf4j;
-import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.command.general.SpacedRepetitionCommand;
+import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.service.LearningService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -18,12 +18,7 @@ public class EasyCommand extends SpacedRepetitionCommand {
     private final LearningService learningService;
 
     public EasyCommand(LearningService learningService) {
-        super(
-                EASY.getAlias(),
-                EASY.getDescription(),
-                EASY.getExtendedDescription(),
-                EASY.getValidArgumentCounts()
-        );
+        super(EASY.getAlias(), EASY.getDescription(), EASY.getExtendedDescription(), EASY.getValidArgumentCounts());
         this.learningService = learningService;
     }
 
@@ -31,8 +26,8 @@ public class EasyCommand extends SpacedRepetitionCommand {
      * Выполняет действие команды: отмечает карточку как изученную с качеством "Легко".
      *
      * @param arguments массив аргументов команды, где:
-     *                 arguments[0] - название колоды
-     *                 arguments[1] - лицевая сторона карточки
+     *                  arguments[0] - название колоды
+     *                  arguments[1] - лицевая сторона карточки
      */
     @Override
     protected void performAction(TelegramClient telegramClient, String[] arguments) {

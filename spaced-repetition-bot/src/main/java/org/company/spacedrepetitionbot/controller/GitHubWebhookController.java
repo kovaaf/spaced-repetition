@@ -7,7 +7,8 @@ import org.company.spacedrepetitionbot.service.GitHubWebhookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// для работы нужен статический адрес\домен - устанавливается в вебхуке на GitHub. Можно получить временный с помощью ngrok (для его работы нужен впн)
+// для работы нужен статический адрес\домен - устанавливается в вебхуке на GitHub. Можно получить временный с помощью
+// ngrok (для его работы нужен впн)
 @Slf4j
 @RestController
 @RequestMapping("/webhook/github")

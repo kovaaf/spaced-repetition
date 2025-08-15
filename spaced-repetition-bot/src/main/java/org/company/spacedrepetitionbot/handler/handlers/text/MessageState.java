@@ -16,8 +16,7 @@ public enum MessageState {
     EDIT_CARD_DRAFT_BACK("EDIT_CARD_DRAFT_BACK"),
     EDIT_EXISTING_CARD_FRONT("EDIT_EXISTING_CARD_FRONT"),
     EDIT_EXISTING_CARD_BACK("EDIT_EXISTING_CARD_BACK"),
-    COPY_DEFAULT_DECK("COPY_DEFAULT_DECK")
-    ;
+    COPY_DEFAULT_DECK("COPY_DEFAULT_DECK");
 
     private final String alias;
 
@@ -27,7 +26,8 @@ public enum MessageState {
 
     public static MessageState from(String alias) {
         return Arrays.stream(MessageState.values())
-                .filter(state -> state.getAlias().equalsIgnoreCase(alias))
+                .filter(state -> state.getAlias()
+                        .equalsIgnoreCase(alias))
                 .findFirst()
                 .orElse(null);
     }

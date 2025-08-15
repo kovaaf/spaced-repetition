@@ -24,6 +24,7 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
     }
 
     protected abstract String getMessageText(CallbackQuery callbackQuery);
+
     protected abstract InlineKeyboardMarkup getKeyboard(CallbackQuery callbackQuery);
 
     /**
@@ -40,11 +41,13 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
      */
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
         Integer messageId = messageStateService.getMenuMessageId(chatId);
 
         if (messageId == null) {
-            messageId = callbackQuery.getMessage().getMessageId();
+            messageId = callbackQuery.getMessage()
+                    .getMessageId();
             messageStateService.saveMenuMessageId(chatId, messageId);
         }
 
@@ -55,8 +58,8 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
         }
     }
 
-    protected void editMenuMessage(Long chatId, Integer messageId, CallbackQuery callbackQuery)
-            throws TelegramApiException {
+    protected void editMenuMessage(Long chatId, Integer messageId, CallbackQuery callbackQuery) throws
+            TelegramApiException {
 
         EditMessageText editMessage = EditMessageText.builder()
                 .chatId(chatId)
@@ -70,7 +73,8 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
     }
 
     protected void handleEditException(Long chatId, CallbackQuery callbackQuery, TelegramApiException e) {
-        if (e.getMessage().contains("message to edit not found")) {
+        if (e.getMessage()
+                .contains("message to edit not found")) {
             resendMenuMessage(chatId, callbackQuery);
         } else {
             log.error("Ошибка редактирования сообщения: {}", e.getMessage());

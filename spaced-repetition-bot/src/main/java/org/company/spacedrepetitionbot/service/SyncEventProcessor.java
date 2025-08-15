@@ -2,8 +2,8 @@ package org.company.spacedrepetitionbot.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.company.spacedrepetitionbot.model.Deck;
 import org.company.spacedrepetitionbot.kafka.event.SyncEventDTO;
+import org.company.spacedrepetitionbot.model.Deck;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,8 @@ public class SyncEventProcessor {
     @Transactional
     public void processSyncEvent(SyncEventDTO event) {
         Deck deck = event.getDeckId() != null ?
-                deckService.getDeckById(event.getDeckId()).orElse(null) :
+                deckService.getDeckById(event.getDeckId())
+                        .orElse(null) :
                 null;
 
         repoSynchronizer.sync(event, deck);

@@ -18,8 +18,7 @@ public class EditCardBackCommand extends SpacedRepetitionCommand {
                 EDIT_CARD_BACK.getAlias(),
                 EDIT_CARD_BACK.getDescription(),
                 EDIT_CARD_BACK.getExtendedDescription(),
-                EDIT_CARD_BACK.getValidArgumentCounts()
-        );
+                EDIT_CARD_BACK.getValidArgumentCounts());
         this.cardService = cardService;
     }
 

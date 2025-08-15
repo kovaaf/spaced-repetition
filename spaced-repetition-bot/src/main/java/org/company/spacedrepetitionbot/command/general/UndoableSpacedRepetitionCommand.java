@@ -19,7 +19,11 @@ import java.util.Set;
 //  hard,
 //  learn
 public abstract class UndoableSpacedRepetitionCommand extends SpacedRepetitionCommand {
-    public UndoableSpacedRepetitionCommand(String commandIdentifier, String description, String extendedDescription, Set<Integer> validArgumentCounts) {
+    public UndoableSpacedRepetitionCommand(
+            String commandIdentifier,
+            String description,
+            String extendedDescription,
+            Set<Integer> validArgumentCounts) {
         super(commandIdentifier, description, extendedDescription, validArgumentCounts);
     }
 

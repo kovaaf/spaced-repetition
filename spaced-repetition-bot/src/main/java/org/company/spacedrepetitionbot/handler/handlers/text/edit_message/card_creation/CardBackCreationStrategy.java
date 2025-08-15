@@ -17,10 +17,11 @@ public class CardBackCreationStrategy extends BaseEditTextStrategy {
     private final CardDraftService cardDraftService;
     private final KeyboardManager keyboardManager;
 
-    public CardBackCreationStrategy(TelegramClient telegramClient,
-                                    MessageStateService messageStateService,
-                                    CardDraftService cardDraftService,
-                                    KeyboardManager keyboardManager) {
+    public CardBackCreationStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardDraftService cardDraftService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardDraftService = cardDraftService;
         this.keyboardManager = keyboardManager;
@@ -48,11 +49,7 @@ public class CardBackCreationStrategy extends BaseEditTextStrategy {
                     return new IllegalStateException("Draft not found for chat: " + chatId);
                 });
         String cardText = "✅ Черновик карты создан:\n\nВопрос: " + draft.getFront() + "\nОтвет: " + text;
-        sendNewMenu(
-                chatId,
-                cardText,
-                keyboardManager.getCardDraftConfirmationKeyboard(draft.getDeckId())
-        );
+        sendNewMenu(chatId, cardText, keyboardManager.getCardDraftConfirmationKeyboard(draft.getDeckId()));
     }
 
     @Override
@@ -61,10 +58,6 @@ public class CardBackCreationStrategy extends BaseEditTextStrategy {
     }
 
     private void sendErrorMessage(Long chatId) throws TelegramApiException {
-        sendNewMenu(
-                chatId,
-                "Ошибка создания карты. Начните заново.",
-                null
-        );
+        sendNewMenu(chatId, "Ошибка создания карты. Начните заново.", null);
     }
 }

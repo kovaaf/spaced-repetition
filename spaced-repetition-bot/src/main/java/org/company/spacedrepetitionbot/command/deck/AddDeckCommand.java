@@ -18,8 +18,7 @@ public class AddDeckCommand extends SpacedRepetitionCommand {
                 ADD_DECK.getAlias(),
                 ADD_DECK.getDescription(),
                 ADD_DECK.getExtendedDescription(),
-                ADD_DECK.getValidArgumentCounts()
-        );
+                ADD_DECK.getValidArgumentCounts());
         this.deckService = deckService;
     }
 

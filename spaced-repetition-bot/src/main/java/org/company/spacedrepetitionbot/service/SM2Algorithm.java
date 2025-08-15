@@ -53,7 +53,7 @@ public class SM2Algorithm {
     /**
      * Обновляет карточку на основе алгоритма интервального повторения.
      *
-     * @param card карточка для обновления
+     * @param card    карточка для обновления
      * @param quality качество ответа пользователя
      * @return обновленная карточка
      * @throws IllegalArgumentException если передан недопустимый статус карточки
@@ -138,9 +138,7 @@ public class SM2Algorithm {
         int step = card.getRepeatCount();
         card.setRepeatCount(step + 1);
 
-        long interval = USER_RELEARNING_INTERVAL ?
-                (long)(getPreviousInterval(card) * RELEARNING_INTERVAL) :
-                3 * DAY;
+        long interval = USER_RELEARNING_INTERVAL ? (long) (getPreviousInterval(card) * RELEARNING_INTERVAL) : 3 * DAY;
 
         // TODO добавить гибкую настройку количества шагов переучивания для пользователя в формате 1m, 10m, 1d, 1m, 1y
         // Для EASY сразу переходим в REVIEW
@@ -171,11 +169,11 @@ public class SM2Algorithm {
         }
 
         if (quality == Quality.EASY) {
-            newInterval = (long)(previousInterval * card.getEasinessFactor() * 1.5 * intervalFactor);
+            newInterval = (long) (previousInterval * card.getEasinessFactor() * 1.5 * intervalFactor);
         } else if (quality == Quality.GOOD) {
-            newInterval =  (long)(previousInterval * card.getEasinessFactor() * intervalFactor);
+            newInterval = (long) (previousInterval * card.getEasinessFactor() * intervalFactor);
         } else { // HARD
-            newInterval =  (long)(previousInterval * 1.2);
+            newInterval = (long) (previousInterval * 1.2);
         }
 
         setNextReviewIntervalFromCurrentInterval(card, newInterval);
@@ -183,7 +181,8 @@ public class SM2Algorithm {
 
     private void updateCardStatus(Card card) {
         if (card.getStatus() == Status.REVIEW_YOUNG || card.getStatus() == Status.REVIEW_MATURE) {
-            long days = Duration.between(LocalDateTime.now(), card.getNextReviewTime()).toDays();
+            long days = Duration.between(LocalDateTime.now(), card.getNextReviewTime())
+                    .toDays();
             if (days >= MATURE_THRESHOLD_DAYS) {
                 card.setStatus(Status.REVIEW_MATURE);
             } else {
@@ -194,28 +193,31 @@ public class SM2Algorithm {
 
     private void updateEasinessFactor(Card card, Quality quality) {
         double qualityValue = quality.getQuality();
-        double newEasiness = card.getEasinessFactor() +
-                0.1 - (5 - qualityValue) * (0.08 + (5 - qualityValue) * 0.02);
+        double newEasiness = card.getEasinessFactor() + 0.1 - (5 - qualityValue) * (0.08 + (5 - qualityValue) * 0.02);
         card.setEasinessFactor(Math.max(MIN_EASINESS_FACTOR, newEasiness));
     }
 
     private void setNextReviewIntervalFromNow(Card card, long minutes) {
-        card.setNextReviewTime(LocalDateTime.now().plusMinutes(minutes));
+        card.setNextReviewTime(LocalDateTime.now()
+                .plusMinutes(minutes));
     }
 
     private void setNextReviewIntervalFromCurrentInterval(Card card, long minutes) {
-        card.setNextReviewTime(card.getNextReviewTime().plusMinutes(minutes));
+        card.setNextReviewTime(card.getNextReviewTime()
+                .plusMinutes(minutes));
     }
 
     private long getPreviousInterval(Card card) {
         return card.getNextReviewTime() != null ?
-                Duration.between(LocalDateTime.now(), card.getNextReviewTime()).toMinutes() : 0;
+                Duration.between(LocalDateTime.now(), card.getNextReviewTime())
+                        .toMinutes() :
+                0;
     }
 
     /**
      * Возвращает строковое представление времени следующего повторения на основе качества ответа.
      *
-     * @param card карточка для расчета
+     * @param card    карточка для расчета
      * @param quality качество ответа пользователя
      * @return строка с информацией о следующем повторении (например, "через 10 минут", "через 2 дня", "через 3 месяца")
      */
@@ -240,20 +242,15 @@ public class SM2Algorithm {
 
         // Формируем читаемую строку
         if (minutes < 60) {
-            return String.format("через %d %s",
-                    minutes, getRussianWordForm(minutes, "минуту", "минуты", "минут"));
+            return String.format("через %d %s", minutes, getRussianWordForm(minutes, "минуту", "минуты", "минут"));
         } else if (hours < 24) {
-            return String.format("через %d %s",
-                    hours, getRussianWordForm(hours, "час", "часа", "часов"));
+            return String.format("через %d %s", hours, getRussianWordForm(hours, "час", "часа", "часов"));
         } else if (days < 30) {
-            return String.format("через %d %s",
-                    days, getRussianWordForm(days, "день", "дня", "дней"));
+            return String.format("через %d %s", days, getRussianWordForm(days, "день", "дня", "дней"));
         } else if (years < 1) {
-            return String.format("через %d %s",
-                    months, getRussianWordForm(months, "месяц", "месяца", "месяцев"));
+            return String.format("через %d %s", months, getRussianWordForm(months, "месяц", "месяца", "месяцев"));
         } else {
-            return String.format("через %d %s",
-                    years, getRussianWordForm(years, "год", "года", "лет"));
+            return String.format("через %d %s", years, getRussianWordForm(years, "год", "года", "лет"));
         }
     }
 
@@ -261,18 +258,24 @@ public class SM2Algorithm {
      * Вспомогательный метод для склонения слов в русском языке.
      *
      * @param number число
-     * @param form1 форма для 1 (1 день)
-     * @param form2 форма для 2-4 (2 дня)
-     * @param form5 форма для 5-20 (5 дней)
+     * @param form1  форма для 1 (1 день)
+     * @param form2  форма для 2-4 (2 дня)
+     * @param form5  форма для 5-20 (5 дней)
      * @return правильная форма слова для числа
      */
     private String getRussianWordForm(long number, String form1, String form2, String form5) {
         long n = Math.abs(number) % 100;
         long n1 = n % 10;
 
-        if (n > 10 && n < 20) return form5;
-        if (n1 > 1 && n1 < 5) return form2;
-        if (n1 == 1) return form1;
+        if (n > 10 && n < 20) {
+            return form5;
+        }
+        if (n1 > 1 && n1 < 5) {
+            return form2;
+        }
+        if (n1 == 1) {
+            return form1;
+        }
         return form5;
     }
 }

@@ -19,12 +19,7 @@ public class UndoCommand extends SpacedRepetitionCommand {
     private final ICommandRegistry commandRegistry;
 
     public UndoCommand(CommandHistoryService commandHistoryService, @Lazy ICommandRegistry commandRegistry) {
-        super(
-                UNDO.getAlias(),
-                UNDO.getDescription(),
-                UNDO.getExtendedDescription(),
-                UNDO.getValidArgumentCounts()
-        );
+        super(UNDO.getAlias(), UNDO.getDescription(), UNDO.getExtendedDescription(), UNDO.getValidArgumentCounts());
         this.commandHistoryService = commandHistoryService;
         this.commandRegistry = commandRegistry;
     }
@@ -54,16 +49,14 @@ public class UndoCommand extends SpacedRepetitionCommand {
     }
 
     public String executeUndo(ExecutedCommand command) {
-        UndoableSpacedRepetitionCommand undoableCommand = (UndoableSpacedRepetitionCommand) commandRegistry.getRegisteredCommand(
-                command.getCommandIdentifier()
-        );
+        UndoableSpacedRepetitionCommand undoableCommand =
+                (UndoableSpacedRepetitionCommand) commandRegistry.getRegisteredCommand(
+                command.getCommandIdentifier());
 
         String[] arguments = command.getArguments();
         String undoResult = undoableCommand.undo(arguments);
         commandHistoryService.deleteCommand(command.getId());
 
-        return String.format("Отмена команды: %s\n%s",
-                command.getCommandIdentifier(),
-                undoResult);
+        return String.format("Отмена команды: %s\n%s", command.getCommandIdentifier(), undoResult);
     }
 }

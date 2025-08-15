@@ -19,7 +19,9 @@ public class GitSyncOperator {
     }
 
     public boolean isSyncRequired(Git git, Deck deck, SyncEventDTO event) throws IOException {
-        if (event.isForceFullSync()) return true;
+        if (event.isForceFullSync()) {
+            return true;
+        }
 
         String currentCommit = gitService.getLatestCommit(git);
         String lastKnownCommit = deck.getLastSyncCommit();

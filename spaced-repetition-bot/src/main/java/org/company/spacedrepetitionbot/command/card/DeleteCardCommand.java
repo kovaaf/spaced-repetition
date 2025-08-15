@@ -18,8 +18,7 @@ public class DeleteCardCommand extends SpacedRepetitionCommand {
                 DELETE_CARD.getAlias(),
                 DELETE_CARD.getDescription(),
                 DELETE_CARD.getExtendedDescription(),
-                DELETE_CARD.getValidArgumentCounts()
-        );
+                DELETE_CARD.getValidArgumentCounts());
         this.cardService = cardService;
     }
 

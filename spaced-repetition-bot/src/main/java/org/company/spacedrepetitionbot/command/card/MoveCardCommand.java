@@ -18,8 +18,7 @@ public class MoveCardCommand extends SpacedRepetitionCommand {
                 MOVE_CARD.getAlias(),
                 MOVE_CARD.getDescription(),
                 MOVE_CARD.getExtendedDescription(),
-                MOVE_CARD.getValidArgumentCounts()
-        );
+                MOVE_CARD.getValidArgumentCounts());
         this.cardService = cardService;
     }
 
@@ -29,12 +28,7 @@ public class MoveCardCommand extends SpacedRepetitionCommand {
         String cardFront = arguments[1];
         String targetDeckName = arguments[2];
 
-        String result = cardService.moveCard(
-                chatId,
-                sourceDeckName,
-                cardFront,
-                targetDeckName
-        );
+        String result = cardService.moveCard(chatId, sourceDeckName, cardFront, targetDeckName);
         sendMessage(telegramClient, result);
     }
 }

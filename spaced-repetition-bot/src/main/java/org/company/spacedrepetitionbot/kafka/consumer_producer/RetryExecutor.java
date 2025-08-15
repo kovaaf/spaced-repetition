@@ -7,11 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class RetryExecutor {
-    @Value("${spring.kafka.topic.sync.max-attempts}")
-    private int maxAttempts;
+    @Value("${spring.kafka.topic.sync.max-attempts}") private int maxAttempts;
 
-    @Value("${spring.kafka.topic.sync.initial-delay}")
-    private long initialDelay;
+    @Value("${spring.kafka.topic.sync.initial-delay}") private long initialDelay;
 
     public void executeWithRetry(Runnable action) {
         int attempt = 0;
@@ -35,7 +33,8 @@ public class RetryExecutor {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            Thread.currentThread()
+                    .interrupt();
             log.warn("Sleep interrupted", e);
         }
     }

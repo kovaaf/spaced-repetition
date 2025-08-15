@@ -2,9 +2,9 @@ package org.company.spacedrepetitionbot.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.company.spacedrepetitionbot.model.Deck;
 import org.company.spacedrepetitionbot.exception.SyncException;
 import org.company.spacedrepetitionbot.kafka.event.SyncEventDTO;
+import org.company.spacedrepetitionbot.model.Deck;
 import org.eclipse.jgit.api.Git;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

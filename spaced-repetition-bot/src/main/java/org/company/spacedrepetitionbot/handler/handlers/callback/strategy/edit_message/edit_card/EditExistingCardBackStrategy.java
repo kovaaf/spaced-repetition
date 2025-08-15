@@ -16,9 +16,10 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class EditExistingCardBackStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
 
-    public EditExistingCardBackStrategy(TelegramClient telegramClient,
-                                        MessageStateService messageStateService,
-                                        CardService cardService) {
+    public EditExistingCardBackStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardService cardService) {
         super(telegramClient, messageStateService);
         this.cardService = cardService;
     }
@@ -42,16 +43,14 @@ public class EditExistingCardBackStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
 
         try {
             messageStateService.setUserState(
                     chatId,
-                    MessageState.EDIT_EXISTING_CARD_BACK.getAlias() +
-                            MessageState.STATE_DELIMITER.getAlias() +
-                            cardId
-            );
+                    MessageState.EDIT_EXISTING_CARD_BACK.getAlias() + MessageState.STATE_DELIMITER.getAlias() + cardId);
             super.executeCallbackQuery(callbackQuery);
         } catch (Exception e) {
             log.error("Ошибка редактирования ответа карты {}: {}", cardId, e.getMessage());

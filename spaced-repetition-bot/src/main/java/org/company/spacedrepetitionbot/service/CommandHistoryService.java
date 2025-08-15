@@ -28,7 +28,9 @@ public class CommandHistoryService {
     }
 
     public Optional<ExecutedCommand> getLastCommandByIdentifier(Long userChatId, String commandIdentifier) {
-        return commandHistoryRepository.findTopByUserInfoUserChatIdAndCommandIdentifierOrderByExecutedAtDesc(userChatId, commandIdentifier);
+        return commandHistoryRepository.findTopByUserInfoUserChatIdAndCommandIdentifierOrderByExecutedAtDesc(
+                userChatId,
+                commandIdentifier);
     }
 
     public void deleteCommand(Long id) {

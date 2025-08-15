@@ -18,12 +18,7 @@ public class SRHelpCommand extends SpacedRepetitionCommand {
 
     @Lazy
     public SRHelpCommand(ICommandRegistry iCommandRegistry) {
-        super(
-                HELP.getAlias(),
-                HELP.getDescription(),
-                HELP.getExtendedDescription(),
-                HELP.getValidArgumentCounts()
-        );
+        super(HELP.getAlias(), HELP.getDescription(), HELP.getExtendedDescription(), HELP.getValidArgumentCounts());
         this.registry = iCommandRegistry;
     }
 

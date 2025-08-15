@@ -16,10 +16,11 @@ public class SuspendCardStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
 
-    public SuspendCardStrategy(TelegramClient telegramClient,
-                               MessageStateService messageStateService,
-                               CardService cardService,
-                               KeyboardManager keyboardManager) {
+    public SuspendCardStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardService cardService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.keyboardManager = keyboardManager;
         this.cardService = cardService;
@@ -30,8 +31,7 @@ public class SuspendCardStrategy extends BaseEditCallbackStrategy {
         Long cardId = Long.valueOf(getCallbackDataByIndex(callbackQuery.getData(), 1));
         Card card = cardService.getCardById(cardId);
 
-        return "Статус карточки: " +
-                (card.getStatus() == Status.SUSPENDED ? "Возобновлена" : "Приостановлена");
+        return "Статус карточки: " + (card.getStatus() == Status.SUSPENDED ? "Возобновлена" : "Приостановлена");
     }
 
     @Override
@@ -41,11 +41,7 @@ public class SuspendCardStrategy extends BaseEditCallbackStrategy {
         Card card = cardService.getCardById(cardId);
 
         // Обновляем статус
-        card.setStatus(
-                card.getStatus() == Status.SUSPENDED ?
-                        Status.REVIEW_YOUNG :
-                        Status.SUSPENDED
-        );
+        card.setStatus(card.getStatus() == Status.SUSPENDED ? Status.REVIEW_YOUNG : Status.SUSPENDED);
         cardService.save(card);
 
         // Возвращаемся в меню колоды

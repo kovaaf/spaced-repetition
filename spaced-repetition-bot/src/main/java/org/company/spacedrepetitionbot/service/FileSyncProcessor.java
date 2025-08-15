@@ -2,9 +2,9 @@ package org.company.spacedrepetitionbot.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.company.spacedrepetitionbot.config.AppProperties;
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;
-import org.company.spacedrepetitionbot.config.AppProperties;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -36,22 +36,22 @@ public class FileSyncProcessor {
 
         changedPaths.stream()
                 .filter(path -> path.endsWith(".md"))
-                .filter(path -> pathService.isFileIncluded(
-                        path,
-                        getSourceFolders(),
-                        getExcludeFolders()
-                ))
+                .filter(path -> pathService.isFileIncluded(path, getSourceFolders(), getExcludeFolders()))
                 .forEach(path -> fileSyncExecutor.processFile(deck, repoPath.resolve(path), processedFiles));
 
         fileConsistencyValidator.verifyAfterIncrementalSync(deck, processedFiles);
     }
 
     private List<String> getExcludeFolders() {
-        return appProperties.getDefaultDeck().getRepo().getExcludeFolders();
+        return appProperties.getDefaultDeck()
+                .getRepo()
+                .getExcludeFolders();
     }
 
     private List<String> getSourceFolders() {
-        return appProperties.getDefaultDeck().getRepo().getSourceFolders();
+        return appProperties.getDefaultDeck()
+                .getRepo()
+                .getSourceFolders();
     }
 
     public void processAllMarkdownFiles(Deck deck) {
@@ -81,15 +81,19 @@ public class FileSyncProcessor {
         cardService.getBySourceFilePathAndSourceHeading(relativePath, card.getSourceHeading())
                 .ifPresentOrElse(
                         existing -> {
-                            if (!existing.getFront().equals(card.getFront()) || !existing.getBack().equals(card.getBack())) {
+                            if (!existing.getFront()
+                                    .equals(card.getFront()) ||
+                                    !existing.getBack()
+                                            .equals(card.getBack())) {
                                 updateCard(existing, card);
                             }
-                        },
-                        () -> createCard(card, deck));
+                        }, () -> createCard(card, deck));
     }
 
     private void deleteObsoleteCards(Deck deck, String relativePath, List<Card> cards) {
-        List<String> validFronts = cards.stream().map(Card::getFront).collect(Collectors.toList());
+        List<String> validFronts = cards.stream()
+                .map(Card::getFront)
+                .collect(Collectors.toList());
         cardService.deleteByDeckAndSourceFilePathAndFrontNotIn(deck, relativePath, validFronts);
     }
 
@@ -100,7 +104,7 @@ public class FileSyncProcessor {
     }
 
     private void createCard(Card card, Deck deck) {
-        if(deck.getDeckId() == null) {
+        if (deck.getDeckId() == null) {
             deck = deckService.save(deck);
         }
 
@@ -113,7 +117,10 @@ public class FileSyncProcessor {
     }
 
     private List<Path> getSourceFolderPaths() {
-        Path repoPath = Paths.get(appProperties.getDefaultDeck().getRepo().getPath()).toAbsolutePath();
+        Path repoPath = Paths.get(appProperties.getDefaultDeck()
+                        .getRepo()
+                        .getPath())
+                .toAbsolutePath();
         List<String> sourceFolders = getSourceFolders();
 
         if (sourceFolders == null || sourceFolders.isEmpty()) {
@@ -125,29 +132,33 @@ public class FileSyncProcessor {
                 .collect(Collectors.toList());
     }
 
-    private void processFolder(Deck deck, Path rootPath, Set<String> processedFilePaths, List<String> filesWithNoCards) {
+    private void processFolder(
+            Deck deck,
+            Path rootPath,
+            Set<String> processedFilePaths,
+            List<String> filesWithNoCards) {
         if (!Files.exists(rootPath)) {
             log.warn("Source folder does not exist: {}", rootPath);
             return;
         }
 
         try {
-            fileSystemScanner.findMarkdownFiles(rootPath).forEach(file -> {
-                String relativePath = pathService.getRelativePath(file);
-                if (!pathService.isFileIncluded(relativePath,
-                        getSourceFolders(), getExcludeFolders())) {
-                    return;
-                }
-                try {
-                    List<Card> cards = processMarkdownFile(deck, file);
-                    processedFilePaths.add(relativePath);
-                    if (cards.isEmpty()) {
-                        filesWithNoCards.add(relativePath);
-                    }
-                } catch (Exception e) {
-                    log.error("Error processing file: {}", file, e);
-                }
-            });
+            fileSystemScanner.findMarkdownFiles(rootPath)
+                    .forEach(file -> {
+                        String relativePath = pathService.getRelativePath(file);
+                        if (!pathService.isFileIncluded(relativePath, getSourceFolders(), getExcludeFolders())) {
+                            return;
+                        }
+                        try {
+                            List<Card> cards = processMarkdownFile(deck, file);
+                            processedFilePaths.add(relativePath);
+                            if (cards.isEmpty()) {
+                                filesWithNoCards.add(relativePath);
+                            }
+                        } catch (Exception e) {
+                            log.error("Error processing file: {}", file, e);
+                        }
+                    });
         } catch (IOException e) {
             log.error("Failed to process folder: {}", rootPath, e);
         }

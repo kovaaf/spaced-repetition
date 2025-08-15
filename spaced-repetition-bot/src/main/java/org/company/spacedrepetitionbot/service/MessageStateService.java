@@ -15,13 +15,19 @@ public class MessageStateService {
     private final MenuMessageStateRepository stateRepository;
 
     public void saveMenuMessageId(Long chatId, Integer messageId) {
-        stateRepository.findByChatId(chatId).ifPresentOrElse(
-                state -> {
-                    state.setMessageId(messageId);
-                    stateRepository.save(state);
-                },
-                () -> stateRepository.save(new MenuMessageState(null, chatId, messageId, LocalDateTime.now(), LocalDateTime.now(), null))
-        );
+        stateRepository.findByChatId(chatId)
+                .ifPresentOrElse(
+                        state -> {
+                            state.setMessageId(messageId);
+                            stateRepository.save(state);
+                        },
+                        () -> stateRepository.save(new MenuMessageState(
+                                null,
+                                chatId,
+                                messageId,
+                                LocalDateTime.now(),
+                                LocalDateTime.now(),
+                                null)));
     }
 
     public Integer getMenuMessageId(Long chatId) {
@@ -35,16 +41,16 @@ public class MessageStateService {
     }
 
     public void setUserState(Long chatId, String state) {
-        stateRepository.findByChatId(chatId).ifPresentOrElse(
-                entity -> {
-                    entity.setUserState(state);
-                    stateRepository.save(entity);
-                },
-                () -> stateRepository.save(MenuMessageState.builder()
-                        .chatId(chatId)
-                        .userState(state)
-                        .build())
-        );
+        stateRepository.findByChatId(chatId)
+                .ifPresentOrElse(
+                        entity -> {
+                            entity.setUserState(state);
+                            stateRepository.save(entity);
+                        },
+                        () -> stateRepository.save(MenuMessageState.builder()
+                                .chatId(chatId)
+                                .userState(state)
+                                .build()));
     }
 
     public String getUserState(Long chatId) {
@@ -54,9 +60,10 @@ public class MessageStateService {
     }
 
     public void clearUserState(Long chatId) {
-        stateRepository.findByChatId(chatId).ifPresent(entity -> {
-            entity.setUserState(null);
-            stateRepository.save(entity);
-        });
+        stateRepository.findByChatId(chatId)
+                .ifPresent(entity -> {
+                    entity.setUserState(null);
+                    stateRepository.save(entity);
+                });
     }
 }

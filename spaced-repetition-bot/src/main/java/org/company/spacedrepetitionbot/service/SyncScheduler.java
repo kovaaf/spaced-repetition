@@ -18,18 +18,13 @@ public class SyncScheduler {
 
     @Scheduled(cron = "${app.default-deck.sync.cron}")
     public void scheduledSync() {
-        deckService.getOptionalDeckByName(appProperties.getDefaultDeck().getName())
+        deckService.getOptionalDeckByName(appProperties.getDefaultDeck()
+                        .getName())
                 .ifPresentOrElse(
                         deck -> syncEventProducer.sendSyncEvent(new SyncEventDTO(
                                 deck.getDeckId(),
                                 false,
-                                Collections.emptyList()
-                        )),
-                        () -> syncEventProducer.sendSyncEvent(new SyncEventDTO(
-                                null,
-                                true,
-                                Collections.emptyList()
-                        ))
-                );
+                                Collections.emptyList())),
+                        () -> syncEventProducer.sendSyncEvent(new SyncEventDTO(null, true, Collections.emptyList())));
     }
 }

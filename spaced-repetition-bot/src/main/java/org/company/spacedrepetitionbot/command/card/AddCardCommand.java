@@ -18,13 +18,15 @@ public class AddCardCommand extends UndoableSpacedRepetitionCommand {
     private final CommandHistoryService commandHistoryService;
     private final UserInfoService userInfoService;
 
-    public AddCardCommand(CardService cardService, CommandHistoryService commandHistoryService, UserInfoService userInfoService) {
+    public AddCardCommand(
+            CardService cardService,
+            CommandHistoryService commandHistoryService,
+            UserInfoService userInfoService) {
         super(
                 ADD_CARD.getAlias(),
                 ADD_CARD.getDescription(),
                 ADD_CARD.getExtendedDescription(),
-                ADD_CARD.getValidArgumentCounts()
-        );
+                ADD_CARD.getValidArgumentCounts());
         this.cardService = cardService;
         this.commandHistoryService = commandHistoryService;
         this.userInfoService = userInfoService;
@@ -45,11 +47,7 @@ public class AddCardCommand extends UndoableSpacedRepetitionCommand {
     @Override
     protected void saveToCommandHistory(String[] arguments) {
         UserInfo userInfo = userInfoService.getOrCreate(getCurrentUser());
-        commandHistoryService.saveCommand(
-                userInfo,
-                getCommandIdentifier(),
-                arguments
-        );
+        commandHistoryService.saveCommand(userInfo, getCommandIdentifier(), arguments);
     }
 
     @Override

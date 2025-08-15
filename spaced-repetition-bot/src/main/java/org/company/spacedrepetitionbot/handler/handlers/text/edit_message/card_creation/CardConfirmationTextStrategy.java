@@ -17,10 +17,11 @@ public class CardConfirmationTextStrategy extends BaseEditTextStrategy {
     private final CardDraftService cardDraftService;
     private final KeyboardManager keyboardManager;
 
-    public CardConfirmationTextStrategy(TelegramClient telegramClient,
-                                        MessageStateService messageStateService,
-                                        CardDraftService cardDraftService,
-                                        KeyboardManager keyboardManager) {
+    public CardConfirmationTextStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardDraftService cardDraftService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardDraftService = cardDraftService;
         this.keyboardManager = keyboardManager;
@@ -38,8 +39,7 @@ public class CardConfirmationTextStrategy extends BaseEditTextStrategy {
         sendNewMenu(
                 chatId,
                 "✅ Черновик карты:\n\nВопрос: " + draft.getFront() + "\nОтвет: " + draft.getBack(),
-                keyboardManager.getCardDraftConfirmationKeyboard(draft.getDeckId())
-        );
+                keyboardManager.getCardDraftConfirmationKeyboard(draft.getDeckId()));
     }
 
     @Override

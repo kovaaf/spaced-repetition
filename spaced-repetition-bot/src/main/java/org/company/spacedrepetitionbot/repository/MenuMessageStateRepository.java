@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface MenuMessageStateRepository extends JpaRepository<MenuMessageState, Long> {
     Optional<MenuMessageState> findByChatId(Long chatId);
+
     void deleteByChatId(Long chatId);
 }

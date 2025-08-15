@@ -16,7 +16,9 @@ public class UserInfoService {
     private final UserInfoRepository userInfoRepository;
     private final UserInfoTelegramUserMapper userInfoTelegramUserMapper;
 
-    public UserInfoService(UserInfoRepository userInfoRepository, UserInfoTelegramUserMapper userInfoTelegramUserMapper) {
+    public UserInfoService(
+            UserInfoRepository userInfoRepository,
+            UserInfoTelegramUserMapper userInfoTelegramUserMapper) {
         this.userInfoRepository = userInfoRepository;
         this.userInfoTelegramUserMapper = userInfoTelegramUserMapper;
     }
@@ -33,13 +35,13 @@ public class UserInfoService {
         userInfoRepository.findById(userChatId)
                 .ifPresentOrElse(
                         existingUser -> updateUsernameIfChanged(existingUser, telegramUser),
-                        () -> getOrCreate(telegramUser)
-                );
+                        () -> getOrCreate(telegramUser));
         return formatWelcomeMessage(telegramUser);
     }
 
     private void updateUsernameIfChanged(UserInfo userInfo, User telegramUser) {
-        if (!userInfo.getUserName().equals(telegramUser.getUserName())) {
+        if (!userInfo.getUserName()
+                .equals(telegramUser.getUserName())) {
             userInfo.setUserName(telegramUser.getUserName());
             userInfoRepository.save(userInfo);
             log.debug("Обновлено имя пользователя для: {}", telegramUser.getId());
@@ -59,20 +61,18 @@ public class UserInfoService {
     }
 
     private String determineUserName(User user) {
-        return (user.getFirstName().length() > 3)
-                ? user.getFirstName()
-                : user.getUserName();
+        return (user.getFirstName()
+                .length() > 3) ? user.getFirstName() : user.getUserName();
     }
 
     @Transactional
     public UserInfo getSystemUser() {
         return userInfoRepository.findByUserName("system")
-                .orElseGet(() -> userInfoRepository.save(
-                        UserInfo.builder()
-                                .userName("system")
-                                .userChatId(0L) // 0 - ID системного пользователя
-                                .build()
-                ));
+                .orElseGet(() -> userInfoRepository.save(UserInfo.builder()
+                        .userName("system")
+                        .userChatId(0L) // 0 - ID
+                        // системного пользователя
+                        .build()));
     }
 
     @Transactional
@@ -84,10 +84,11 @@ public class UserInfoService {
 
     @Transactional
     public void markUserCopiedDefaultDeck(Long chatId) {
-        userInfoRepository.findById(chatId).ifPresent(user -> {
-            user.setHasCopiedDefaultDeck(true);
-            userInfoRepository.save(user);
-            log.debug("Пользователь {} помечен как скопировавший дефолтную колоду", chatId);
-        });
+        userInfoRepository.findById(chatId)
+                .ifPresent(user -> {
+                    user.setHasCopiedDefaultDeck(true);
+                    userInfoRepository.save(user);
+                    log.debug("Пользователь {} помечен как скопировавший дефолтную колоду", chatId);
+                });
     }
 }

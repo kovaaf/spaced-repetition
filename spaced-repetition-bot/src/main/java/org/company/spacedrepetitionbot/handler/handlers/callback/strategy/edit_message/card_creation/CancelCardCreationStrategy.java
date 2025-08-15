@@ -17,10 +17,11 @@ public class CancelCardCreationStrategy extends BaseEditCallbackStrategy {
     private final CardDraftService cardDraftService;
     private final KeyboardManager keyboardManager;
 
-    public CancelCardCreationStrategy(TelegramClient telegramClient,
-                                      MessageStateService messageStateService,
-                                      CardDraftService cardDraftService,
-                                      KeyboardManager keyboardManager) {
+    public CancelCardCreationStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardDraftService cardDraftService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardDraftService = cardDraftService;
         this.keyboardManager = keyboardManager;
@@ -39,7 +40,8 @@ public class CancelCardCreationStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
 
         try {
             cardDraftService.clearDraft(chatId);

@@ -18,8 +18,7 @@ public class EditCardFrontCommand extends SpacedRepetitionCommand {
                 EDIT_CARD_FRONT.getAlias(),
                 EDIT_CARD_FRONT.getDescription(),
                 EDIT_CARD_FRONT.getExtendedDescription(),
-                EDIT_CARD_FRONT.getValidArgumentCounts()
-        );
+                EDIT_CARD_FRONT.getValidArgumentCounts());
         this.cardService = cardService;
     }
 

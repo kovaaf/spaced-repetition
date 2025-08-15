@@ -17,8 +17,6 @@ public class KafkaSyncEventListener {
 
     @KafkaListener(topics = "sync-events", groupId = "sync-group")
     public void handleSyncEvent(SyncEventDTO event) {
-        retryExecutor.executeWithRetry(() ->
-                syncEventProcessor.processSyncEvent(event)
-        );
+        retryExecutor.executeWithRetry(() -> syncEventProcessor.processSyncEvent(event));
     }
 }

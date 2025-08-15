@@ -17,8 +17,10 @@ public class AddCardStrategy extends BaseEditCallbackStrategy {
     private final MessageStateService messageStateService;
     private final KeyboardManager keyboardManager;
 
-    public AddCardStrategy(TelegramClient telegramClient,
-                           MessageStateService messageStateService, KeyboardManager keyboardManager) {
+    public AddCardStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.messageStateService = messageStateService;
         this.keyboardManager = keyboardManager;
@@ -37,14 +39,12 @@ public class AddCardStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
         Long deckId = getLastDataElementFromCallback(callbackQuery.getData());
         messageStateService.setUserState(
                 chatId,
-                MessageState.CARD_FRONT_CREATION.getAlias() +
-                    MessageState.STATE_DELIMITER.getAlias() +
-                    deckId
-        );
+                MessageState.CARD_FRONT_CREATION.getAlias() + MessageState.STATE_DELIMITER.getAlias() + deckId);
 
         super.executeCallbackQuery(callbackQuery);
     }

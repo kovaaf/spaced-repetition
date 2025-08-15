@@ -17,7 +17,11 @@ public class DeckMenuStrategy extends BaseEditCallbackStrategy {
     private final DeckService deckService;
     private final KeyboardManager keyboardManager;
 
-    public DeckMenuStrategy(TelegramClient telegramClient, MessageStateService messageStateService, DeckService deckService, KeyboardManager keyboardManager) {
+    public DeckMenuStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            DeckService deckService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.deckService = deckService;
         this.keyboardManager = keyboardManager;

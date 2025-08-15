@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface CardFileProcessor {
     List<Card> parseMarkdownFile(Path file);
+
     void processFile(Deck deck, Path filePath);
 }

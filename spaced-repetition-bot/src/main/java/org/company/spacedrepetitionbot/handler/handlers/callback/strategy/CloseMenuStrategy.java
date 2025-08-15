@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 @Slf4j
 @Component
-public class CloseMenuStrategy implements CallbackStrategy  {
+public class CloseMenuStrategy implements CallbackStrategy {
     private final TelegramClient telegramClient;
     private final MessageStateService messageStateService;
 
@@ -23,7 +23,8 @@ public class CloseMenuStrategy implements CallbackStrategy  {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
         Integer messageId = messageStateService.getMenuMessageId(chatId);
 
         try {
@@ -36,7 +37,6 @@ public class CloseMenuStrategy implements CallbackStrategy  {
                     .chatId(chatId)
                     .text("Общение завершено")
                     .build());
-
         } catch (TelegramApiException e) {
             log.error("Ошибка закрытия меню: {}", e.getMessage());
         } finally {

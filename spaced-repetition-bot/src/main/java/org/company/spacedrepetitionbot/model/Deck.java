@@ -16,26 +16,17 @@ import java.util.Set;
 @Entity
 public class Deck {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "deck_seq"
-    )
-    @SequenceGenerator(
-            name = "deck_seq",
-            sequenceName = "deck_seq",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "deck_seq")
+    @SequenceGenerator(name = "deck_seq", sequenceName = "deck_seq", allocationSize = 1)
     private Long deckId;
     private String name;
-    @OneToMany(mappedBy = "deck", cascade = CascadeType.PERSIST)
-    private Set<Card> cards;
+    @OneToMany(mappedBy = "deck", cascade = CascadeType.PERSIST) private Set<Card> cards;
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_chat_id", nullable = false)
     private UserInfo owner;
 
     // TODO избавиться от полей isDefault и lastSyncCommit и lastUpdated
-    @Builder.Default
-    private boolean isDefault = false;
+    @Builder.Default private boolean isDefault = false;
     private String lastSyncCommit;
     private LocalDateTime lastUpdated;
     @ElementCollection(fetch = FetchType.EAGER)

@@ -22,11 +22,12 @@ public class ConfirmCardStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
 
-    public ConfirmCardStrategy(TelegramClient telegramClient,
-                               MessageStateService messageStateService,
-                               CardDraftService cardDraftService,
-                               CardService cardService,
-                               KeyboardManager keyboardManager) {
+    public ConfirmCardStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardDraftService cardDraftService,
+            CardService cardService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardDraftService = cardDraftService;
         this.cardService = cardService;
@@ -45,7 +46,8 @@ public class ConfirmCardStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
 
         try {
             // TODO может передавать в колбэке айдишник черновика? Так надёжнее должно быть
@@ -71,7 +73,8 @@ public class ConfirmCardStrategy extends BaseEditCallbackStrategy {
         try {
             telegramClient.execute(EditMessageText.builder()
                     .chatId(chatId)
-                    .messageId(callbackQuery.getMessage().getMessageId())
+                    .messageId(callbackQuery.getMessage()
+                            .getMessageId())
                     .text("❌ Черновик карты не найден")
                     .build());
         } catch (TelegramApiException e) {

@@ -23,7 +23,8 @@ public class StrategyExceptionHandler {
     public void handleEntityNotFound(EntityNotFoundException e, CallbackQuery callbackQuery) {
         try {
             telegramClient.execute(SendMessage.builder()
-                    .chatId(callbackQuery.getMessage().getChatId())
+                    .chatId(callbackQuery.getMessage()
+                            .getChatId())
                     .text(e.getMessage())
                     .build());
         } catch (TelegramApiException ex) {

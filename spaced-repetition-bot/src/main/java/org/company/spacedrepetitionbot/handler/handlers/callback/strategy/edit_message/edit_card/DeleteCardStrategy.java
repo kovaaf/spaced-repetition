@@ -17,10 +17,11 @@ public class DeleteCardStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
 
-    public DeleteCardStrategy(TelegramClient telegramClient,
-                              MessageStateService messageStateService,
-                              CardService cardService,
-                              KeyboardManager keyboardManager) {
+    public DeleteCardStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardService cardService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardService = cardService;
         this.keyboardManager = keyboardManager;
@@ -49,7 +50,8 @@ public class DeleteCardStrategy extends BaseEditCallbackStrategy {
             super.executeCallbackQuery(callbackQuery);
         } catch (Exception e) {
             log.error("Ошибка удаления карты: {}", e.getMessage(), e);
-            Long chatId = callbackQuery.getMessage().getChatId();
+            Long chatId = callbackQuery.getMessage()
+                    .getChatId();
             sendErrorMessage(chatId, "Ошибка при удалении карты");
         }
     }

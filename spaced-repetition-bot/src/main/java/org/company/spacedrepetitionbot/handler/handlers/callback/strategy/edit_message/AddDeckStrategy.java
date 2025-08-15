@@ -10,10 +10,13 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 @Component
-public class AddDeckStrategy extends BaseEditCallbackStrategy{
+public class AddDeckStrategy extends BaseEditCallbackStrategy {
     private final KeyboardManager keyboardManager;
 
-    protected AddDeckStrategy(TelegramClient telegramClient, MessageStateService messageStateService, KeyboardManager keyboardManager) {
+    protected AddDeckStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.keyboardManager = keyboardManager;
     }
@@ -25,7 +28,8 @@ public class AddDeckStrategy extends BaseEditCallbackStrategy{
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
         messageStateService.setUserState(chatId, MessageState.DECK_CREATION.getAlias());
 
         super.executeCallbackQuery(callbackQuery);

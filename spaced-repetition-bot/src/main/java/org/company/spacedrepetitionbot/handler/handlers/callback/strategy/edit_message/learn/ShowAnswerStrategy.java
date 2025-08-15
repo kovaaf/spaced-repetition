@@ -19,7 +19,12 @@ public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
     private final KeyboardManager keyboardManager;
     private final CardService cardService;
 
-    public ShowAnswerStrategy(TelegramClient telegramClient, MessageStateService messageStateService, LearningService learningService, KeyboardManager keyboardManager, CardService cardService) {
+    public ShowAnswerStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            LearningService learningService,
+            KeyboardManager keyboardManager,
+            CardService cardService) {
         super(telegramClient, messageStateService);
         this.learningService = learningService;
         this.keyboardManager = keyboardManager;
@@ -28,7 +33,8 @@ public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        messageStateService.clearUserState(callbackQuery.getMessage().getChatId());
+        messageStateService.clearUserState(callbackQuery.getMessage()
+                .getChatId());
         super.executeCallbackQuery(callbackQuery);
     }
 

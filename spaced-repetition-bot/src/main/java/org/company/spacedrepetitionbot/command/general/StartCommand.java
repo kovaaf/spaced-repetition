@@ -15,12 +15,7 @@ public class StartCommand extends SpacedRepetitionCommand {
     private final UserInfoService userInfoService;
 
     public StartCommand(UserInfoService userInfoService) {
-        super(
-                START.getAlias(),
-                START.getDescription(),
-                START.getExtendedDescription(),
-                START.getValidArgumentCounts()
-        );
+        super(START.getAlias(), START.getDescription(), START.getExtendedDescription(), START.getValidArgumentCounts());
         this.userInfoService = userInfoService;
     }
 
@@ -32,10 +27,7 @@ public class StartCommand extends SpacedRepetitionCommand {
             sendMessage(telegramClient, result);
         } catch (Exception e) {
             log.error("Ошибка инициализации пользователя: {}", e.getMessage());
-            String result = String.format(
-                    USER_INITIALIZATION_ERROR.getMessage(),
-                    e.getMessage()
-            );
+            String result = String.format(USER_INITIALIZATION_ERROR.getMessage(), e.getMessage());
             sendMessage(telegramClient, result);
         }
     }

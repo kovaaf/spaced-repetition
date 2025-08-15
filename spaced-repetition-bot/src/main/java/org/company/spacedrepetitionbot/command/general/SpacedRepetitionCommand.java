@@ -20,11 +20,15 @@ import static org.company.spacedrepetitionbot.constants.MessageConstants.*;
 public abstract class SpacedRepetitionCommand extends DefaultBotCommand implements IManCommand {
     private static final String LINE_SEPARATOR = "\n-----------------\n";
     private final String extendedDescription;
-    protected Long chatId;
     private final Set<Integer> validArgumentCounts;
+    protected Long chatId;
     private User currentUser;
 
-    public SpacedRepetitionCommand(String commandIdentifier, String description, String extendedDescription, Set<Integer> validArgumentCounts) {
+    public SpacedRepetitionCommand(
+            String commandIdentifier,
+            String description,
+            String extendedDescription,
+            Set<Integer> validArgumentCounts) {
         super(commandIdentifier, description);
         this.extendedDescription = extendedDescription;
         this.validArgumentCounts = validArgumentCounts;
@@ -46,12 +50,12 @@ public abstract class SpacedRepetitionCommand extends DefaultBotCommand implemen
 
         // 2. Проверка всех аргументов на пустоту
         for (int i = 0; i < arguments.length; i++) {
-            if (arguments[i] == null || arguments[i].trim().isEmpty()) {
-                sendMessage(telegramClient, String.format(
-                        EMPTY_ARGUMENT_TEMPLATE_MESSAGE.getMessage(),
-                        ERROR_MESSAGE.getMessage(),
-                        i + 1
-                ));
+            if (arguments[i] == null ||
+                    arguments[i].trim()
+                            .isEmpty()) {
+                sendMessage(
+                        telegramClient,
+                        String.format(EMPTY_ARGUMENT_TEMPLATE_MESSAGE.getMessage(), ERROR_MESSAGE.getMessage(), i + 1));
                 return;
             }
         }
@@ -90,21 +94,18 @@ public abstract class SpacedRepetitionCommand extends DefaultBotCommand implemen
 
     @Override
     public String toMan() {
-        return String.join(LINE_SEPARATOR,
-                toString(),
-                extendedDescription != null ? extendedDescription : ""
-        );
+        return String.join(LINE_SEPARATOR, toString(), extendedDescription != null ? extendedDescription : "");
     }
 
     private String generateArgumentCountError(String[] arguments) {
         if (validArgumentCounts.size() == 1) {
-            int validCounts = validArgumentCounts.iterator().next();
+            int validCounts = validArgumentCounts.iterator()
+                    .next();
             return String.format(
                     WRONG_ARGUMENTS_TEMPLATE_MESSAGE.getMessage(),
                     arguments.length,
                     validCounts,
-                    getExtendedDescription()
-            );
+                    getExtendedDescription());
         } else {
             String validCounts = validArgumentCounts.stream()
                     .sorted()
@@ -115,8 +116,7 @@ public abstract class SpacedRepetitionCommand extends DefaultBotCommand implemen
                     WRONG_ARGUMENTS_COUNT_MULTIPLE.getMessage(),
                     arguments.length,
                     validCounts,
-                    getExtendedDescription()
-            );
+                    getExtendedDescription());
         }
     }
 

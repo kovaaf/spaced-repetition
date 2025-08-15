@@ -28,11 +28,15 @@ public class LearningService {
     private final CardRepository cardRepository;
     private final SM2Algorithm SM2Algorithm;
 
-    public LearningService(UserInfoRepository userInfoRepository, DeckRepository deckRepository, CardRepository cardRepository, SM2Algorithm SM2Algorithm) {
+    public LearningService(
+            UserInfoRepository userInfoRepository,
+            DeckRepository deckRepository,
+            CardRepository cardRepository,
+            SM2Algorithm sm2Algorithm) {
         this.userInfoRepository = userInfoRepository;
         this.deckRepository = deckRepository;
         this.cardRepository = cardRepository;
-        this.SM2Algorithm = SM2Algorithm;
+        this.SM2Algorithm = sm2Algorithm;
     }
 
     @Transactional(readOnly = true)
@@ -58,10 +62,7 @@ public class LearningService {
         card = SM2Algorithm.updateCardWithSMTwoAlgorithm(card, quality);
         cardRepository.save(card);
 
-        return String.format(ANSWER.getMessage(),
-                front,
-                LEARN_NEXT.getAlias(), deckName,
-                PREV_CARD.getAlias());
+        return String.format(ANSWER.getMessage(), front, LEARN_NEXT.getAlias(), deckName, PREV_CARD.getAlias());
     }
 
     @Transactional(readOnly = true)
@@ -93,10 +94,11 @@ public class LearningService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void resetBuriedCards() {
-        cardRepository.findByStatus(Status.BURIED).forEach(card -> {
-            // TODO назначать статус в зависимости от старости как в алгоритме
-            card.setStatus(Status.REVIEW_YOUNG);
-        });
+        cardRepository.findByStatus(Status.BURIED)
+                .forEach(card -> {
+                    // TODO назначать статус в зависимости от старости как в алгоритме
+                    card.setStatus(Status.REVIEW_YOUNG);
+                });
     }
 
     private Deck getDeckByOwnerIdAndDeckNameOrThrow(Long userChatId, String deckName) {
@@ -111,22 +113,23 @@ public class LearningService {
 
     private UserInfo getUserIdOrThrow(Long userChatId) {
         return userInfoRepository.findById(userChatId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format(USER_NOT_FOUND.getMessage(), userChatId)
-                ));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(
+                        USER_NOT_FOUND.getMessage(),
+                        userChatId)));
     }
 
     private Deck getDeckOwnerInfoAndDeckNameOrThrow(UserInfo owner, String deckName) {
         return deckRepository.findByNameIgnoreCaseAndOwner(deckName, owner)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format(DECK_NOT_FOUND_SIMPLE.getMessage(), deckName)
-                ));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(
+                        DECK_NOT_FOUND_SIMPLE.getMessage(),
+                        deckName)));
     }
 
     private Card getCardByFrontAndDeckOrThrow(Deck deck, String cardFront) {
         return cardRepository.findByDeckAndFrontIgnoreCase(deck, cardFront)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format(CARD_NOT_FOUND_SIMPLE.getMessage(), cardFront, deck.getName())
-                ));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(
+                        CARD_NOT_FOUND_SIMPLE.getMessage(),
+                        cardFront,
+                        deck.getName())));
     }
 }

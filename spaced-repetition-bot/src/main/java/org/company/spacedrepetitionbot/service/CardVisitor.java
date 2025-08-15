@@ -49,7 +49,9 @@ public class CardVisitor extends AbstractVisitor {
 
     @Override
     public void visit(Code code) {
-        currentContent.append("`").append(code.getLiteral()).append("`");
+        currentContent.append("`")
+                .append(code.getLiteral())
+                .append("`");
     }
 
     @Override
@@ -62,7 +64,8 @@ public class CardVisitor extends AbstractVisitor {
     public void visit(ListItem listItem) {
         Node parent = listItem.getParent();
         if (parent instanceof BulletList) {
-            currentContent.append(getIndent()).append("- ");
+            currentContent.append(getIndent())
+                    .append("- ");
         }
         super.visit(listItem);
     }
@@ -80,7 +83,9 @@ public class CardVisitor extends AbstractVisitor {
         int counter = orderedList.getMarkerStartNumber();
         for (Node child = orderedList.getFirstChild(); child != null; child = child.getNext()) {
             if (child instanceof ListItem) {
-                currentContent.append(getIndent()).append(counter).append(". ");
+                currentContent.append(getIndent())
+                        .append(counter)
+                        .append(". ");
                 visit((ListItem) child);
                 counter++;
             }
@@ -88,13 +93,13 @@ public class CardVisitor extends AbstractVisitor {
         listLevel--;
     }
 
-
     private String getIndent() {
         return "  ".repeat(listLevel - 1);
     }
 
     private void saveInitialContent() {
-        String content = currentContent.toString().trim();
+        String content = currentContent.toString()
+                .trim();
         if (!content.isEmpty()) {
             cards.add(Card.builder()
                     .front(fileName)
@@ -116,7 +121,8 @@ public class CardVisitor extends AbstractVisitor {
 
     private void saveCurrentCard() {
         if (currentHeading != null || beforeFirstHeading) {
-            String content = currentContent.toString().trim();
+            String content = currentContent.toString()
+                    .trim();
             if (!content.isEmpty()) {
                 // Для карточек до первого заголовка используем только имя файла
                 // Для карточек на основе заголовка добавляем префикс имени файла
@@ -139,13 +145,19 @@ public class CardVisitor extends AbstractVisitor {
             if (child instanceof Text) {
                 sb.append(((Text) child).getLiteral());
             } else if (child instanceof Code) {
-                sb.append("`").append(((Code) child).getLiteral()).append("`");
+                sb.append("`")
+                        .append(((Code) child).getLiteral())
+                        .append("`");
             } else if (child instanceof Link) {
                 sb.append(extractLinkText((Link) child));
             } else if (child instanceof Emphasis) {
-                sb.append("*").append(extractText(child)).append("*");
+                sb.append("*")
+                        .append(extractText(child))
+                        .append("*");
             } else if (child instanceof StrongEmphasis) {
-                sb.append("**").append(extractText(child)).append("**");
+                sb.append("**")
+                        .append(extractText(child))
+                        .append("**");
             } else {
                 sb.append(extractText(child));
             }
@@ -166,7 +178,8 @@ public class CardVisitor extends AbstractVisitor {
                 sb.append(extractPlainText(child));
             }
         }
-        return sb.toString().trim();
+        return sb.toString()
+                .trim();
     }
 
     private String extractLinkText(Link link) {
@@ -183,7 +196,8 @@ public class CardVisitor extends AbstractVisitor {
 
     private String getFileNameWithoutExtension(String filePath) {
         Path path = Paths.get(filePath);
-        String fileName = path.getFileName().toString();
+        String fileName = path.getFileName()
+                .toString();
         int dotIndex = fileName.lastIndexOf('.');
         if (dotIndex != -1) {
             fileName = fileName.substring(0, dotIndex);

@@ -17,9 +17,11 @@ public class UpdateDispatcher {
     private final Map<String, NonCommandHandler> nonCommandHandlers;
 
     public UpdateDispatcher(List<NonCommandHandler> nonCommandHandlers) {
-        log.debug("Available handlers: {}",
+        log.debug(
+                "Available handlers: {}",
                 nonCommandHandlers.stream()
-                        .map(h -> h.getClass().getSimpleName())
+                        .map(h -> h.getClass()
+                                .getSimpleName())
                         .collect(Collectors.toList()));
 
         this.nonCommandHandlers = nonCommandHandlers.stream()
@@ -27,17 +29,25 @@ public class UpdateDispatcher {
     }
 
     public void handle(Update update) {
-//        nonCommandHandlers.forEach((k,v) ->
-//                System.out.printf("Идентификатор: %s, описание: %s%n", k, v.toString()));
+        //        nonCommandHandlers.forEach((k,v) ->
+        //                System.out.printf("Идентификатор: %s, описание: %s%n", k, v.toString()));
 
         if (update.hasCallbackQuery()) {
-            nonCommandHandlers.get("callBackHandler").handle(update);
-        } else if (update.hasMessage() && update.getMessage().hasText()) {
-            nonCommandHandlers.get("textHandler").handle(update);
+            nonCommandHandlers.get("callBackHandler")
+                    .handle(update);
+        } else if (update.hasMessage() &&
+                update.getMessage()
+                        .hasText()) {
+            nonCommandHandlers.get("textHandler")
+                    .handle(update);
         } else if (update.hasMessage()) {
-            nonCommandHandlers.get("nonTextHandler").handle(update);
-        } else if (update.hasEditedMessage() && update.getEditedMessage().hasText()) {
-            nonCommandHandlers.get("editedMessageHandler").handle(update);
+            nonCommandHandlers.get("nonTextHandler")
+                    .handle(update);
+        } else if (update.hasEditedMessage() &&
+                update.getEditedMessage()
+                        .hasText()) {
+            nonCommandHandlers.get("editedMessageHandler")
+                    .handle(update);
         }
     }
 }

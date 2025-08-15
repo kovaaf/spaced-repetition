@@ -33,8 +33,7 @@ public enum Callback {
     SUSPEND("Приостановить карточку", "SUSPEND"), // TODO ещё не реализовано
     UNSUSPEND("Возобновить карточку", "UNSUSPEND"), // TODO ещё не реализовано
     PREVIOUS("Вернуться к предыдущей карте", "PREVIOUS"), // TODO ещё не реализовано
-    COPY_DEFAULT_DECK("Скопировать дефолтную колоду", "COPY_DEFAULT_DECK")
-    ;
+    COPY_DEFAULT_DECK("Скопировать дефолтную колоду", "COPY_DEFAULT_DECK");
     private final String text;
     private final String alias;
 
@@ -45,7 +44,8 @@ public enum Callback {
 
     public static Callback from(String alias) {
         return Arrays.stream(Callback.values())
-                .filter(callBack -> callBack.getAlias().equalsIgnoreCase(alias))
+                .filter(callBack -> callBack.getAlias()
+                        .equalsIgnoreCase(alias))
                 .findFirst()
                 .orElse(null);
     }

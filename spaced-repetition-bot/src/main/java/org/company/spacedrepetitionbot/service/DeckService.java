@@ -2,15 +2,15 @@ package org.company.spacedrepetitionbot.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.company.spacedrepetitionbot.config.AppProperties;
 import org.company.spacedrepetitionbot.constants.MessageConstants;
+import org.company.spacedrepetitionbot.exception.DeckNotFoundException;
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;
 import org.company.spacedrepetitionbot.model.UserInfo;
 import org.company.spacedrepetitionbot.repository.CardRepository;
 import org.company.spacedrepetitionbot.repository.DeckRepository;
 import org.company.spacedrepetitionbot.repository.UserInfoRepository;
-import org.company.spacedrepetitionbot.exception.DeckNotFoundException;
-import org.company.spacedrepetitionbot.config.AppProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +29,20 @@ import static org.company.spacedrepetitionbot.constants.OtherConstants.DEFAULT_D
 @Slf4j
 @Service
 public class DeckService {
-    @Value("${app.deck.max-cards-display:10}")
-    private int maxCardsToDisplay;
     private final DeckRepository deckRepository;
     private final UserInfoRepository userInfoRepository;
     private final AppProperties appProperties;
     private final UserInfoService userInfoService;
     private final CardRepository cardRepository;
+    @Value("${app.deck.max-cards-display:10}") private int maxCardsToDisplay;
+
+    private static String formatErrorMessage(MessageConstants template, Object... args) {
+        return String.format(template.getMessage(), args);
+    }
 
     @Transactional(readOnly = true)
     public String getDeckDetails(Long userId, String deckName) {
-        return findDeckWithCards(userId, deckName)
-                .map(this::formatDeckDetails)
+        return findDeckWithCards(userId, deckName).map(this::formatDeckDetails)
                 .orElseGet(() -> String.format(DECK_NOT_FOUND_MESSAGE.getMessage(), deckName));
     }
 
@@ -48,7 +50,7 @@ public class DeckService {
      * Создает новую колоду и сохраняет ее в базе данных.
      *
      * @param userChatId идентификатор пользователя, которому будет принадлежать колода
-     * @param deckName       имя колоды
+     * @param deckName   имя колоды
      * @throws IllegalArgumentException если пользователь с указанным идентификатором не существует
      */
     @Transactional
@@ -57,11 +59,7 @@ public class DeckService {
             UserInfo owner = getUserInfoOrThrow(userChatId);
 
             if (deckRepository.existsByNameIgnoreCaseAndOwner(deckName, owner)) {
-                return formatErrorMessage(
-                        DECK_ALREADY_EXISTS_TEMPLATE,
-                        deckName,
-                        ADD_DECK.getExtendedDescription()
-                );
+                return formatErrorMessage(DECK_ALREADY_EXISTS_TEMPLATE, deckName, ADD_DECK.getExtendedDescription());
             }
 
             Deck newDeck = Deck.builder()
@@ -128,24 +126,20 @@ public class DeckService {
 
     private UserInfo getUserInfoOrThrow(Long userChatId) {
         return userInfoRepository.findById(userChatId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format(USER_NOT_FOUND.getMessage(), userChatId)
-                ));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(
+                        USER_NOT_FOUND.getMessage(),
+                        userChatId)));
     }
 
     private Deck getDeckOwnerInfoAndNameOrThrow(UserInfo owner, String deckName) {
         return deckRepository.findByNameIgnoreCaseAndOwner(deckName, owner)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        String.format(DECK_NOT_FOUND_SIMPLE.getMessage(), deckName)
-                ));
+                .orElseThrow(() -> new IllegalArgumentException(String.format(
+                        DECK_NOT_FOUND_SIMPLE.getMessage(),
+                        deckName)));
     }
 
     private String formatErrorMessage(MessageConstants constant, Exception e) {
         return String.format("%s%s", constant.getMessage(), e.getMessage());
-    }
-
-    private static String formatErrorMessage(MessageConstants template, Object... args) {
-        return String.format(template.getMessage(), args);
     }
 
     private String formatDeckList(List<Deck> decks) {
@@ -154,10 +148,12 @@ public class DeckService {
         String deckItems = IntStream.range(0, decks.size())
                 .mapToObj(i -> {
                     Deck deck = decks.get(i);
-                    return String.format(DECK_ITEM_FORMAT.getMessage(),
+                    return String.format(
+                            DECK_ITEM_FORMAT.getMessage(),
                             i + 1,
                             deck.getName(),
-                            deck.getCards().size());
+                            deck.getCards()
+                                    .size());
                 })
                 .collect(Collectors.joining("\n"));
 
@@ -170,11 +166,12 @@ public class DeckService {
     }
 
     private String formatDeckDetails(Deck deck) {
-        return String.format(DECK_DETAILS_TEMPLATE.getMessage(),
+        return String.format(
+                DECK_DETAILS_TEMPLATE.getMessage(),
                 deck.getName(),
-                deck.getCards().size(),
-                formatCardList(deck.getCards())
-        );
+                deck.getCards()
+                        .size(),
+                formatCardList(deck.getCards()));
     }
 
     private String formatCardList(Set<Card> cards) {
@@ -205,20 +202,25 @@ public class DeckService {
     }
 
     public Deck getDefaultDeck() {
-        return deckRepository.findByName(appProperties.getDefaultDeck().getName())
+        return deckRepository.findByName(appProperties.getDefaultDeck()
+                        .getName())
                 .orElseThrow(() -> new DeckNotFoundException("Default deck not found"));
     }
 
     @Transactional
     public Deck initializeDefaultDeck() {
-        return deckRepository.findByName(appProperties.getDefaultDeck().getName())
+        return deckRepository.findByName(appProperties.getDefaultDeck()
+                        .getName())
                 .orElseGet(() -> {
                     UserInfo systemUser = userInfoService.getSystemUser();
                     Deck newDeck = Deck.builder()
-                            .name(appProperties.getDefaultDeck().getName())
+                            .name(appProperties.getDefaultDeck()
+                                    .getName())
                             .isDefault(true)
                             .owner(systemUser)
-                            .sourceFolders(appProperties.getDefaultDeck().getRepo().getSourceFolders())
+                            .sourceFolders(appProperties.getDefaultDeck()
+                                    .getRepo()
+                                    .getSourceFolders())
                             .build();
                     log.debug("Initializing default deck: {}", newDeck.getName());
                     return deckRepository.save(newDeck);
@@ -229,6 +231,7 @@ public class DeckService {
         return deckRepository.findByName(deckName)
                 .orElseThrow(() -> new DeckNotFoundException("Deck '" + deckName + "' not found"));
     }
+
     public Optional<Deck> getOptionalDeckByName(String deckName) {
         return deckRepository.findByName(deckName);
     }
@@ -260,7 +263,8 @@ public class DeckService {
             deckRepository.save(newDeck);
 
             // Копирование карт
-            List<Card> cardsToCopy = defaultDeck.getCards().stream()
+            List<Card> cardsToCopy = defaultDeck.getCards()
+                    .stream()
                     .map(card -> Card.builder()
                             .front(card.getFront())
                             .back(card.getBack())

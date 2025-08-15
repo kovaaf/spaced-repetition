@@ -12,14 +12,18 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class MainMenuStrategy extends BaseEditCallbackStrategy {
     private final KeyboardManager keyboardManager;
 
-    public MainMenuStrategy(TelegramClient telegramClient, MessageStateService messageStateService, KeyboardManager keyboardManager) {
+    public MainMenuStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.keyboardManager = keyboardManager;
     }
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        messageStateService.clearUserState(callbackQuery.getMessage().getChatId());
+        messageStateService.clearUserState(callbackQuery.getMessage()
+                .getChatId());
         super.executeCallbackQuery(callbackQuery);
     }
 

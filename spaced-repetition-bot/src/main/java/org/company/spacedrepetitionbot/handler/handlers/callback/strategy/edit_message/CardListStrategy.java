@@ -22,9 +22,11 @@ public class CardListStrategy extends BaseEditCallbackStrategy {
     private final DeckService deckService;
     private final KeyboardManager keyboardManager;
 
-    public CardListStrategy(TelegramClient telegramClient,
-                            DeckService deckService,
-                            MessageStateService messageStateService, KeyboardManager keyboardManager) {
+    public CardListStrategy(
+            TelegramClient telegramClient,
+            DeckService deckService,
+            MessageStateService messageStateService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.deckService = deckService;
         this.keyboardManager = keyboardManager;
@@ -42,9 +44,7 @@ public class CardListStrategy extends BaseEditCallbackStrategy {
         Deck deck = deckOpt.get();
         // TODO отправлять карты не в виде списка в сообщении, а в виде кнопок
         //  кнопки предоставляют меню, аналогичное тому, что используется в LearnDeckStrategy
-        return String.format("Карточки в колоде \"%s\":\n\n%s",
-                deck.getName(),
-                formatCards(deck.getCards()));
+        return String.format("Карточки в колоде \"%s\":\n\n%s", deck.getName(), formatCards(deck.getCards()));
     }
 
     // TODO исправить колоду на гибкую

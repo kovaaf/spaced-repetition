@@ -13,7 +13,12 @@ import static org.company.spacedrepetitionbot.handler.handlers.callback.Callback
 
 @Component
 public class AnswerGoodStrategy extends BaseAnswerStrategy {
-    protected AnswerGoodStrategy(TelegramClient telegramClient, MessageStateService messageStateService, LearningService learningService, DeckService deckService, KeyboardManager keyboardManager) {
+    protected AnswerGoodStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            LearningService learningService,
+            DeckService deckService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService, learningService, deckService, keyboardManager);
     }
 

@@ -1,8 +1,8 @@
 package org.company.spacedrepetitionbot.command.learning;
 
 import lombok.extern.slf4j.Slf4j;
-import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.command.general.SpacedRepetitionCommand;
+import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.service.LearningService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
@@ -18,12 +18,7 @@ public class HardCommand extends SpacedRepetitionCommand {
     private final LearningService learningService;
 
     public HardCommand(LearningService learningService) {
-        super(
-                HARD.getAlias(),
-                HARD.getDescription(),
-                HARD.getExtendedDescription(),
-                HARD.getValidArgumentCounts()
-        );
+        super(HARD.getAlias(), HARD.getDescription(), HARD.getExtendedDescription(), HARD.getValidArgumentCounts());
         this.learningService = learningService;
     }
 
@@ -31,8 +26,8 @@ public class HardCommand extends SpacedRepetitionCommand {
      * Выполняет действие команды: отмечает карточку как изученную с качеством "Трудно".
      *
      * @param arguments массив аргументов команды, где:
-     *                 arguments[0] - название колоды
-     *                 arguments[1] - лицевая сторона карточки
+     *                  arguments[0] - название колоды
+     *                  arguments[1] - лицевая сторона карточки
      */
     @Override
     protected void performAction(TelegramClient telegramClient, String[] arguments) {

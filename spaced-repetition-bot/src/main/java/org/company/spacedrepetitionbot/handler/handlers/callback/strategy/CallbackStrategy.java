@@ -5,5 +5,6 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 
 public interface CallbackStrategy {
     void executeCallbackQuery(CallbackQuery callbackQuery);
+
     Callback getPrefix();
 }

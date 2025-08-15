@@ -18,8 +18,7 @@ public class ShowCardCommand extends SpacedRepetitionCommand {
                 SHOW_CARD.getAlias(),
                 SHOW_CARD.getDescription(),
                 SHOW_CARD.getExtendedDescription(),
-                SHOW_CARD.getValidArgumentCounts()
-        );
+                SHOW_CARD.getValidArgumentCounts());
         this.cardService = cardService;
     }
 

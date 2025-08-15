@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface CardDraftRepository extends JpaRepository<CardDraft, Long> {
     Optional<CardDraft> findByChatId(Long chatId);
+
     void deleteByChatId(Long chatId);
 }

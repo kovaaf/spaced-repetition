@@ -18,8 +18,7 @@ public class EditDeckCommand extends SpacedRepetitionCommand {
                 EDIT_DECK.getAlias(),
                 EDIT_DECK.getDescription(),
                 EDIT_DECK.getExtendedDescription(),
-                EDIT_DECK.getValidArgumentCounts()
-        );
+                EDIT_DECK.getValidArgumentCounts());
         this.deckService = deckService;
     }
 

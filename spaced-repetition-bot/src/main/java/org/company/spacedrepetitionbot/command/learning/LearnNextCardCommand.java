@@ -24,8 +24,7 @@ public class LearnNextCardCommand extends SpacedRepetitionCommand {
                 LEARN_NEXT.getAlias(),
                 LEARN_NEXT.getDescription(),
                 LEARN_NEXT.getExtendedDescription(),
-                LEARN_NEXT.getValidArgumentCounts()
-        );
+                LEARN_NEXT.getValidArgumentCounts());
         this.learningService = learningService;
     }
 
@@ -33,7 +32,7 @@ public class LearnNextCardCommand extends SpacedRepetitionCommand {
      * Возвращает следующую карточку для изучения из указанной колоды.
      *
      * @param arguments массив аргументов команды, где:
-     *                 arguments[0] - название колоды
+     *                  arguments[0] - название колоды
      */
     @Override
     protected void performAction(TelegramClient telegramClient, String[] arguments) {
@@ -41,9 +40,12 @@ public class LearnNextCardCommand extends SpacedRepetitionCommand {
         Card card = learningService.getCardFromDeckWithMinimumInterval(chatId, deckName);
         String front = card.getFront();
 
-        String result = String.format(CARD_WITH_MINIMUM_INTERVAL.getMessage(),
+        String result = String.format(
+                CARD_WITH_MINIMUM_INTERVAL.getMessage(),
                 front,
-                SHOW_ANSWER.getAlias(), deckName, front,
+                SHOW_ANSWER.getAlias(),
+                deckName,
+                front,
                 PREV_CARD.getAlias());
 
         sendMessage(telegramClient, result);

@@ -17,9 +17,10 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class EditExistingCardFrontStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
 
-    public EditExistingCardFrontStrategy(TelegramClient telegramClient,
-                                         MessageStateService messageStateService,
-                                         CardService cardService) {
+    public EditExistingCardFrontStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardService cardService) {
         super(telegramClient, messageStateService);
         this.cardService = cardService;
     }
@@ -28,9 +29,7 @@ public class EditExistingCardFrontStrategy extends BaseEditCallbackStrategy {
     protected String getMessageText(CallbackQuery callbackQuery) {
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
         return cardService.getCardDetails(cardId)
-                .map(details -> "✏️ Текущий вопрос:\n" +
-                        details.split("\nОтвет:")[0] +
-                        "\n\nВведите новый вопрос:")
+                .map(details -> "✏️ Текущий вопрос:\n" + details.split("\nОтвет:")[0] + "\n\nВведите новый вопрос:")
                 .orElse("❌ Карточка не найдена");
     }
 
@@ -41,7 +40,8 @@ public class EditExistingCardFrontStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
 
         try {
@@ -49,8 +49,7 @@ public class EditExistingCardFrontStrategy extends BaseEditCallbackStrategy {
                     chatId,
                     MessageState.EDIT_EXISTING_CARD_FRONT.getAlias() +
                             MessageState.STATE_DELIMITER.getAlias() +
-                            cardId
-            );
+                            cardId);
             super.executeCallbackQuery(callbackQuery);
         } catch (Exception e) {
             log.error("Ошибка редактирования вопроса карты {}: {}", cardId, e.getMessage());

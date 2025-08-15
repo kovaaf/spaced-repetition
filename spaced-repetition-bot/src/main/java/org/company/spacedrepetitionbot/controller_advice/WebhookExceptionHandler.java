@@ -15,12 +15,14 @@ public class WebhookExceptionHandler {
     @ExceptionHandler(DeckNotFoundException.class)
     public ResponseEntity<String> handleDeckNotFound(DeckNotFoundException ex) {
         log.error("Deck not found", ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
     }
 
     @ExceptionHandler(WebhookProcessingException.class)
     public ResponseEntity<String> handleWebhookProcessingException(WebhookProcessingException ex) {
         log.error("Error processing webhook", ex);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Internal server error");
     }
 }

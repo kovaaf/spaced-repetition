@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.32.xsd">
 
@@ -16,8 +16,8 @@
         </createTable>
         <sql>
             INSERT INTO user_info (user_chat_id, user_name)
-            SELECT 0, 'system'
-            WHERE NOT EXISTS (
+            SELECT 0,
+                   'system' WHERE NOT EXISTS (
                 SELECT 1 FROM user_info WHERE user_name = 'system'
             );
         </sql>
@@ -140,7 +140,6 @@
                 constraintName="fk_executed_command_user_info"
                 referencedTableName="user_info"
                 referencedColumnNames="user_chat_id"/>
-
 
 
         <createSequence

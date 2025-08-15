@@ -18,11 +18,12 @@ public class CopyDefaultDeckTextStrategy extends BaseEditTextStrategy {
     private final UserInfoService userInfoService;
     private final KeyboardManager keyboardManager;
 
-    public CopyDefaultDeckTextStrategy(TelegramClient telegramClient,
-                                       MessageStateService messageStateService,
-                                       DeckService deckService,
-                                       UserInfoService userInfoService,
-                                       KeyboardManager keyboardManager) {
+    public CopyDefaultDeckTextStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            DeckService deckService,
+            UserInfoService userInfoService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.deckService = deckService;
         this.userInfoService = userInfoService;
@@ -34,7 +35,9 @@ public class CopyDefaultDeckTextStrategy extends BaseEditTextStrategy {
         clearPreviousMenu(chatId);
 
         if (deckName.length() > 100) {
-            sendNewMenu(chatId, "❌ Слишком длинное название (макс. 100 символов)",
+            sendNewMenu(
+                    chatId,
+                    "❌ Слишком длинное название (макс. 100 символов)",
                     keyboardManager.getBackToDeckListKeyboard());
             return;
         }
@@ -45,8 +48,7 @@ public class CopyDefaultDeckTextStrategy extends BaseEditTextStrategy {
         if (result.startsWith("✅")) {
             List<Deck> decks = deckService.getUserDecks(chatId);
             boolean showCopyButton = !userInfoService.hasUserCopiedDefaultDeck(chatId);
-            sendNewMenu(chatId, result,
-                    keyboardManager.getDeckListKeyboard(decks, showCopyButton));
+            sendNewMenu(chatId, result, keyboardManager.getDeckListKeyboard(decks, showCopyButton));
         } else {
             // В случае ошибки показываем сообщение с кнопкой отмены
             sendNewMenu(chatId, result, keyboardManager.getBackToDeckListKeyboard());

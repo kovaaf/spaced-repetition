@@ -23,7 +23,12 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
     private final KeyboardManager keyboardManager;
     private final DeckService deckService;
 
-    public LearnDeckStrategy(TelegramClient telegramClient, MessageStateService messageStateService, LearningService learningService, KeyboardManager keyboardManager, DeckService deckService) {
+    public LearnDeckStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            LearningService learningService,
+            KeyboardManager keyboardManager,
+            DeckService deckService) {
         super(telegramClient, messageStateService);
         this.learningService = learningService;
         this.keyboardManager = keyboardManager;
@@ -32,14 +37,16 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
         Long deckId = getLastDataElementFromCallback(callbackQuery.getData());
         if (isDeckEmpty(deckId)) {
             handleEmptyDeck(chatId, deckId, callbackQuery);
             return;
         }
 
-        messageStateService.clearUserState(callbackQuery.getMessage().getChatId());
+        messageStateService.clearUserState(callbackQuery.getMessage()
+                .getChatId());
         super.executeCallbackQuery(callbackQuery);
     }
 
@@ -53,8 +60,7 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
             return getDeckName(deckId) + " не содержит карточек для изучения";
         }
 
-        return String.format("Карточка для изучения:\n\nВопрос:\n%s",
-                nextCard.getFront());
+        return String.format("Карточка для изучения:\n\nВопрос:\n%s", nextCard.getFront());
     }
 
     @Override
@@ -72,7 +78,8 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
 
     private boolean isDeckEmpty(Long deckId) {
         return deckService.getDeckByIdWithCards(deckId)
-                .map(deck -> deck.getCards().isEmpty())
+                .map(deck -> deck.getCards()
+                        .isEmpty())
                 .orElse(true);
     }
 
@@ -83,7 +90,8 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
 
             telegramClient.execute(EditMessageText.builder()
                     .chatId(chatId)
-                    .messageId(callbackQuery.getMessage().getMessageId())
+                    .messageId(callbackQuery.getMessage()
+                            .getMessageId())
                     .text(message)
                     .replyMarkup(keyboardManager.getDeckMenuKeyboard(deckId))
                     .build());

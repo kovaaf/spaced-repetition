@@ -35,9 +35,14 @@ public class GitService {
     }
 
     private Git getGitInstance() throws GitAPIException {
-        Path repoPath = Paths.get(appProperties.getDefaultDeck().getRepo().getPath()).toAbsolutePath();
+        Path repoPath = Paths.get(appProperties.getDefaultDeck()
+                        .getRepo()
+                        .getPath())
+                .toAbsolutePath();
         File repoDir = repoPath.toFile();
-        String repoUrl = appProperties.getDefaultDeck().getRepo().getUrl();
+        String repoUrl = appProperties.getDefaultDeck()
+                .getRepo()
+                .getUrl();
 
         if (!repoDir.exists()) {
             return cloneRepository(repoUrl, repoDir);
@@ -89,7 +94,9 @@ public class GitService {
     }
 
     private void resetToOriginBranch(Git git) throws GitAPIException {
-        String branch = appProperties.getDefaultDeck().getRepo().getBranch();
+        String branch = appProperties.getDefaultDeck()
+                .getRepo()
+                .getBranch();
         git.reset()
                 .setMode(ResetCommand.ResetType.HARD)
                 .setRef("origin/" + branch)
@@ -98,8 +105,10 @@ public class GitService {
 
     public String getLatestCommit(Git git) throws IOException {
         try (RevWalk walk = new RevWalk(git.getRepository())) {
-            ObjectId head = git.getRepository().resolve(Constants.HEAD);
-            return walk.parseCommit(head).getName();
+            ObjectId head = git.getRepository()
+                    .resolve(Constants.HEAD);
+            return walk.parseCommit(head)
+                    .getName();
         }
     }
 }

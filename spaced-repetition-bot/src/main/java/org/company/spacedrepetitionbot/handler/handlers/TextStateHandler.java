@@ -27,26 +27,28 @@ public class TextStateHandler implements NonCommandHandler {
     private final Map<MessageState, TextStateStrategy> textStateStrategies;
 
     @Autowired
-    public TextStateHandler(TelegramClient telegramClient,
-                            MessageStateService messageStateService,
-                            List<TextStateStrategy> strategies) {
+    public TextStateHandler(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            List<TextStateStrategy> strategies) {
         this.telegramClient = telegramClient;
         this.messageStateService = messageStateService;
         this.textStateStrategies = strategies.stream()
-                .collect(Collectors.toMap(
-                        TextStateStrategy::getStateHandlerName,
-                        Function.identity()
-                ));
+                .collect(Collectors.toMap(TextStateStrategy::getStateHandlerName, Function.identity()));
     }
 
     @Override
     public void handle(Update update) {
-        if (!update.hasMessage() || !update.getMessage().hasText()) {
+        if (!update.hasMessage() ||
+                !update.getMessage()
+                        .hasText()) {
             return;
         }
 
-        Long chatId = update.getMessage().getChatId();
-        String text = update.getMessage().getText();
+        Long chatId = update.getMessage()
+                .getChatId();
+        String text = update.getMessage()
+                .getText();
         String userState = messageStateService.getUserState(chatId);
 
         try {
@@ -67,8 +69,7 @@ public class TextStateHandler implements NonCommandHandler {
 
         return textStateStrategies.getOrDefault(
                 MessageState.from(stateAlias),
-                textStateStrategies.get(MessageState.DEFAULT)
-        );
+                textStateStrategies.get(MessageState.DEFAULT));
     }
 
     private void sendErrorMessage(Long chatId) {

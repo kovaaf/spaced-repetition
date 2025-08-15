@@ -14,9 +14,10 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class CardFrontCreationStrategy extends BaseEditTextStrategy {
     private final CardDraftService cardDraftService;
 
-    public CardFrontCreationStrategy(TelegramClient telegramClient,
-                                     MessageStateService messageStateService,
-                                     CardDraftService cardDraftService) {
+    public CardFrontCreationStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardDraftService cardDraftService) {
         super(telegramClient, messageStateService);
         this.cardDraftService = cardDraftService;
     }
@@ -36,10 +37,7 @@ public class CardFrontCreationStrategy extends BaseEditTextStrategy {
         messageStateService.setUserState(chatId, MessageState.CARD_BACK_CREATION.getAlias());
 
         // Отправляем новое сообщение, которое станет текущим меню после ввода ответа пользователем
-        sendNewMenu(
-                chatId,
-                "Введите ответ на вопрос:\n" + text,
-                null // Без клавиатуры
+        sendNewMenu(chatId, "Введите ответ на вопрос:\n" + text, null // Без клавиатуры
         );
     }
 

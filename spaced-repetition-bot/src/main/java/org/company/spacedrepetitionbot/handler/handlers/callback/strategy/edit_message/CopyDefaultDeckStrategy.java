@@ -14,8 +14,10 @@ public class CopyDefaultDeckStrategy extends BaseEditCallbackStrategy {
     private final MessageStateService messageStateService;
     private final KeyboardManager keyboardManager;
 
-    public CopyDefaultDeckStrategy(TelegramClient telegramClient,
-                                   MessageStateService messageStateService, KeyboardManager keyboardManager) {
+    public CopyDefaultDeckStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.messageStateService = messageStateService;
         this.keyboardManager = keyboardManager;
@@ -33,9 +35,9 @@ public class CopyDefaultDeckStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage().getChatId();
-        messageStateService.setUserState(chatId,
-                MessageState.COPY_DEFAULT_DECK.getAlias());
+        Long chatId = callbackQuery.getMessage()
+                .getChatId();
+        messageStateService.setUserState(chatId, MessageState.COPY_DEFAULT_DECK.getAlias());
         super.executeCallbackQuery(callbackQuery);
     }
 

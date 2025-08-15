@@ -16,11 +16,13 @@ public class DefaultTextStrategy implements TextStateStrategy {
     // TODO на основе текущего стейта отправить меню, если возможно
     @Override
     public void handle(Long chatId, String text) throws TelegramApiException {
-        telegramClient.execute(
-                SendMessage.builder()
-                        .chatId(chatId)
-                        .text("Некорректная команда.\nДля помощи введите /help\nДля открытия меню введите /menu")
-                        .build());
+        telegramClient.execute(SendMessage.builder()
+                .chatId(chatId)
+                .text("""
+                        Некорректная команда.
+                        Для помощи введите /help
+                        Для открытия меню введите /menu""")
+                .build());
     }
 
     @Override

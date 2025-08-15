@@ -9,7 +9,9 @@ class RepoUrlNormalizer {
     private static final String GIT_SUFFIX = ".git";
 
     public String normalize(String url) {
-        if (url == null) return "";
+        if (url == null) {
+            return "";
+        }
 
         if (url.startsWith(HTTPS_PREFIX)) {
             return url.substring(HTTPS_PREFIX.length())

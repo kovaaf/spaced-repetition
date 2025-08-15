@@ -19,10 +19,11 @@ public class EditCardDraftFrontTextStrategy extends BaseEditTextStrategy {
     private final KeyboardManager keyboardManager;
 
     @Autowired
-    public EditCardDraftFrontTextStrategy(TelegramClient telegramClient,
-                                          MessageStateService messageStateService,
-                                          CardDraftService cardDraftService,
-                                          KeyboardManager keyboardManager) {
+    public EditCardDraftFrontTextStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardDraftService cardDraftService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardDraftService = cardDraftService;
         this.keyboardManager = keyboardManager;
@@ -50,14 +51,13 @@ public class EditCardDraftFrontTextStrategy extends BaseEditTextStrategy {
 
         // Формируем текст с обновленными данными
         String cardText = "✅ Вопрос обновлен:\n\n" +
-                "Вопрос: " + newFront + "\n" +
-                "Ответ: " + (draft.getBack() != null ? draft.getBack() : "[ещё не введен]");
+                "Вопрос: " +
+                newFront +
+                "\n" +
+                "Ответ: " +
+                (draft.getBack() != null ? draft.getBack() : "[ещё не введен]");
 
-        sendNewMenu(
-                chatId,
-                cardText,
-                keyboardManager.getCardDraftConfirmationKeyboard(draft.getDeckId())
-        );
+        sendNewMenu(chatId, cardText, keyboardManager.getCardDraftConfirmationKeyboard(draft.getDeckId()));
     }
 
     @Override
@@ -66,10 +66,6 @@ public class EditCardDraftFrontTextStrategy extends BaseEditTextStrategy {
     }
 
     private void sendErrorMessage(Long chatId, String message) throws TelegramApiException {
-        sendNewMenu(
-                chatId,
-                message,
-                null
-        );
+        sendNewMenu(chatId, message, null);
     }
 }

@@ -18,7 +18,12 @@ public abstract class BaseAnswerStrategy extends BaseEditCallbackStrategy {
     private final DeckService deckService;
     private final KeyboardManager keyboardManager;
 
-    protected BaseAnswerStrategy(TelegramClient telegramClient, MessageStateService messageStateService, LearningService learningService, DeckService deckService, KeyboardManager keyboardManager) {
+    protected BaseAnswerStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            LearningService learningService,
+            DeckService deckService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.learningService = learningService;
         this.deckService = deckService;
@@ -26,6 +31,7 @@ public abstract class BaseAnswerStrategy extends BaseEditCallbackStrategy {
     }
 
     protected abstract Quality getQuality();
+
     public abstract Callback getPrefix();
 
     @Override
@@ -44,8 +50,7 @@ public abstract class BaseAnswerStrategy extends BaseEditCallbackStrategy {
             return getDeckName(deckId) + " не содержит карточек для изучения";
         }
 
-        return String.format("Карточка для изучения:\n\nВопрос:\n%s",
-                nextCard.getFront());
+        return String.format("Карточка для изучения:\n\nВопрос:\n%s", nextCard.getFront());
     }
 
     @Override

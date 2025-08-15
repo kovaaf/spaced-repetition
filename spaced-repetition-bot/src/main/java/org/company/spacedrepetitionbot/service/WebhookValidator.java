@@ -13,8 +13,11 @@ public class WebhookValidator {
     private final AppProperties appProperties;
 
     public void validateSignature(WebhookPayload payload, String signature) {
-        String secret = appProperties.getDefaultDeck().getRepo().getWebhookSecret();
-        String computedSignature = "sha1=" + new HmacUtils(HmacAlgorithms.HMAC_SHA_1, secret).hmacHex(payload.toString());
+        String secret = appProperties.getDefaultDeck()
+                .getRepo()
+                .getWebhookSecret();
+        String computedSignature = "sha1=" +
+                new HmacUtils(HmacAlgorithms.HMAC_SHA_1, secret).hmacHex(payload.toString());
 
         if (!computedSignature.equals(signature)) {
             throw new SecurityException("Invalid webhook signature");

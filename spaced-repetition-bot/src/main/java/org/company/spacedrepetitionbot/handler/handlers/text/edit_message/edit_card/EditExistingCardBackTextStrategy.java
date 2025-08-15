@@ -16,10 +16,11 @@ public class EditExistingCardBackTextStrategy extends BaseEditTextStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
 
-    public EditExistingCardBackTextStrategy(TelegramClient telegramClient,
-                                            MessageStateService messageStateService,
-                                            CardService cardService,
-                                            KeyboardManager keyboardManager) {
+    public EditExistingCardBackTextStrategy(
+            TelegramClient telegramClient,
+            MessageStateService messageStateService,
+            CardService cardService,
+            KeyboardManager keyboardManager) {
         super(telegramClient, messageStateService);
         this.cardService = cardService;
         this.keyboardManager = keyboardManager;
@@ -38,11 +39,7 @@ public class EditExistingCardBackTextStrategy extends BaseEditTextStrategy {
                     .orElseThrow(() -> new IllegalStateException("Deck not found for card: " + cardId));
 
             clearPreviousMenu(chatId);
-            sendNewMenu(
-                    chatId,
-                    result,
-                    keyboardManager.getDeckMenuKeyboard(deckId)
-            );
+            sendNewMenu(chatId, result, keyboardManager.getDeckMenuKeyboard(deckId));
         } catch (Exception e) {
             log.error("Ошибка обновления ответа карты {}: {}", cardId, e.getMessage());
             sendErrorMessage(chatId, "Ошибка при обновлении ответа");
@@ -55,10 +52,6 @@ public class EditExistingCardBackTextStrategy extends BaseEditTextStrategy {
     }
 
     private void sendErrorMessage(Long chatId, String message) throws TelegramApiException {
-        sendNewMenu(
-                chatId,
-                message,
-                null
-        );
+        sendNewMenu(chatId, message, null);
     }
 }
