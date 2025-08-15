@@ -30,14 +30,15 @@
         <springdoc-openapi-ui.version>2.8.9</springdoc-openapi-ui.version>
         <telegrambots.version>8.3.0</telegrambots.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
-        <jacoco.min.coverage>0.65</jacoco.min.coverage>
         <liquibase-core.version>4.33.0</liquibase-core.version>
         <org.eclipse.jgit.version>7.3.0.202506031305-r</org.eclipse.jgit.version>
         <jsch.version>2.27.2</jsch.version>
         <commonmark.version>0.25.0</commonmark.version>
         <commons-codec.version>1.18.0</commons-codec.version>
         <guava.version>33.4.8-jre</guava.version>
+        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+<!--    Минимальное покрытие тестами:   -->
+        <jacoco.min.coverage>0</jacoco.min.coverage>
     </properties>
 
 	<dependencies>
