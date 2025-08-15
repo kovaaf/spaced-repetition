@@ -41,7 +41,6 @@ jobs:
         run: |
           git config --global user.name github-actions
           git config --global user.email github-actions@github.com
-          git checkout -b badges-branch 2>/dev/null || git checkout badges-branch
-          git add .github/badges
+          git add -A
           git commit -m "Update coverage badges"
-          git push origin badges-branch --force
+          git push --force origin HEAD:badges-branch
