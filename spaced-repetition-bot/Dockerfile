@@ -1,9 +1,5 @@
 FROM maven:3.9.11-amazoncorretto-17-alpine AS build
 
-# Минимальная информация о git для плагинов
-COPY .git/HEAD /workspace/.git/HEAD
-COPY .git/refs /workspace/.git/refs
-
 WORKDIR /workspace
 
 # Копируем pom.xml
