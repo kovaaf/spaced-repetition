@@ -26,7 +26,7 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2
         with:
           jacoco-csv-file: spaced-repetition-bot/target/jacoco-report/jacoco.csv
-          coverage-badge-filename: .github/badges/jacoco_spaced_repetition_bot.svg
+          coverage-badge-filename: jacoco_spaced_repetition_bot.svg
           coverage-label: coverage (Spaced Repetition Bot)
 
       - name: Generate Coverage Badges for Spaced Repetition Web
@@ -34,7 +34,7 @@ jobs:
         uses: cicirello/jacoco-badge-generator@v2
         with:
           jacoco-csv-file: spaced-repetition-web/target/jacoco-report/jacoco.csv
-          coverage-badge-filename: .github/badges/jacoco_spaced_repetition_web.svg
+          coverage-badge-filename: jacoco_spaced_repetition_web.svg
           coverage-label: coverage (Spaced Repetition Web)
 
       - name: Commit the badge (if it changed)
