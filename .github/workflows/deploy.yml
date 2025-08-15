@@ -64,15 +64,15 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Build and Push Web Image
-        if: ${{ needs.detect-changes.outputs.spaced-repetition-web == 'true' }}
-        uses: docker/build-push-action@v3
-        with:
-          file: spaced-repetition-web/Dockerfile
-          push: true
-          tags: ouidockeruser/spaced-repetition-web:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+#      - name: Build and Push Web Image
+#        if: ${{ needs.detect-changes.outputs.spaced-repetition-web == 'true' }}
+#        uses: docker/build-push-action@v3
+#        with:
+#          file: spaced-repetition-web/Dockerfile
+#          push: true
+#          tags: ouidockeruser/spaced-repetition-web:latest
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
 
   deploy:
     name: Deploy to remote server
