@@ -32,8 +32,8 @@ app:
                 - Interview/Прочие вопросы
             exclude-folders:
 #                - Прочие шаблоны
-            webhook-secret: ${GITHUB_WEBHOOK_SECRET}
-            token: ${GITHUB_TOKEN}
+            webhook-secret: ${GIT_WEBHOOK_SECRET}
+            token: ${GIT_TOKEN}
         sync:
             initial-enabled: true
             cron: "0 */30 * * * *"
