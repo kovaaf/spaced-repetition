@@ -201,7 +201,6 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-                    <!-- attached to Maven verify phase -->
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
@@ -210,6 +209,7 @@
                         </goals>
                         <configuration>
                             <outputDirectory>target/jacoco-report</outputDirectory>
+                            <formats>CSV,HTML</formats>
                         </configuration>
                     </execution>
                     <execution>

@@ -33,3 +33,4 @@ build/
 .vscode/
 /config.yml
 /local-repo/
+/IDEA Code Style Config.xml
