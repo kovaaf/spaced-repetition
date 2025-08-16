@@ -76,7 +76,7 @@ jobs:
   deploy:
     name: Deploy to remote server
     runs-on: ubuntu-latest
-    needs: [detect-changes, push-docker-compose-to-remote-server]
+    needs: [detect-changes, push-docker-compose-to-remote-server, build-and-push-images-to-dockerhub]
     steps:
       - name: Create .env file
         run: |
@@ -121,9 +121,9 @@ jobs:
             if [ '${{ needs.detect-changes.outputs.docker-compose }}' = 'true' ]; then
               # При изменении compose перезапускаем весь стек
               echo "Full stack update"
-              sudo docker compose down
-              sudo docker compose pull --quiet
-              sudo docker compose up -d --force-recreate --remove-orphans
+              docker compose down
+              docker compose pull --quiet
+              docker compose up -d --force-recreate --remove-orphans
             else
               echo "Partial update"
               services_to_update=()
@@ -132,16 +132,16 @@ jobs:
             
               for service in "${services_to_update[@]}"; do
                 echo "Updating $service"
-                sudo docker compose pull --quiet $service
-                sudo docker compose up -d --no-deps --force-recreate --remove-orphans $service
+                docker compose pull --quiet $service
+                docker compose up -d --no-deps --force-recreate --remove-orphans $service
               done
             fi
             
             echo "Current containers:"
-            sudo docker ps -a
+            docker ps -a
             
             echo "Cleaning project images..."
-            sudo docker image prune -a -f --filter "reference=ouidockeruser/*"  # удалить все неиспользуемые образы
+            docker image prune -a -f --filter "reference=ouidockeruser/*"  # удалить все неиспользуемые образы
             
       - name: Clean local .env
         run: rm -f .env
