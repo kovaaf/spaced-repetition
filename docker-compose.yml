@@ -9,6 +9,9 @@ services:
       POSTGRES_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
       POSTGRES_PASSWORD: ${TELEGRAM_BOT_DB_PASSWORD:-postgres}
       POSTGRES_DB: spaced-repetition-bot-db
+      shared_buffers: 64MB  # По умолчанию 128MB
+      maintenance_work_mem: 32MB  # По умолчанию 64MB
+      max_connections: 20  # По умолчанию 100
     restart: always
     logging:
       driver: "json-file"
@@ -24,6 +27,7 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
       ZOO_HEAP_SIZE: "256m"  # По умолчанию 1G
+      ZOO_MAX_CLIENT_CNXNS: 30  # По умолчанию 60
     restart: always
     logging:
       driver: "json-file"
