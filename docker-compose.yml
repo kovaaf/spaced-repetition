@@ -49,7 +49,10 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_HEAP_OPTS: "-Xmx64m -Xms32m"  # По умолчанию 1G
+      KAFKA_HEAP_OPTS: "-Xmx128m -Xms32m"  # По умолчанию 1G
+      KAFKA_NUM_PARTITIONS: "1"
+      KAFKA_DEFAULT_REPLICATION_FACTOR: "1"
+      KAFKA_LOG_SEGMENT_BYTES: "104857600"  # 100MB (меньше чем стандартные 1GB)
     restart: always
     logging:
       driver: "json-file"
