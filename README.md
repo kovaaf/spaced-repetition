@@ -1,4 +1,4 @@
-![spaced-repetition-bot-coverage](https://raw.githubusercontent.com/kovaaf/spaced-repetition/refs/heads/badges-branch/.github/badges/jacoco_spaced_repetition_bot.svg)
-![spaced-repetition-web-coverage](https://raw.githubusercontent.com/kovaaf/spaced-repetition/refs/heads/badges-branch/.github/badges/jacoco_spaced_repetition_web.svg)
+![spaced-repetition-bot-coverage](https://gist.githubusercontent.com/kovaaf/c27f99167289d841c193513031ab9a48/raw/jacoco_spaced_repetition_bot.svg)
+![spaced-repetition-web-coverage](https://gist.githubusercontent.com/kovaaf/c27f99167289d841c193513031ab9a48/raw/jacoco_spaced_repetition_web.svg)
 
 
