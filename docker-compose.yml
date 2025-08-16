@@ -67,7 +67,7 @@ services:
     container_name: spaced-repetition-bot
     restart: unless-stopped
     environment:
-      _JAVA_OPTIONS: -Xmx256m
+      _JAVA_OPTIONS: -Xmx128m
       TELEGRAM_BOT_DB_HOST: spaced-repetition-bot-db
       TELEGRAM_BOT_DB_PORT: 5432
       TELEGRAM_BOT_DB_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
