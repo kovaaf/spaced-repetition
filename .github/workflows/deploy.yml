@@ -141,7 +141,7 @@ jobs:
             docker ps -a
             
             echo "Cleaning project images..."
-            docker image prune -a -f --filter "reference=ouidockeruser/*"  # удалить все неиспользуемые образы
+            docker image prune -a -f --filter "label=maintainer=ouidockeruser"  # удалить все неиспользуемые образы
             
       - name: Clean local .env
         run: rm -f .env
