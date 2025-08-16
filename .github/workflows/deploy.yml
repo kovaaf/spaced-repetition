@@ -78,10 +78,6 @@ jobs:
     name: Deploy to remote server
     runs-on: ubuntu-latest
     needs: [detect-changes, build-and-push-images-to-dockerhub, push-docker-compose-to-remote-server]
-    if: |
-      needs.detect-changes.outputs.spaced-repetition-bot == 'true' ||
-      needs.detect-changes.outputs.spaced-repetition-web == 'true' ||
-      needs.detect-changes.outputs.docker-compose == 'true'
     steps:
       - name: Create .env file
         run: |
