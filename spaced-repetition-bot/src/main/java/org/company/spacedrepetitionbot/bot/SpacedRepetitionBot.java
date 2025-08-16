@@ -15,7 +15,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class SpacedRepetitionBot extends CommandLongPollingTelegramBot {
     private final UpdateDispatcher updateDispatcher;
 
-    // TODO for test deployment
+    // TODO for test deployment 3
     public SpacedRepetitionBot(
             TelegramClient telegramClient,
             BotConfigurationProperties botProperties,
