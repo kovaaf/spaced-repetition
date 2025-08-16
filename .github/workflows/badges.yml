@@ -37,6 +37,7 @@ jobs:
           coverage-badge-filename: jacoco_spaced_repetition_web.svg
           coverage-label: coverage (Spaced Repetition Web)
 
+
       - name: Commit the badge (if it changed)
         run: |
           git config --global user.name github-actions
@@ -50,11 +51,11 @@ jobs:
         with:
           token: ${{ secrets.GIT_TOKEN }}
           gist_id: c27f99167289d841c193513031ab9a48
-          file_path: jacoco_spaced_repetition_bot.svg
+          file_path: ${{ github.workspace }}/jacoco_spaced_repetition_bot.svg
 
       - name: Upload Spaced Repetition Web Badge to Gist
         uses: exuanbo/actions-deploy-gist@v1
         with:
           token: ${{ secrets.GIT_TOKEN }}
           gist_id: c27f99167289d841c193513031ab9a48
-          file_path: jacoco_spaced_repetition_web.svg
+          file_path: ${{ github.workspace }}/jacoco_spaced_repetition_web.svg
