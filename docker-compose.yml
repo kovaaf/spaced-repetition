@@ -23,6 +23,7 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+      ZOO_HEAP_SIZE: "256m"  # По умолчанию 1G
     restart: always
     logging:
       driver: "json-file"
@@ -44,6 +45,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_HEAP_OPTS: "-Xmx256m -Xms128m"  # По умолчанию 1G
     restart: always
     logging:
       driver: "json-file"
@@ -60,14 +62,14 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-    restart: always
+    restart: on-failure
 
   spaced-repetition-bot:
     image: ouidockeruser/spaced-repetition-bot:latest
     container_name: spaced-repetition-bot
     restart: unless-stopped
     environment:
-      _JAVA_OPTIONS: -Xmx128m
+      _JAVA_OPTIONS: -Xmx128m -Xms64m
       TELEGRAM_BOT_DB_HOST: spaced-repetition-bot-db
       TELEGRAM_BOT_DB_PORT: 5432
       TELEGRAM_BOT_DB_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
