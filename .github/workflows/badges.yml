@@ -51,7 +51,6 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
           gist_id: c27f99167289d841c193513031ab9a48
           file_path: jacoco_spaced_repetition_bot.svg
-          file_type: 'binary'
 
       - name: Upload Spaced Repetition Web Badge to Gist
         uses: exuanbo/actions-deploy-gist@v1
@@ -59,4 +58,3 @@ jobs:
           token: ${{ secrets.GIT_TOKEN }}
           gist_id: c27f99167289d841c193513031ab9a48
           file_path: jacoco_spaced_repetition_web.svg
-          file_type: 'binary'
