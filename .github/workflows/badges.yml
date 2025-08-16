@@ -37,8 +37,6 @@ jobs:
           coverage-badge-filename: jacoco_spaced_repetition_web.svg
           coverage-label: coverage (Spaced Repetition Web)
 
-
-
       - name: Commit the badge (if it changed)
         run: |
           git config --global user.name github-actions
