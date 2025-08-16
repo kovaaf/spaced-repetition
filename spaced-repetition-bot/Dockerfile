@@ -17,7 +17,6 @@ RUN mvn -B -f ./spaced-repetition-bot/pom.xml  package -DskipTests -Dcheckstyle.
 
 # Финальный образ
 FROM openjdk:17-jdk-slim
-LABEL maintainer="ouidockeruser"
 EXPOSE 8080
 COPY --from=build /workspace/spaced-repetition-bot/target/*.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]

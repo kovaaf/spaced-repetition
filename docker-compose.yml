@@ -65,8 +65,6 @@ services:
   spaced-repetition-bot:
     image: ouidockeruser/spaced-repetition-bot:latest
     container_name: spaced-repetition-bot
-    labels:
-      - "maintainer=ouidockeruser"
     restart: unless-stopped
     environment:
       _JAVA_OPTIONS: -Xmx256m
