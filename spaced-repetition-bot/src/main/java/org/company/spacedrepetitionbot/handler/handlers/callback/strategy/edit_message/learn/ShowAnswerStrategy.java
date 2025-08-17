@@ -5,8 +5,8 @@ import org.company.spacedrepetitionbot.handler.handlers.callback.Callback;
 import org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_message.BaseEditCallbackStrategy;
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.service.CardService;
-import org.company.spacedrepetitionbot.service.LearningService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.service.learning.LearningService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -33,8 +33,7 @@ public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        messageStateService.clearUserState(callbackQuery.getMessage()
-                .getChatId());
+        messageStateService.clearUserState(callbackQuery.getMessage().getChatId());
         super.executeCallbackQuery(callbackQuery);
     }
 

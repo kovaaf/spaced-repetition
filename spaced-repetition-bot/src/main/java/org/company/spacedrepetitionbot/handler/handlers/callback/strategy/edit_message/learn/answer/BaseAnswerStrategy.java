@@ -6,8 +6,8 @@ import org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_m
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;
 import org.company.spacedrepetitionbot.service.DeckService;
-import org.company.spacedrepetitionbot.service.LearningService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.service.learning.LearningService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -62,8 +62,6 @@ public abstract class BaseAnswerStrategy extends BaseEditCallbackStrategy {
     }
 
     protected String getDeckName(Long deckId) {
-        return deckService.getDeckById(deckId)
-                .map(Deck::getName)
-                .orElse("Эта колода");
+        return deckService.getDeckById(deckId).map(Deck::getName).orElse("Эта колода");
     }
 }

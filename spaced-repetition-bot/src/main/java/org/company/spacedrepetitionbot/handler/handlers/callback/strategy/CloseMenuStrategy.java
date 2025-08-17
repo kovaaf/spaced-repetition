@@ -23,20 +23,13 @@ public class CloseMenuStrategy implements CallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = messageStateService.getMenuMessageId(chatId);
 
         try {
-            telegramClient.execute(DeleteMessage.builder()
-                    .chatId(chatId)
-                    .messageId(messageId)
-                    .build());
+            telegramClient.execute(DeleteMessage.builder().chatId(chatId).messageId(messageId).build());
 
-            telegramClient.execute(SendMessage.builder()
-                    .chatId(chatId)
-                    .text("Общение завершено")
-                    .build());
+            telegramClient.execute(SendMessage.builder().chatId(chatId).text("Общение завершено").build());
         } catch (TelegramApiException e) {
             log.error("Ошибка закрытия меню: {}", e.getMessage());
         } finally {

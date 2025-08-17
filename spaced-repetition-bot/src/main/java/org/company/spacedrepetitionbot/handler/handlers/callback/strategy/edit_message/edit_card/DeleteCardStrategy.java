@@ -50,8 +50,7 @@ public class DeleteCardStrategy extends BaseEditCallbackStrategy {
             super.executeCallbackQuery(callbackQuery);
         } catch (Exception e) {
             log.error("Ошибка удаления карты: {}", e.getMessage(), e);
-            Long chatId = callbackQuery.getMessage()
-                    .getChatId();
+            Long chatId = callbackQuery.getMessage().getChatId();
             sendErrorMessage(chatId, "Ошибка при удалении карты");
         }
     }

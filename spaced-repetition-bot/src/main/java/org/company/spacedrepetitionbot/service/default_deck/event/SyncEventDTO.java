@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.kafka.event;
+package org.company.spacedrepetitionbot.service.default_deck.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

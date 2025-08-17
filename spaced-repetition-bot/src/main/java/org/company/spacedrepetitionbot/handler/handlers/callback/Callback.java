@@ -44,8 +44,7 @@ public enum Callback {
 
     public static Callback from(String alias) {
         return Arrays.stream(Callback.values())
-                .filter(callBack -> callBack.getAlias()
-                        .equalsIgnoreCase(alias))
+                .filter(callBack -> callBack.getAlias().equalsIgnoreCase(alias))
                 .findFirst()
                 .orElse(null);
     }

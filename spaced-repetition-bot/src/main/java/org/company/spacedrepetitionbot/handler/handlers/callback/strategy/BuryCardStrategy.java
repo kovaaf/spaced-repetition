@@ -48,8 +48,7 @@ public class BuryCardStrategy extends BaseEditCallbackStrategy {
             card.setStatus(Status.REVIEW_YOUNG);
         } else {
             card.setStatus(Status.BURIED);
-            card.setNextReviewTime(LocalDateTime.now()
-                    .plusDays(1));
+            card.setNextReviewTime(LocalDateTime.now().plusDays(1));
         }
         cardService.save(card);
 

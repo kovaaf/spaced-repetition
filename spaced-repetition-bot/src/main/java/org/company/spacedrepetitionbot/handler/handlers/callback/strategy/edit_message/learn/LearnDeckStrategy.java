@@ -6,8 +6,8 @@ import org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_m
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;
 import org.company.spacedrepetitionbot.service.DeckService;
-import org.company.spacedrepetitionbot.service.LearningService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.service.learning.LearningService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -37,16 +37,14 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         Long deckId = getLastDataElementFromCallback(callbackQuery.getData());
         if (isDeckEmpty(deckId)) {
             handleEmptyDeck(chatId, deckId, callbackQuery);
             return;
         }
 
-        messageStateService.clearUserState(callbackQuery.getMessage()
-                .getChatId());
+        messageStateService.clearUserState(callbackQuery.getMessage().getChatId());
         super.executeCallbackQuery(callbackQuery);
     }
 
@@ -77,10 +75,7 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
     }
 
     private boolean isDeckEmpty(Long deckId) {
-        return deckService.getDeckByIdWithCards(deckId)
-                .map(deck -> deck.getCards()
-                        .isEmpty())
-                .orElse(true);
+        return deckService.getDeckByIdWithCards(deckId).map(deck -> deck.getCards().isEmpty()).orElse(true);
     }
 
     private void handleEmptyDeck(Long chatId, Long deckId, CallbackQuery callbackQuery) {
@@ -90,8 +85,7 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
 
             telegramClient.execute(EditMessageText.builder()
                     .chatId(chatId)
-                    .messageId(callbackQuery.getMessage()
-                            .getMessageId())
+                    .messageId(callbackQuery.getMessage().getMessageId())
                     .text(message)
                     .replyMarkup(keyboardManager.getDeckMenuKeyboard(deckId))
                     .build());
@@ -101,8 +95,6 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
     }
 
     private String getDeckName(Long deckId) {
-        return deckService.getDeckById(deckId)
-                .map(Deck::getName)
-                .orElse("Эта колода");
+        return deckService.getDeckById(deckId).map(Deck::getName).orElse("Эта колода");
     }
 }

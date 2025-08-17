@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.learning;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -74,8 +74,7 @@ public class LearningService {
 
     @Transactional
     public void updateCardWithAnswer(Long cardId, Quality quality) {
-        Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new IllegalArgumentException("Card not found"));
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new IllegalArgumentException("Card not found"));
         if (card.getStatus() == Status.BURIED || card.getStatus() == Status.SUSPENDED) {
             return; // Игнорируем обработку
         }
@@ -85,8 +84,7 @@ public class LearningService {
 
     @Transactional(readOnly = true)
     public Card getNextCard(Long deckId) {
-        Deck deck = deckRepository.findById(deckId)
-                .orElseThrow(() -> new EntityNotFoundException("Deck not found"));
+        Deck deck = deckRepository.findById(deckId).orElseThrow(() -> new EntityNotFoundException("Deck not found"));
 
         return cardRepository.findCardByDeckWithNearestNextReviewTime(deck, List.of(Status.SUSPENDED, Status.BURIED))
                 .orElseThrow(() -> new EntityNotFoundException("No cards found"));
@@ -94,11 +92,10 @@ public class LearningService {
 
     @Scheduled(cron = "0 0 0 * * ?")
     public void resetBuriedCards() {
-        cardRepository.findByStatus(Status.BURIED)
-                .forEach(card -> {
-                    // TODO назначать статус в зависимости от старости как в алгоритме
-                    card.setStatus(Status.REVIEW_YOUNG);
-                });
+        cardRepository.findByStatus(Status.BURIED).forEach(card -> {
+            // TODO назначать статус в зависимости от старости как в алгоритме
+            card.setStatus(Status.REVIEW_YOUNG);
+        });
     }
 
     private Deck getDeckByOwnerIdAndDeckNameOrThrow(Long userChatId, String deckName) {

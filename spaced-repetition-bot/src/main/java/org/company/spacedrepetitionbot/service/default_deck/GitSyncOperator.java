@@ -1,8 +1,8 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
-import org.company.spacedrepetitionbot.kafka.event.SyncEventDTO;
 import org.company.spacedrepetitionbot.model.Deck;
+import org.company.spacedrepetitionbot.service.default_deck.event.SyncEventDTO;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.stereotype.Service;

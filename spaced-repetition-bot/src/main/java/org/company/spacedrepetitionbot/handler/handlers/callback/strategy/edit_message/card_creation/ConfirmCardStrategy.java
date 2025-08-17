@@ -46,17 +46,15 @@ public class ConfirmCardStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
 
         try {
             // TODO может передавать в колбэке айдишник черновика? Так надёжнее должно быть
             // сохраняем черновик как карту
-            CardDraft draft = cardDraftService.getDraft(chatId)
-                    .orElseThrow(() -> {
-                        sendDraftNotFound(chatId, callbackQuery);
-                        return new IllegalStateException("Draft not found for chat: " + chatId);
-                    });
+            CardDraft draft = cardDraftService.getDraft(chatId).orElseThrow(() -> {
+                sendDraftNotFound(chatId, callbackQuery);
+                return new IllegalStateException("Draft not found for chat: " + chatId);
+            });
             cardService.addCard(draft.getDeckId(), draft.getFront(), draft.getBack());
 
             // удаляем черновик и сбрасываем состояние пользователя до null
@@ -73,8 +71,7 @@ public class ConfirmCardStrategy extends BaseEditCallbackStrategy {
         try {
             telegramClient.execute(EditMessageText.builder()
                     .chatId(chatId)
-                    .messageId(callbackQuery.getMessage()
-                            .getMessageId())
+                    .messageId(callbackQuery.getMessage().getMessageId())
                     .text("❌ Черновик карты не найден")
                     .build());
         } catch (TelegramApiException e) {

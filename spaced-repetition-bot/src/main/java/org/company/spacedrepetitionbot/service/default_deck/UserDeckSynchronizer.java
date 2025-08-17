@@ -1,10 +1,12 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.constants.Status;
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;
+import org.company.spacedrepetitionbot.service.CardService;
+import org.company.spacedrepetitionbot.service.DeckService;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,10 +61,7 @@ public class UserDeckSynchronizer {
     }
 
     private void updateCardIfChanged(Card userCard, Card defaultCard) {
-        if (!userCard.getFront()
-                .equals(defaultCard.getFront()) ||
-                !userCard.getBack()
-                        .equals(defaultCard.getBack())) {
+        if (!userCard.getFront().equals(defaultCard.getFront()) || !userCard.getBack().equals(defaultCard.getBack())) {
 
             userCard.setFront(defaultCard.getFront());
             userCard.setBack(defaultCard.getBack());

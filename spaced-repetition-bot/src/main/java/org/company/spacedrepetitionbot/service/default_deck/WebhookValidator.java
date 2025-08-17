@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.digest.HmacAlgorithms;
@@ -13,9 +13,7 @@ public class WebhookValidator {
     private final AppProperties appProperties;
 
     public void validateSignature(WebhookPayload payload, String signature) {
-        String secret = appProperties.getDefaultDeck()
-                .getRepo()
-                .getWebhookSecret();
+        String secret = appProperties.getDefaultDeck().getRepo().getWebhookSecret();
         String computedSignature = "sha1=" +
                 new HmacUtils(HmacAlgorithms.HMAC_SHA_1, secret).hmacHex(payload.toString());
 

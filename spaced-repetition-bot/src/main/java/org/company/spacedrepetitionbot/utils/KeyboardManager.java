@@ -16,10 +16,7 @@ import static org.company.spacedrepetitionbot.handler.handlers.callback.Callback
 @Component
 public class KeyboardManager {
     private InlineKeyboardButton button(String text, String callbackData) {
-        return InlineKeyboardButton.builder()
-                .text(text)
-                .callbackData(callbackData)
-                .build();
+        return InlineKeyboardButton.builder().text(text).callbackData(callbackData).build();
     }
 
     private List<InlineKeyboardRow> createDynamicRows(List<InlineKeyboardButton> buttons, List<Integer> rowSizes) {
@@ -47,9 +44,7 @@ public class KeyboardManager {
                 button(Callback.DECK_LIST.getText(), Callback.DECK_LIST.getAlias()),
                 button(Callback.CLOSE_MENU.getText(), Callback.CLOSE_MENU.getAlias()));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(2)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(2))).build();
     }
 
     public InlineKeyboardMarkup getDeckListKeyboard(List<Deck> decks, boolean showCopyDefaultButton) {
@@ -74,9 +69,7 @@ public class KeyboardManager {
         allButtons.addAll(systemButtons);
         allButtons.addAll(deckButtons);
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(allButtons, List.of(1, 1, 1, 4)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(allButtons, List.of(1, 1, 1, 4))).build();
     }
 
     public InlineKeyboardMarkup getDeckMenuKeyboard(Long deckId) {
@@ -94,9 +87,7 @@ public class KeyboardManager {
                 button(Callback.DECK_LIST.getText(), Callback.DECK_LIST.getAlias()),
                 button(Callback.CLOSE_MENU.getText(), Callback.CLOSE_MENU.getAlias()));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1, 3, 1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1, 3, 1))).build();
     }
 
     public InlineKeyboardMarkup getAddDeckKeyboard() {
@@ -104,9 +95,7 @@ public class KeyboardManager {
                 Callback.DECK_LIST.getText(),
                 Callback.DECK_LIST.getAlias()));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1))).build();
     }
 
     public InlineKeyboardMarkup getAddCardKeyboard(Long deckId) {
@@ -114,9 +103,7 @@ public class KeyboardManager {
                 Callback.DECK_MENU.getText(),
                 Callback.DECK_MENU.getAlias() + CALLBACK_DELIMITER.getAlias() + deckId));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1))).build();
     }
 
     public InlineKeyboardMarkup getCardListKeyboard(Long deckId) {
@@ -128,9 +115,7 @@ public class KeyboardManager {
                         Callback.ADD_CARD.getText(),
                         Callback.ADD_CARD.getAlias() + CALLBACK_DELIMITER.getAlias() + deckId));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1))).build();
     }
 
     public InlineKeyboardMarkup getLearnDeckKeyboard(Long cardId, Long deckId, Status currentStatus) {
@@ -169,9 +154,7 @@ public class KeyboardManager {
                 Callback.DECK_MENU.getAlias() + CALLBACK_DELIMITER.getAlias() + deckId));
         buttons.add(button(Callback.CLOSE_MENU.getText(), Callback.CLOSE_MENU.getAlias()));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1, 2, 2, 1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1, 2, 2, 1))).build();
     }
 
     public InlineKeyboardMarkup getShowAnswerKeyboard(Long cardId, Long deckId, Status currentStatus) {
@@ -247,9 +230,7 @@ public class KeyboardManager {
                         Callback.CANCEL_CARD_CREATION.getText(),
                         Callback.CANCEL_CARD_CREATION.getAlias() + CALLBACK_DELIMITER.getAlias() + deckId));
 
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1, 2, 1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1, 2, 1))).build();
     }
 
     public InlineKeyboardMarkup getExistingCardEditKeyboard(Long cardId, Long deckId) {
@@ -269,15 +250,11 @@ public class KeyboardManager {
                                 cardId +
                                 CALLBACK_DELIMITER.getAlias() +
                                 deckId));
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1, 1, 1, 1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1, 1, 1, 1))).build();
     }
 
     public InlineKeyboardMarkup getBackToDeckListKeyboard() {
         List<InlineKeyboardButton> buttons = List.of(button("Вернуться к списку колод", Callback.DECK_LIST.getAlias()));
-        return InlineKeyboardMarkup.builder()
-                .keyboard(createDynamicRows(buttons, List.of(1)))
-                .build();
+        return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1))).build();
     }
 }

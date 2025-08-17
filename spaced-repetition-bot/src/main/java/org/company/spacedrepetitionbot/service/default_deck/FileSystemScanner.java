@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import org.springframework.stereotype.Component;
 
@@ -13,15 +13,11 @@ import java.util.stream.Stream;
 public class FileSystemScanner {
     public List<Path> findMarkdownFiles(Path directory) throws IOException {
         try (Stream<Path> pathStream = Files.walk(directory)) {
-            return pathStream.filter(Files::isRegularFile)
-                    .filter(this::isMarkdownFile)
-                    .collect(Collectors.toList());
+            return pathStream.filter(Files::isRegularFile).filter(this::isMarkdownFile).collect(Collectors.toList());
         }
     }
 
     private boolean isMarkdownFile(Path path) {
-        return path.toString()
-                .toLowerCase()
-                .endsWith(".md");
+        return path.toString().toLowerCase().endsWith(".md");
     }
 }

@@ -30,9 +30,7 @@ public class DeckMenuStrategy extends BaseEditCallbackStrategy {
     @Override
     protected String getMessageText(CallbackQuery callbackQuery) {
         long deckId = getLastDataElementFromCallback(callbackQuery.getData());
-        String deckName = deckService.getDeckById(deckId)
-                .map(Deck::getName)
-                .orElse("Неизвестная колода");
+        String deckName = deckService.getDeckById(deckId).map(Deck::getName).orElse("Неизвестная колода");
 
         return String.format("Меню колоды \"%s\":", deckName);
     }

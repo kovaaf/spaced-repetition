@@ -8,6 +8,8 @@ telegram:
       url: https://api.telegram.org
 
 app:
+  sync:
+    mode: direct # kafka или direct
   deck:
     max-cards-display: 10
   default-deck:

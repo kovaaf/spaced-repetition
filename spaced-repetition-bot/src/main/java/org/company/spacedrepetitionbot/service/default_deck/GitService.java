@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,14 +35,9 @@ public class GitService {
     }
 
     private Git getGitInstance() throws GitAPIException {
-        Path repoPath = Paths.get(appProperties.getDefaultDeck()
-                        .getRepo()
-                        .getPath())
-                .toAbsolutePath();
+        Path repoPath = Paths.get(appProperties.getDefaultDeck().getRepo().getPath()).toAbsolutePath();
         File repoDir = repoPath.toFile();
-        String repoUrl = appProperties.getDefaultDeck()
-                .getRepo()
-                .getUrl();
+        String repoUrl = appProperties.getDefaultDeck().getRepo().getUrl();
 
         if (!repoDir.exists()) {
             return cloneRepository(repoUrl, repoDir);
@@ -51,10 +46,7 @@ public class GitService {
         // Попытка открыть репозиторий с обработкой возможных ошибок
         try {
             Git git = Git.open(repoDir);
-            git.fetch()
-                    .setCredentialsProvider(credentials)
-                    .setRemoveDeletedRefs(true)
-                    .call();
+            git.fetch().setCredentialsProvider(credentials).setRemoveDeletedRefs(true).call();
             return git;
         } catch (RepositoryNotFoundException e) {
             log.warn("Repository not found or invalid, recreating: {}", repoDir);
@@ -69,24 +61,19 @@ public class GitService {
 
     private Git cloneRepository(String repoUrl, File repoDir) throws GitAPIException {
         log.info("Cloning repository: {}", repoUrl);
-        return Git.cloneRepository()
-                .setURI(repoUrl)
-                .setDirectory(repoDir)
-                .setCredentialsProvider(credentials)
-                .call();
+        return Git.cloneRepository().setURI(repoUrl).setDirectory(repoDir).setCredentialsProvider(credentials).call();
     }
 
     private void deleteDirectoryRecursively(Path path) {
         if (Files.exists(path)) {
             try (Stream<Path> walk = Files.walk(path)) {
-                walk.sorted(Comparator.reverseOrder())
-                        .forEach(p -> {
-                            try {
-                                Files.delete(p);
-                            } catch (IOException e) {
-                                log.error("Failed to delete: {}", p, e);
-                            }
-                        });
+                walk.sorted(Comparator.reverseOrder()).forEach(p -> {
+                    try {
+                        Files.delete(p);
+                    } catch (IOException e) {
+                        log.error("Failed to delete: {}", p, e);
+                    }
+                });
             } catch (IOException e) {
                 log.error("Failed to delete directory: {}", path, e);
             }
@@ -94,21 +81,14 @@ public class GitService {
     }
 
     private void resetToOriginBranch(Git git) throws GitAPIException {
-        String branch = appProperties.getDefaultDeck()
-                .getRepo()
-                .getBranch();
-        git.reset()
-                .setMode(ResetCommand.ResetType.HARD)
-                .setRef("origin/" + branch)
-                .call();
+        String branch = appProperties.getDefaultDeck().getRepo().getBranch();
+        git.reset().setMode(ResetCommand.ResetType.HARD).setRef("origin/" + branch).call();
     }
 
     public String getLatestCommit(Git git) throws IOException {
         try (RevWalk walk = new RevWalk(git.getRepository())) {
-            ObjectId head = git.getRepository()
-                    .resolve(Constants.HEAD);
-            return walk.parseCommit(head)
-                    .getName();
+            ObjectId head = git.getRepository().resolve(Constants.HEAD);
+            return walk.parseCommit(head).getName();
         }
     }
 }

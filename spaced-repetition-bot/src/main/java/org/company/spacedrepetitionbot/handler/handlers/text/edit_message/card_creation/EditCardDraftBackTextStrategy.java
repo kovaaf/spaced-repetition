@@ -31,15 +31,14 @@ public class EditCardDraftBackTextStrategy extends BaseEditTextStrategy {
 
     @Override
     public void handle(Long chatId, String newBack) throws TelegramApiException {
-        CardDraft draft = cardDraftService.getDraft(chatId)
-                .orElseThrow(() -> {
-                    try {
-                        sendErrorMessage(chatId, "❌ Черновик карты не найден");
-                    } catch (TelegramApiException e) {
-                        log.error("Ошибка отправки сообщения: {}", e.getMessage());
-                    }
-                    return new IllegalStateException("Draft not found for chat: " + chatId);
-                });
+        CardDraft draft = cardDraftService.getDraft(chatId).orElseThrow(() -> {
+            try {
+                sendErrorMessage(chatId, "❌ Черновик карты не найден");
+            } catch (TelegramApiException e) {
+                log.error("Ошибка отправки сообщения: {}", e.getMessage());
+            }
+            return new IllegalStateException("Draft not found for chat: " + chatId);
+        });
 
         // Обновляем только бэк
         cardDraftService.updateBack(chatId, newBack);

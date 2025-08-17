@@ -12,9 +12,6 @@ public class UserInfoTelegramUserMapper {
     public UserInfo mapTelegramUserToUserInfo(User user) {
         Long telegramUserId = user.getId();
         String telegramUserName = user.getUserName();
-        return UserInfo.builder()
-                .userChatId(telegramUserId)
-                .userName(telegramUserName)
-                .build();
+        return UserInfo.builder().userChatId(telegramUserId).userName(telegramUserName).build();
     }
 }

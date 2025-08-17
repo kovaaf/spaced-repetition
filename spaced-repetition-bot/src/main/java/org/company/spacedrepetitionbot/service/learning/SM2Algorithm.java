@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.learning;
 
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.constants.Quality;
@@ -181,8 +181,7 @@ public class SM2Algorithm {
 
     private void updateCardStatus(Card card) {
         if (card.getStatus() == Status.REVIEW_YOUNG || card.getStatus() == Status.REVIEW_MATURE) {
-            long days = Duration.between(LocalDateTime.now(), card.getNextReviewTime())
-                    .toDays();
+            long days = Duration.between(LocalDateTime.now(), card.getNextReviewTime()).toDays();
             if (days >= MATURE_THRESHOLD_DAYS) {
                 card.setStatus(Status.REVIEW_MATURE);
             } else {
@@ -198,19 +197,16 @@ public class SM2Algorithm {
     }
 
     private void setNextReviewIntervalFromNow(Card card, long minutes) {
-        card.setNextReviewTime(LocalDateTime.now()
-                .plusMinutes(minutes));
+        card.setNextReviewTime(LocalDateTime.now().plusMinutes(minutes));
     }
 
     private void setNextReviewIntervalFromCurrentInterval(Card card, long minutes) {
-        card.setNextReviewTime(card.getNextReviewTime()
-                .plusMinutes(minutes));
+        card.setNextReviewTime(card.getNextReviewTime().plusMinutes(minutes));
     }
 
     private long getPreviousInterval(Card card) {
         return card.getNextReviewTime() != null ?
-                Duration.between(LocalDateTime.now(), card.getNextReviewTime())
-                        .toMinutes() :
+                Duration.between(LocalDateTime.now(), card.getNextReviewTime()).toMinutes() :
                 0;
     }
 

@@ -27,13 +27,11 @@ public class EditExistingCardBackStrategy extends BaseEditCallbackStrategy {
     @Override
     protected String getMessageText(CallbackQuery callbackQuery) {
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
-        return cardService.getCardDetails(cardId)
-                .map(details -> {
-                    String[] parts = details.split("\nОтвет:");
-                    String answer = parts.length > 1 ? parts[1] : "";
-                    return "✏️ Текущий ответ:" + answer + "\n\nВведите новый ответ:";
-                })
-                .orElse("❌ Карточка не найдена");
+        return cardService.getCardDetails(cardId).map(details -> {
+            String[] parts = details.split("\nОтвет:");
+            String answer = parts.length > 1 ? parts[1] : "";
+            return "✏️ Текущий ответ:" + answer + "\n\nВведите новый ответ:";
+        }).orElse("❌ Карточка не найдена");
     }
 
     @Override
@@ -43,8 +41,7 @@ public class EditExistingCardBackStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
 
         try {

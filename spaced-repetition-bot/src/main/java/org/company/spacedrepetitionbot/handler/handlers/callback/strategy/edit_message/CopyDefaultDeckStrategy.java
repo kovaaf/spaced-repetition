@@ -35,8 +35,7 @@ public class CopyDefaultDeckStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         messageStateService.setUserState(chatId, MessageState.COPY_DEFAULT_DECK.getAlias());
         super.executeCallbackQuery(callbackQuery);
     }

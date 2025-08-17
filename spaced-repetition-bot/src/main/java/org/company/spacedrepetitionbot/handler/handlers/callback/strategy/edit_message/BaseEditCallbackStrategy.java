@@ -41,13 +41,11 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
      */
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = messageStateService.getMenuMessageId(chatId);
 
         if (messageId == null) {
-            messageId = callbackQuery.getMessage()
-                    .getMessageId();
+            messageId = callbackQuery.getMessage().getMessageId();
             messageStateService.saveMenuMessageId(chatId, messageId);
         }
 
@@ -73,8 +71,7 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
     }
 
     protected void handleEditException(Long chatId, CallbackQuery callbackQuery, TelegramApiException e) {
-        if (e.getMessage()
-                .contains("message to edit not found")) {
+        if (e.getMessage().contains("message to edit not found")) {
             resendMenuMessage(chatId, callbackQuery);
         } else {
             log.error("Ошибка редактирования сообщения: {}", e.getMessage());
@@ -100,10 +97,7 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
     private void clearPreviousMenu(Long chatId) throws TelegramApiException {
         Integer menuMessageId = messageStateService.getMenuMessageId(chatId);
         if (menuMessageId != null) {
-            telegramClient.execute(DeleteMessage.builder()
-                    .chatId(chatId)
-                    .messageId(menuMessageId)
-                    .build());
+            telegramClient.execute(DeleteMessage.builder().chatId(chatId).messageId(menuMessageId).build());
         }
     }
 
@@ -135,10 +129,7 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
 
     protected void sendErrorMessage(Long chatId, String message) {
         try {
-            telegramClient.execute(SendMessage.builder()
-                    .chatId(chatId)
-                    .text(message)
-                    .build());
+            telegramClient.execute(SendMessage.builder().chatId(chatId).text(message).build());
         } catch (TelegramApiException e) {
             log.error("Ошибка отправки сообщения об ошибке: {}", e.getMessage());
         }

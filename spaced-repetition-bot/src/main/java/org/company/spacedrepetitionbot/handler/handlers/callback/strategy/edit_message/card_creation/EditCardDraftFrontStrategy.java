@@ -30,8 +30,7 @@ public class EditCardDraftFrontStrategy extends BaseEditCallbackStrategy {
 
     @Override
     protected String getMessageText(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
 
         return cardDraftService.getDraft(chatId)
                 .map(draft -> "✏️ Текущий вопрос: " + draft.getFront() + "\n\nВведите новый вопрос:")
@@ -45,22 +44,19 @@ public class EditCardDraftFrontStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
 
         try {
             // Устанавливаем следующий шаг - состояние подтверждения
             messageStateService.setUserState(chatId, MessageState.CARD_CONFIRMATION.getAlias());
 
-            CardDraft draft = cardDraftService.getDraft(chatId)
-                    .orElseThrow(() -> {
-                        sendErrorMessage(chatId, "❌ Черновик карты не найден");
-                        return new IllegalStateException("Draft not found for chat: " + chatId);
-                    });
+            CardDraft draft = cardDraftService.getDraft(chatId).orElseThrow(() -> {
+                sendErrorMessage(chatId, "❌ Черновик карты не найден");
+                return new IllegalStateException("Draft not found for chat: " + chatId);
+            });
             telegramClient.execute(EditMessageText.builder()
                     .chatId(chatId)
-                    .messageId(callbackQuery.getMessage()
-                            .getMessageId())
+                    .messageId(callbackQuery.getMessage().getMessageId())
                     .text("Введите новый вопрос для карточки:\n(Текущий: " + draft.getFront() + ")")
                     .replyMarkup(null)
                     .build());

@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.kafka.consumer_producer;
+package org.company.spacedrepetitionbot.service.default_deck.processors.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,8 +33,7 @@ public class RetryExecutor {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            Thread.currentThread()
-                    .interrupt();
+            Thread.currentThread().interrupt();
             log.warn("Sleep interrupted", e);
         }
     }

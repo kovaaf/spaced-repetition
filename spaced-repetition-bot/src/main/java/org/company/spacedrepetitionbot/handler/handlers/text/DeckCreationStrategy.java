@@ -44,10 +44,7 @@ public class DeckCreationStrategy implements TextStateStrategy {
         // Нужно пересоздавать меню, чтобы меню всегда было последним. Из-за сообщений пользователя оно смещается наверх
         Integer menuMessageId = messageStateService.getMenuMessageId(chatId);
         if (menuMessageId != null) {
-            telegramClient.execute(DeleteMessage.builder()
-                    .chatId(chatId)
-                    .messageId(menuMessageId)
-                    .build());
+            telegramClient.execute(DeleteMessage.builder().chatId(chatId).messageId(menuMessageId).build());
         }
     }
 

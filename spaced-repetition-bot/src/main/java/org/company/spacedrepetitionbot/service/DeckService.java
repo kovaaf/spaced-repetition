@@ -62,10 +62,7 @@ public class DeckService {
                 return formatErrorMessage(DECK_ALREADY_EXISTS_TEMPLATE, deckName, ADD_DECK.getExtendedDescription());
             }
 
-            Deck newDeck = Deck.builder()
-                    .name(deckName)
-                    .owner(owner)
-                    .build();
+            Deck newDeck = Deck.builder().name(deckName).owner(owner).build();
 
             deckRepository.save(newDeck);
             return String.format(DECK_ADDED_SUCCESSFULLY.getMessage(), deckName);
@@ -145,17 +142,10 @@ public class DeckService {
     private String formatDeckList(List<Deck> decks) {
         String header = String.format(DECK_LIST_HEADER.getMessage(), decks.size());
 
-        String deckItems = IntStream.range(0, decks.size())
-                .mapToObj(i -> {
-                    Deck deck = decks.get(i);
-                    return String.format(
-                            DECK_ITEM_FORMAT.getMessage(),
-                            i + 1,
-                            deck.getName(),
-                            deck.getCards()
-                                    .size());
-                })
-                .collect(Collectors.joining("\n"));
+        String deckItems = IntStream.range(0, decks.size()).mapToObj(i -> {
+            Deck deck = decks.get(i);
+            return String.format(DECK_ITEM_FORMAT.getMessage(), i + 1, deck.getName(), deck.getCards().size());
+        }).collect(Collectors.joining("\n"));
 
         return header + deckItems;
     }
@@ -169,8 +159,7 @@ public class DeckService {
         return String.format(
                 DECK_DETAILS_TEMPLATE.getMessage(),
                 deck.getName(),
-                deck.getCards()
-                        .size(),
+                deck.getCards().size(),
                 formatCardList(deck.getCards()));
     }
 
@@ -202,29 +191,23 @@ public class DeckService {
     }
 
     public Deck getDefaultDeck() {
-        return deckRepository.findByName(appProperties.getDefaultDeck()
-                        .getName())
+        return deckRepository.findByName(appProperties.getDefaultDeck().getName())
                 .orElseThrow(() -> new DeckNotFoundException("Default deck not found"));
     }
 
     @Transactional
     public Deck initializeDefaultDeck() {
-        return deckRepository.findByName(appProperties.getDefaultDeck()
-                        .getName())
-                .orElseGet(() -> {
-                    UserInfo systemUser = userInfoService.getSystemUser();
-                    Deck newDeck = Deck.builder()
-                            .name(appProperties.getDefaultDeck()
-                                    .getName())
-                            .isDefault(true)
-                            .owner(systemUser)
-                            .sourceFolders(appProperties.getDefaultDeck()
-                                    .getRepo()
-                                    .getSourceFolders())
-                            .build();
-                    log.debug("Initializing default deck: {}", newDeck.getName());
-                    return deckRepository.save(newDeck);
-                });
+        return deckRepository.findByName(appProperties.getDefaultDeck().getName()).orElseGet(() -> {
+            UserInfo systemUser = userInfoService.getSystemUser();
+            Deck newDeck = Deck.builder()
+                    .name(appProperties.getDefaultDeck().getName())
+                    .isDefault(true)
+                    .owner(systemUser)
+                    .sourceFolders(appProperties.getDefaultDeck().getRepo().getSourceFolders())
+                    .build();
+            log.debug("Initializing default deck: {}", newDeck.getName());
+            return deckRepository.save(newDeck);
+        });
     }
 
     public Deck getDeckByName(String deckName) {
@@ -256,10 +239,7 @@ public class DeckService {
                 return "У вас уже есть колода с именем: " + fullDeckName;
             }
 
-            Deck newDeck = Deck.builder()
-                    .name(fullDeckName)
-                    .owner(user)
-                    .build();
+            Deck newDeck = Deck.builder().name(fullDeckName).owner(user).build();
             deckRepository.save(newDeck);
 
             // Копирование карт

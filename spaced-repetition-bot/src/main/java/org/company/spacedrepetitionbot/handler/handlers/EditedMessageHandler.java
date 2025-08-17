@@ -22,8 +22,7 @@ public class EditedMessageHandler implements NonCommandHandler {
     public void handle(Update update) {
         try {
             telegramClient.execute(SendMessage.builder()
-                    .chatId(update.getMessage()
-                            .getChatId())
+                    .chatId(update.getMessage().getChatId())
                     .text(DESCRIPTION)
                     .build());
         } catch (TelegramApiException e) {

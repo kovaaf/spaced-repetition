@@ -26,8 +26,7 @@ public enum MessageState {
 
     public static MessageState from(String alias) {
         return Arrays.stream(MessageState.values())
-                .filter(state -> state.getAlias()
-                        .equalsIgnoreCase(alias))
+                .filter(state -> state.getAlias().equalsIgnoreCase(alias))
                 .findFirst()
                 .orElse(null);
     }

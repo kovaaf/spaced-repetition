@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.extern.slf4j.Slf4j;
 import org.commonmark.node.Node;
@@ -22,8 +22,7 @@ public class MarkdownParser {
         content = removeInlineTags(content);
         content = content.replace('\u00A0', ' ');
 
-        Parser parser = Parser.builder()
-                .build();
+        Parser parser = Parser.builder().build();
         Node document = parser.parse(content);
         CardVisitor visitor = new CardVisitor(filePath);
         document.accept(visitor);
@@ -31,27 +30,21 @@ public class MarkdownParser {
     }
 
     private String removePreamble(String content) {
-        List<String> lines = content.lines()
-                .toList();
+        List<String> lines = content.lines().toList();
         boolean[] preambleEnded = {false};
-        return lines.stream()
-                .filter(line -> {
-                    if (preambleEnded[0]) {
-                        return true;
-                    }
-                    String trimmed = line.trim();
-                    if (TAG_PATTERN.matcher(trimmed)
-                            .matches() ||
-                            LINK_PATTERN.matcher(trimmed)
-                                    .matches()) {
-                        return false;
-                    }
-                    if (trimmed.matches("^#+\\s?\\S+.*") || !trimmed.isEmpty()) {
-                        preambleEnded[0] = true;
-                    }
-                    return preambleEnded[0];
-                })
-                .collect(Collectors.joining("\n"));
+        return lines.stream().filter(line -> {
+            if (preambleEnded[0]) {
+                return true;
+            }
+            String trimmed = line.trim();
+            if (TAG_PATTERN.matcher(trimmed).matches() || LINK_PATTERN.matcher(trimmed).matches()) {
+                return false;
+            }
+            if (trimmed.matches("^#+\\s?\\S+.*") || !trimmed.isEmpty()) {
+                preambleEnded[0] = true;
+            }
+            return preambleEnded[0];
+        }).collect(Collectors.joining("\n"));
     }
 
     private String removeInlineTags(String content) {

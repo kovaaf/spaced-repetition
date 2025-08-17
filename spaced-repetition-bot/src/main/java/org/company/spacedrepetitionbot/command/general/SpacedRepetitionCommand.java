@@ -50,9 +50,7 @@ public abstract class SpacedRepetitionCommand extends DefaultBotCommand implemen
 
         // 2. Проверка всех аргументов на пустоту
         for (int i = 0; i < arguments.length; i++) {
-            if (arguments[i] == null ||
-                    arguments[i].trim()
-                            .isEmpty()) {
+            if (arguments[i] == null || arguments[i].trim().isEmpty()) {
                 sendMessage(
                         telegramClient,
                         String.format(EMPTY_ARGUMENT_TEMPLATE_MESSAGE.getMessage(), ERROR_MESSAGE.getMessage(), i + 1));
@@ -68,12 +66,9 @@ public abstract class SpacedRepetitionCommand extends DefaultBotCommand implemen
     }
 
     protected Message sendMessage(TelegramClient telegramClient, String text, InlineKeyboardMarkup keyboard) {
-        var message = SendMessage.builder()
-                .chatId(chatId) // should not be null
+        var message = SendMessage.builder().chatId(chatId) // should not be null
                 .text(text) // should not be null
-                .parseMode("HTML")
-                .replyMarkup(keyboard)
-                .build();
+                .parseMode("HTML").replyMarkup(keyboard).build();
 
         try {
             return telegramClient.execute(message);
@@ -99,8 +94,7 @@ public abstract class SpacedRepetitionCommand extends DefaultBotCommand implemen
 
     private String generateArgumentCountError(String[] arguments) {
         if (validArgumentCounts.size() == 1) {
-            int validCounts = validArgumentCounts.iterator()
-                    .next();
+            int validCounts = validArgumentCounts.iterator().next();
             return String.format(
                     WRONG_ARGUMENTS_TEMPLATE_MESSAGE.getMessage(),
                     arguments.length,

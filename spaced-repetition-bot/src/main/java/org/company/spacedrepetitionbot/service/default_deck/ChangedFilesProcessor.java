@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import org.company.spacedrepetitionbot.config.AppProperties;
@@ -11,17 +11,15 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-class ChangedFilesProcessor {
+public class ChangedFilesProcessor {
     private static final String MD_FILE_EXTENSION = ".md";
 
     private final PathService pathService;
 
     public List<String> getChangedFiles(WebhookPayload payload, AppProperties.DefaultDeckConfig deckConfig) {
         List<String> changedFiles = extractAllChangedFiles(payload);
-        List<String> sourceFolders = deckConfig.getRepo()
-                .getSourceFolders();
-        List<String> excludeFolders = deckConfig.getRepo()
-                .getExcludeFolders();
+        List<String> sourceFolders = deckConfig.getRepo().getSourceFolders();
+        List<String> excludeFolders = deckConfig.getRepo().getExcludeFolders();
 
         return changedFiles.stream()
                 .filter(file -> file.endsWith(MD_FILE_EXTENSION))

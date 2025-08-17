@@ -39,8 +39,7 @@ public class AddCardStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         Long deckId = getLastDataElementFromCallback(callbackQuery.getData());
         messageStateService.setUserState(
                 chatId,

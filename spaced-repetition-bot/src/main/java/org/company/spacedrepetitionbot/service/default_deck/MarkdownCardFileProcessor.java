@@ -1,9 +1,12 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import org.company.spacedrepetitionbot.exception.FileProcessingException;
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;
+import org.company.spacedrepetitionbot.service.CardFileProcessor;
+import org.company.spacedrepetitionbot.service.CardService;
+import org.company.spacedrepetitionbot.service.DeckService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -41,16 +44,12 @@ public class MarkdownCardFileProcessor implements CardFileProcessor {
     }
 
     private void updateOrCreateCard(Deck deck, Card card, String relativePath) {
-        cardService.getBySourceFilePathAndSourceHeading(relativePath, card.getSourceHeading())
-                .ifPresentOrElse(
-                        existing -> {
-                            if (!existing.getFront()
-                                    .equals(card.getFront()) ||
-                                    !existing.getBack()
-                                            .equals(card.getBack())) {
-                                updateCard(existing, card);
-                            }
-                        }, () -> createCard(card, deck));
+        cardService.getBySourceFilePathAndSourceHeading(relativePath, card.getSourceHeading()).ifPresentOrElse(
+                existing -> {
+                    if (!existing.getFront().equals(card.getFront()) || !existing.getBack().equals(card.getBack())) {
+                        updateCard(existing, card);
+                    }
+                }, () -> createCard(card, deck));
     }
 
     private void updateCard(Card existing, Card newData) {
@@ -73,9 +72,7 @@ public class MarkdownCardFileProcessor implements CardFileProcessor {
     }
 
     private void deleteObsoleteCards(Deck deck, String relativePath, List<Card> cards) {
-        List<String> validFronts = cards.stream()
-                .map(Card::getFront)
-                .collect(Collectors.toList());
+        List<String> validFronts = cards.stream().map(Card::getFront).collect(Collectors.toList());
         cardService.deleteByDeckAndSourceFilePathAndFrontNotIn(deck, relativePath, validFronts);
     }
 }

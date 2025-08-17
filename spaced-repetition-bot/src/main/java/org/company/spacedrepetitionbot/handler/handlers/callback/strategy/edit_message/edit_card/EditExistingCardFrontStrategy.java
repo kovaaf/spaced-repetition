@@ -40,8 +40,7 @@ public class EditExistingCardFrontStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
 
         try {

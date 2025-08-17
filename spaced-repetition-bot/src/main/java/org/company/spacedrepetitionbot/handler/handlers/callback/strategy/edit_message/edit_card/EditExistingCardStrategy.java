@@ -28,15 +28,13 @@ public class EditExistingCardStrategy extends BaseEditCallbackStrategy {
     @Override
     protected String getMessageText(CallbackQuery callbackQuery) {
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
-        return cardService.getCardDetails(cardId)
-                .orElse("❌ Карточка не найдена");
+        return cardService.getCardDetails(cardId).orElse("❌ Карточка не найдена");
     }
 
     @Override
     protected InlineKeyboardMarkup getKeyboard(CallbackQuery callbackQuery) {
         Long cardId = getLastDataElementFromCallback(callbackQuery.getData());
-        Long deckId = cardService.getDeckIdByCardId(cardId)
-                .orElseThrow();
+        Long deckId = cardService.getDeckIdByCardId(cardId).orElseThrow();
         return keyboardManager.getExistingCardEditKeyboard(cardId, deckId);
     }
 

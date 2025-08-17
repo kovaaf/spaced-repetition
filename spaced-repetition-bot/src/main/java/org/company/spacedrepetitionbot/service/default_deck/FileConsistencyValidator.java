@@ -1,10 +1,11 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.config.AppProperties;
 import org.company.spacedrepetitionbot.exception.SyncException;
 import org.company.spacedrepetitionbot.model.Deck;
+import org.company.spacedrepetitionbot.service.CardService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -38,10 +39,8 @@ public class FileConsistencyValidator {
     }
 
     private void verifyFileConsistency(Deck deck, String relativePath) {
-        Path filePath = pathService.getRepoPath()
-                .resolve(relativePath);
-        int expected = fileProcessor.parseMarkdownFile(filePath)
-                .size();
+        Path filePath = pathService.getRepoPath().resolve(relativePath);
+        int expected = fileProcessor.parseMarkdownFile(filePath).size();
         int actual = cardService.countByDeckAndSourceFilePath(deck, relativePath);
 
         if (actual < expected) {
@@ -61,25 +60,18 @@ public class FileConsistencyValidator {
     }
 
     private int getExpectedCardCountForCurrentCommit() {
-        return getSourceFolderPaths().stream()
-                .mapToInt(this::countCardsInFolder)
-                .sum();
+        return getSourceFolderPaths().stream().mapToInt(this::countCardsInFolder).sum();
     }
 
     private List<Path> getSourceFolderPaths() {
-        Path repoPath = Paths.get(appProperties.getDefaultDeck()
-                        .getRepo()
-                        .getPath())
-                .toAbsolutePath();
+        Path repoPath = Paths.get(appProperties.getDefaultDeck().getRepo().getPath()).toAbsolutePath();
         List<String> sourceFolders = getSourceFolders();
 
         if (sourceFolders == null || sourceFolders.isEmpty()) {
             return List.of(repoPath);
         }
 
-        return sourceFolders.stream()
-                .map(repoPath::resolve)
-                .collect(Collectors.toList());
+        return sourceFolders.stream().map(repoPath::resolve).collect(Collectors.toList());
     }
 
     private int countCardsInFolder(Path folderPath) {
@@ -89,16 +81,13 @@ public class FileConsistencyValidator {
         }
 
         try (Stream<Path> walk = Files.walk(folderPath)) {
-            return walk.filter(this::isMarkdownFile)
-                    .filter((file -> {
-                        String relative = pathService.getRelativePath(file);
-                        return pathService.isFileIncluded(
-                                relative,
-                                getSourceFolders(),
-                                getExcludeFolders()); // Фильтр исключений
-                    }))
-                    .mapToInt(this::parseAndCountCards)
-                    .sum();
+            return walk.filter(this::isMarkdownFile).filter((file -> {
+                String relative = pathService.getRelativePath(file);
+                return pathService.isFileIncluded(
+                        relative,
+                        getSourceFolders(),
+                        getExcludeFolders()); // Фильтр исключений
+            })).mapToInt(this::parseAndCountCards).sum();
         } catch (IOException e) {
             log.error("Error processing folder: {}", folderPath, e);
             return 0;
@@ -106,25 +95,18 @@ public class FileConsistencyValidator {
     }
 
     private boolean isMarkdownFile(Path file) {
-        return Files.isRegularFile(file) &&
-                file.toString()
-                        .endsWith(".md");
+        return Files.isRegularFile(file) && file.toString().endsWith(".md");
     }
 
     private int parseAndCountCards(Path file) {
-        return fileProcessor.parseMarkdownFile(file)
-                .size();
+        return fileProcessor.parseMarkdownFile(file).size();
     }
 
     private List<String> getSourceFolders() {
-        return appProperties.getDefaultDeck()
-                .getRepo()
-                .getSourceFolders();
+        return appProperties.getDefaultDeck().getRepo().getSourceFolders();
     }
 
     private List<String> getExcludeFolders() {
-        return appProperties.getDefaultDeck()
-                .getRepo()
-                .getExcludeFolders();
+        return appProperties.getDefaultDeck().getRepo().getExcludeFolders();
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class AppProperties {
     private DefaultDeckConfig defaultDeck;
+    private SyncMode syncMode;
 
     @Data
     public static class DefaultDeckConfig {
@@ -34,6 +35,16 @@ public class AppProperties {
         public static class SyncConfig {
             private boolean initialEnabled;
             private String cron;
+        }
+    }
+
+    @Data
+    public static class SyncMode {
+        private Mode mode = Mode.KAFKA;
+
+        public enum Mode {
+            KAFKA,
+            DIRECT
         }
     }
 }

@@ -3,8 +3,8 @@ package org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_
 import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.handler.handlers.callback.Callback;
 import org.company.spacedrepetitionbot.service.DeckService;
-import org.company.spacedrepetitionbot.service.LearningService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.service.learning.LearningService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.generics.TelegramClient;

@@ -61,11 +61,7 @@ public class CardService {
         Deck deck = getDeckByOwnerIdAndDeckNameOrThrow(userChatId, deckName);
         validateCardNotExists(deck, front);
 
-        Card card = Card.builder()
-                .front(front)
-                .back(back)
-                .deck(deck)
-                .build();
+        Card card = Card.builder().front(front).back(back).deck(deck).build();
 
         cardRepository.save(card);
         return String.format(CARD_ADDED_SUCCESSFULLY.getMessage(), front, deckName);
@@ -82,11 +78,7 @@ public class CardService {
                 return;
             }
 
-            Card card = Card.builder()
-                    .front(front)
-                    .back(back)
-                    .deck(deck)
-                    .build();
+            Card card = Card.builder().front(front).back(back).deck(deck).build();
 
             cardRepository.save(card);
         } catch (IllegalArgumentException e) {
@@ -234,8 +226,7 @@ public class CardService {
     private String formatCardDetails(Card card) {
         long seconds = 0;
         if (card.getNextReviewTime() != null) {
-            seconds = Duration.between(LocalDateTime.now(), card.getNextReviewTime())
-                    .getSeconds();
+            seconds = Duration.between(LocalDateTime.now(), card.getNextReviewTime()).getSeconds();
         }
 
         return String.format(
@@ -270,8 +261,7 @@ public class CardService {
 
         return nextReviewTime.isBefore(LocalDateTime.now()) ?
                 DUE_TODAY.getMessage() :
-                DateTimeFormatter.ofPattern(DATE_TIME_FORMAT.getMessage())
-                        .format(nextReviewTime);
+                DateTimeFormatter.ofPattern(DATE_TIME_FORMAT.getMessage()).format(nextReviewTime);
     }
 
     public Optional<String> getCardDetails(Long cardId) {
@@ -280,9 +270,7 @@ public class CardService {
     }
 
     public Optional<Long> getDeckIdByCardId(Long cardId) {
-        return cardRepository.findById(cardId)
-                .map(card -> card.getDeck()
-                        .getDeckId());
+        return cardRepository.findById(cardId).map(card -> card.getDeck().getDeckId());
     }
 
     @Transactional
@@ -311,8 +299,7 @@ public class CardService {
 
     @Transactional(readOnly = true)
     public Card getCardById(Long cardId) {
-        return cardRepository.findById(cardId)
-                .orElseThrow(() -> new EntityNotFoundException("Card not found"));
+        return cardRepository.findById(cardId).orElseThrow(() -> new EntityNotFoundException("Card not found"));
     }
 
     public void save(Card card) {

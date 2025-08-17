@@ -3,8 +3,9 @@ package org.company.spacedrepetitionbot.kafka.config;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.company.spacedrepetitionbot.kafka.event.SyncEventDTO;
+import org.company.spacedrepetitionbot.service.default_deck.event.SyncEventDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
@@ -16,6 +17,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.Map;
 
+@ConditionalOnProperty(name = "app.sync.mode", havingValue = "KAFKA")
 @Configuration
 public class KafkaConfig {
     @Value("${spring.kafka.topic.sync.events}") private String syncTopic;
@@ -23,10 +25,7 @@ public class KafkaConfig {
 
     @Bean
     public NewTopic syncTopic() {
-        return TopicBuilder.name(syncTopic)
-                .partitions(1)
-                .replicas(1)
-                .build();
+        return TopicBuilder.name(syncTopic).partitions(1).replicas(1).build();
     }
 
     @Bean

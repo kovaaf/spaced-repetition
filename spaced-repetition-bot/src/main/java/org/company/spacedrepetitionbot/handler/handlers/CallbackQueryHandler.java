@@ -38,8 +38,7 @@ public class CallbackQueryHandler implements NonCommandHandler {
 
         CallbackQuery callbackQuery = update.getCallbackQuery();
         String callbackData = callbackQuery.getData();
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
 
         try {
             CallbackStrategy strategy = getCallbackStrategy(callbackData);
@@ -66,10 +65,7 @@ public class CallbackQueryHandler implements NonCommandHandler {
 
     private void sendErrorMessage(Long chatId, String text) {
         try {
-            telegramClient.execute(SendMessage.builder()
-                    .chatId(chatId)
-                    .text(text)
-                    .build());
+            telegramClient.execute(SendMessage.builder().chatId(chatId).text(text).build());
         } catch (TelegramApiException e) {
             log.error("Ошибка отправки сообщения об ошибке: {}", e.getMessage());
         }

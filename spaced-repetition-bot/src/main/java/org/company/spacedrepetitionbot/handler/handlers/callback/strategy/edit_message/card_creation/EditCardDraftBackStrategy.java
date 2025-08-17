@@ -30,8 +30,7 @@ public class EditCardDraftBackStrategy extends BaseEditCallbackStrategy {
 
     @Override
     protected String getMessageText(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
 
         return cardDraftService.getDraft(chatId)
                 .map(draft -> "✏️ Текущий ответ: " + draft.getBack() + "\n\nВведите новый ответ:")
@@ -45,16 +44,12 @@ public class EditCardDraftBackStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
 
         try {
-            cardDraftService.getDraft(chatId)
-                    .ifPresentOrElse(
-                            draft -> messageStateService.setUserState(
-                                    chatId,
-                                    MessageState.EDIT_CARD_DRAFT_BACK.getAlias()),
-                            () -> sendDraftNotFound(chatId, callbackQuery));
+            cardDraftService.getDraft(chatId).ifPresentOrElse(
+                    draft -> messageStateService.setUserState(chatId, MessageState.EDIT_CARD_DRAFT_BACK.getAlias()),
+                    () -> sendDraftNotFound(chatId, callbackQuery));
             super.executeCallbackQuery(callbackQuery);
         } catch (Exception e) {
             log.error("Ошибка редактирования ответа: {}", e.getMessage(), e);
@@ -66,8 +61,7 @@ public class EditCardDraftBackStrategy extends BaseEditCallbackStrategy {
         try {
             telegramClient.execute(EditMessageText.builder()
                     .chatId(chatId)
-                    .messageId(callbackQuery.getMessage()
-                            .getMessageId())
+                    .messageId(callbackQuery.getMessage().getMessageId())
                     .text("❌ Черновик карты не найден")
                     .build());
         } catch (TelegramApiException e) {

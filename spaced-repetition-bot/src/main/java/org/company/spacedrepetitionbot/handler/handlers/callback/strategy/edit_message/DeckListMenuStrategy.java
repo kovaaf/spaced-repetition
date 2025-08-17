@@ -34,8 +34,7 @@ public class DeckListMenuStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        messageStateService.clearUserState(callbackQuery.getMessage()
-                .getChatId());
+        messageStateService.clearUserState(callbackQuery.getMessage().getChatId());
         super.executeCallbackQuery(callbackQuery);
     }
 
@@ -46,8 +45,7 @@ public class DeckListMenuStrategy extends BaseEditCallbackStrategy {
 
     @Override
     protected InlineKeyboardMarkup getKeyboard(CallbackQuery callbackQuery) {
-        Long chatId = callbackQuery.getMessage()
-                .getChatId();
+        Long chatId = callbackQuery.getMessage().getChatId();
         List<Deck> decks = deckService.getUserDecks(chatId);
         boolean showCopyButton = !userInfoService.hasUserCopiedDefaultDeck(chatId);
         return keyboardManager.getDeckListKeyboard(decks, showCopyButton);

@@ -22,10 +22,7 @@ public abstract class BaseEditTextStrategy implements TextStateStrategy {
     protected void clearPreviousMenu(Long chatId) throws TelegramApiException {
         Integer menuMessageId = messageStateService.getMenuMessageId(chatId);
         if (menuMessageId != null) {
-            telegramClient.execute(DeleteMessage.builder()
-                    .chatId(chatId)
-                    .messageId(menuMessageId)
-                    .build());
+            telegramClient.execute(DeleteMessage.builder().chatId(chatId).messageId(menuMessageId).build());
         }
     }
 

@@ -1,12 +1,16 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck.executors;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.config.AppProperties;
 import org.company.spacedrepetitionbot.dto.WebhookPayload;
-import org.company.spacedrepetitionbot.kafka.consumer_producer.KafkaSyncEventProducer;
-import org.company.spacedrepetitionbot.kafka.event.SyncEventDTO;
 import org.company.spacedrepetitionbot.model.Deck;
+import org.company.spacedrepetitionbot.service.DeckService;
+import org.company.spacedrepetitionbot.service.default_deck.ChangedFilesProcessor;
+import org.company.spacedrepetitionbot.service.default_deck.RepoUrlNormalizer;
+import org.company.spacedrepetitionbot.service.default_deck.WebhookValidator;
+import org.company.spacedrepetitionbot.service.default_deck.event.SyncEventDTO;
+import org.company.spacedrepetitionbot.service.default_deck.processors.SyncEventProcessor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +24,9 @@ public class GitHubWebhookService {
     private final AppProperties appProperties;
     private final RepoUrlNormalizer repoUrlNormalizer;
     private final ChangedFilesProcessor changedFilesProcessor;
-    private final KafkaSyncEventProducer syncEventProducer;
     private final DeckService deckService;
     private final WebhookValidator webhookValidator;
+    private final SyncEventProcessor syncEventProcessor;
 
     public void processWebhook(String event, WebhookPayload payload, String signature) {
         webhookValidator.validateSignature(payload, signature); // Валидация подписи
@@ -33,10 +37,7 @@ public class GitHubWebhookService {
         AppProperties.DefaultDeckConfig defaultDeck = appProperties.getDefaultDeck();
 
         if (!isExpectedRepoAndBranch(payload, defaultDeck)) {
-            log.debug("Webhook ignored for repository: {}, branch: {}",
-                    payload.repository()
-                            .fullName(),
-                    payload.ref());
+            log.debug("Webhook ignored for repository: {}, branch: {}", payload.repository().fullName(), payload.ref());
             return;
         }
 
@@ -51,17 +52,13 @@ public class GitHubWebhookService {
         Deck deck = deckService.getDeckByName(deckConfig.getName());
         List<String> changedFiles = changedFilesProcessor.getChangedFiles(payload, deckConfig);
 
-        syncEventProducer.sendSyncEvent(new SyncEventDTO(deck.getDeckId(), false, changedFiles));
+        syncEventProcessor.processSyncEvent(new SyncEventDTO(deck.getDeckId(), false, changedFiles));
     }
 
     private boolean isExpectedRepoAndBranch(WebhookPayload payload, AppProperties.DefaultDeckConfig defaultDeck) {
-        String expectedRepo = repoUrlNormalizer.normalize(defaultDeck.getRepo()
-                .getUrl());
-        String expectedBranch = REF_PREFIX +
-                defaultDeck.getRepo()
-                        .getBranch();
+        String expectedRepo = repoUrlNormalizer.normalize(defaultDeck.getRepo().getUrl());
+        String expectedBranch = REF_PREFIX + defaultDeck.getRepo().getBranch();
 
-        return expectedRepo.equals(payload.repository()
-                .fullName()) && expectedBranch.equals(payload.ref());
+        return expectedRepo.equals(payload.repository().fullName()) && expectedBranch.equals(payload.ref());
     }
 }

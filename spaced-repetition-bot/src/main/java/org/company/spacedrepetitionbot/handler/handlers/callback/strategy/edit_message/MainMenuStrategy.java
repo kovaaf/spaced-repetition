@@ -22,8 +22,7 @@ public class MainMenuStrategy extends BaseEditCallbackStrategy {
 
     @Override
     public void executeCallbackQuery(CallbackQuery callbackQuery) {
-        messageStateService.clearUserState(callbackQuery.getMessage()
-                .getChatId());
+        messageStateService.clearUserState(callbackQuery.getMessage().getChatId());
         super.executeCallbackQuery(callbackQuery);
     }
 

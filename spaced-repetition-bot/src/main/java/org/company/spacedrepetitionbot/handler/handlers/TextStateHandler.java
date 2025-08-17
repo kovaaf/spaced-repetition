@@ -39,16 +39,12 @@ public class TextStateHandler implements NonCommandHandler {
 
     @Override
     public void handle(Update update) {
-        if (!update.hasMessage() ||
-                !update.getMessage()
-                        .hasText()) {
+        if (!update.hasMessage() || !update.getMessage().hasText()) {
             return;
         }
 
-        Long chatId = update.getMessage()
-                .getChatId();
-        String text = update.getMessage()
-                .getText();
+        Long chatId = update.getMessage().getChatId();
+        String text = update.getMessage().getText();
         String userState = messageStateService.getUserState(chatId);
 
         try {

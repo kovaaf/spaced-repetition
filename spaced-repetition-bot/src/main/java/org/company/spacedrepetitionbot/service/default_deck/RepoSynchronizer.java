@@ -1,10 +1,11 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.exception.SyncException;
-import org.company.spacedrepetitionbot.kafka.event.SyncEventDTO;
 import org.company.spacedrepetitionbot.model.Deck;
+import org.company.spacedrepetitionbot.service.DeckService;
+import org.company.spacedrepetitionbot.service.default_deck.event.SyncEventDTO;
 import org.eclipse.jgit.api.Git;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +26,11 @@ public class RepoSynchronizer {
             }
 
             try (Git git = gitSyncOperator.prepareRepository()) {
+                log.info("Подготовка репозитория окончена.");
                 if (gitSyncOperator.isSyncRequired(git, deck, event)) {
+                    log.info("Начинаю синхронизацию");
                     executeSync(git, deck, event);
+                    log.info("Синхронизация БД с репозиторием выполнена");
                 }
             }
         } catch (Exception e) {

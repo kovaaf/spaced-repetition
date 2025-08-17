@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import lombok.RequiredArgsConstructor;
 import org.company.spacedrepetitionbot.config.AppProperties;
@@ -14,15 +14,11 @@ public class PathService {
     private final AppProperties appProperties;
 
     public Path getRepoPath() {
-        return Paths.get(appProperties.getDefaultDeck()
-                        .getRepo()
-                        .getPath())
-                .toAbsolutePath();
+        return Paths.get(appProperties.getDefaultDeck().getRepo().getPath()).toAbsolutePath();
     }
 
     public String getRelativePath(Path file) {
-        return getRepoPath().relativize(file)
-                .toString();
+        return getRepoPath().relativize(file).toString();
     }
 
     public boolean isFileInSourceFolder(String filePath, List<String> sourceFolders) {
@@ -46,30 +42,27 @@ public class PathService {
             return true;
         }
 
-        return excludeFolders.stream()
-                .noneMatch(exFolder -> {
-                    String normalizedExFolder = normalizePath(exFolder);
+        return excludeFolders.stream().noneMatch(exFolder -> {
+            String normalizedExFolder = normalizePath(exFolder);
 
-                    // 1. Проверка полного пути
-                    if (normalizedPath.startsWith(normalizedExFolder + "/") ||
-                            normalizedPath.equals(normalizedExFolder)) {
-                        return true;
-                    }
+            // 1. Проверка полного пути
+            if (normalizedPath.startsWith(normalizedExFolder + "/") || normalizedPath.equals(normalizedExFolder)) {
+                return true;
+            }
 
-                    // 2. Проверка всех сегментов пути, а не только последнего
-                    String[] pathSegments = normalizedPath.split("/");
-                    for (String segment : pathSegments) {
-                        if (segment.equals(normalizedExFolder)) {
-                            return true;
-                        }
-                    }
+            // 2. Проверка всех сегментов пути, а не только последнего
+            String[] pathSegments = normalizedPath.split("/");
+            for (String segment : pathSegments) {
+                if (segment.equals(normalizedExFolder)) {
+                    return true;
+                }
+            }
 
-                    return false;
-                });
+            return false;
+        });
     }
 
     private String normalizePath(String path) {
-        return path.replace('\\', '/')
-                .toLowerCase();
+        return path.replace('\\', '/').toLowerCase();
     }
 }

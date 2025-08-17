@@ -16,42 +16,39 @@ public class CardDraftService {
 
     @Transactional
     public void saveDraft(Long chatId, Long deckId, String front, String back) {
-        cardDraftRepository.findByChatId(chatId)
-                .ifPresentOrElse(
-                        draft -> {
-                            draft.setFront(front);
-                            draft.setBack(back);
-                            draft.setUpdatedAt(LocalDateTime.now());
-                            cardDraftRepository.save(draft);
-                        },
-                        () -> cardDraftRepository.save(CardDraft.builder()
-                                .chatId(chatId)
-                                .deckId(deckId)
-                                .front(front)
-                                .back(back)
-                                .createdAt(LocalDateTime.now())
-                                .updatedAt(LocalDateTime.now())
-                                .build()));
+        cardDraftRepository.findByChatId(chatId).ifPresentOrElse(
+                draft -> {
+                    draft.setFront(front);
+                    draft.setBack(back);
+                    draft.setUpdatedAt(LocalDateTime.now());
+                    cardDraftRepository.save(draft);
+                },
+                () -> cardDraftRepository.save(CardDraft.builder()
+                        .chatId(chatId)
+                        .deckId(deckId)
+                        .front(front)
+                        .back(back)
+                        .createdAt(LocalDateTime.now())
+                        .updatedAt(LocalDateTime.now())
+                        .build()));
     }
 
     @Transactional
     public void updateFront(Long chatId, String front) {
-        cardDraftRepository.findByChatId(chatId)
-                .ifPresent(draft -> {
-                    draft.setFront(front);
-                    draft.setUpdatedAt(LocalDateTime.now());
-                    cardDraftRepository.save(draft);
-                });
+        cardDraftRepository.findByChatId(chatId).ifPresent(draft -> {
+            draft.setFront(front);
+            draft.setUpdatedAt(LocalDateTime.now());
+            cardDraftRepository.save(draft);
+        });
     }
 
     @Transactional
     public void updateBack(Long chatId, String back) {
-        cardDraftRepository.findByChatId(chatId)
-                .ifPresent(draft -> {
-                    draft.setBack(back);
-                    draft.setUpdatedAt(LocalDateTime.now());
-                    cardDraftRepository.save(draft);
-                });
+        cardDraftRepository.findByChatId(chatId).ifPresent(draft -> {
+            draft.setBack(back);
+            draft.setUpdatedAt(LocalDateTime.now());
+            cardDraftRepository.save(draft);
+        });
     }
 
     @Transactional(readOnly = true)

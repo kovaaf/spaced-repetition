@@ -39,15 +39,14 @@ public class CardBackCreationStrategy extends BaseEditTextStrategy {
         messageStateService.setUserState(chatId, MessageState.CARD_CONFIRMATION.getAlias());
 
         // Отправляем новое сообщение, которое станет текущим меню после ввода ответа пользователем
-        CardDraft draft = cardDraftService.getDraft(chatId)
-                .orElseThrow(() -> {
-                    try {
-                        sendErrorMessage(chatId);
-                    } catch (TelegramApiException e) {
-                        log.error("Ошибка отправки сообщения об ошибке: {}", e.getMessage(), e);
-                    }
-                    return new IllegalStateException("Draft not found for chat: " + chatId);
-                });
+        CardDraft draft = cardDraftService.getDraft(chatId).orElseThrow(() -> {
+            try {
+                sendErrorMessage(chatId);
+            } catch (TelegramApiException e) {
+                log.error("Ошибка отправки сообщения об ошибке: {}", e.getMessage(), e);
+            }
+            return new IllegalStateException("Draft not found for chat: " + chatId);
+        });
         String cardText = "✅ Черновик карты создан:\n\nВопрос: " + draft.getFront() + "\nОтвет: " + text;
         sendNewMenu(chatId, cardText, keyboardManager.getCardDraftConfirmationKeyboard(draft.getDeckId()));
     }
