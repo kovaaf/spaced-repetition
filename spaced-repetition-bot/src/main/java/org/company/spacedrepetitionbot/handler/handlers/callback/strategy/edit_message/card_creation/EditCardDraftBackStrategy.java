@@ -47,9 +47,12 @@ public class EditCardDraftBackStrategy extends BaseEditCallbackStrategy {
         Long chatId = callbackQuery.getMessage().getChatId();
 
         try {
-            cardDraftService.getDraft(chatId).ifPresentOrElse(
-                    draft -> messageStateService.setUserState(chatId, MessageState.EDIT_CARD_DRAFT_BACK.getAlias()),
-                    () -> sendDraftNotFound(chatId, callbackQuery));
+            cardDraftService.getDraft(chatId)
+                    .ifPresentOrElse(
+                            draft -> messageStateService.setUserState(
+                                    chatId,
+                                    MessageState.EDIT_CARD_DRAFT_BACK.getAlias()),
+                            () -> sendDraftNotFound(chatId, callbackQuery));
             super.executeCallbackQuery(callbackQuery);
         } catch (Exception e) {
             log.error("Ошибка редактирования ответа: {}", e.getMessage(), e);

@@ -2,10 +2,11 @@ package org.company.spacedrepetitionbot.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.company.spacedrepetitionbot.dto.WebhookPayload;
 import org.company.spacedrepetitionbot.service.default_deck.executors.GitHubWebhookService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 // для работы нужен статический адрес\домен - устанавливается в вебхуке на GitHub. Можно получить временный с помощью
 // ngrok (для его работы нужен впн)
@@ -20,10 +21,14 @@ public class GitHubWebhookController {
     public ResponseEntity<String> handleWebhook(
             @RequestHeader(value = "X-GitHub-Event", required = false) String event,
             @RequestHeader(value = "X-Hub-Signature", required = false) String signature,
-            @RequestBody WebhookPayload payload) {
+            @RequestBody String rawPayload) {
 
         log.debug("Received GitHub webhook with event: {}", event);
-        gitHubWebhookService.processWebhook(event, payload, signature);
-        return ResponseEntity.ok("Webhook processed successfully");
+        try {
+            gitHubWebhookService.processWebhook(event, signature, rawPayload);
+            return ResponseEntity.ok("Webhook processed successfully");
+        } catch (IOException e) {
+            return ResponseEntity.badRequest().body("Invalid payload");
+        }
     }
 }

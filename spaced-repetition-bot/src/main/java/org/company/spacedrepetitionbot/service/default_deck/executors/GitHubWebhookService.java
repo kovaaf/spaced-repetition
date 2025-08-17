@@ -1,5 +1,7 @@
 package org.company.spacedrepetitionbot.service.default_deck.executors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.config.AppProperties;
@@ -13,6 +15,7 @@ import org.company.spacedrepetitionbot.service.default_deck.event.SyncEventDTO;
 import org.company.spacedrepetitionbot.service.default_deck.processors.SyncEventProcessor;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -27,9 +30,17 @@ public class GitHubWebhookService {
     private final DeckService deckService;
     private final WebhookValidator webhookValidator;
     private final SyncEventProcessor syncEventProcessor;
+    private final ObjectMapper objectMapper;
 
-    public void processWebhook(String event, WebhookPayload payload, String signature) {
-        webhookValidator.validateSignature(payload, signature); // Валидация подписи
+    public void processWebhook(String event, String signature, String rawPayload) throws IOException {
+        WebhookPayload payload = null;
+        try {
+            payload = objectMapper.readValue(rawPayload, WebhookPayload.class);
+        } catch (JsonProcessingException e) {
+            log.error("Error parsing payload", e);
+            throw new IOException(e);
+        }
+        webhookValidator.validateSignature(rawPayload, signature); // Валидация подписи
         handleEvent(event, payload);
     }
 
