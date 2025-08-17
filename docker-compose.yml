@@ -9,9 +9,10 @@ services:
       POSTGRES_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
       POSTGRES_PASSWORD: ${TELEGRAM_BOT_DB_PASSWORD:-postgres}
       POSTGRES_DB: spaced-repetition-bot-db
-      shared_buffers: 32MB  # По умолчанию 128MB
-      maintenance_work_mem: 32MB  # По умолчанию 64MB
+      shared_buffers: 24MB  # По умолчанию 128MB
+      maintenance_work_mem: 16MB  # По умолчанию 64MB
       max_connections: 10  # По умолчанию 100
+      effective_cache_size: 64MB  # По умолчанию 4GB (указать явно)
     restart: always
     logging:
       driver: "json-file"
@@ -26,8 +27,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      ZOO_HEAP_SIZE: "128m"  # По умолчанию 1G
-      ZOO_MAX_CLIENT_CNXNS: 30  # По умолчанию 60
+      ZOO_HEAP_SIZE: "48m"  # По умолчанию 1G; использует около 130mb
+      ZOO_MAX_CLIENT_CNXNS: 20  # По умолчанию 60
     restart: always
     logging:
       driver: "json-file"
@@ -52,12 +53,14 @@ services:
       KAFKA_HEAP_OPTS: "-Xmx256m -Xms128m"  # По умолчанию 1G
       KAFKA_NUM_PARTITIONS: "1"
       KAFKA_DEFAULT_REPLICATION_FACTOR: "1"
-      KAFKA_LOG_RETENTION_BYTES: "52428800"  # 50MB максимум на топик
-      KAFKA_LOG_SEGMENT_BYTES: "10485760"  # 10MB (меньше чем стандартные 1GB)
-      KAFKA_LOG_CLEANER_DEDUPE_BUFFER_SIZE: "67108864" # 64MB вместо 128MB
-      KAFKA_NUM_IO_THREADS: "4"  # По умолчанию 8
+      KAFKA_LOG_RETENTION_BYTES: "26214400"  # 25MB максимум на топик
+      KAFKA_LOG_SEGMENT_BYTES: "5242880"  # 5MB (меньше чем стандартные 1GB)
+      KAFKA_LOG_CLEANER_DEDUPE_BUFFER_SIZE: "33554432" # 32MB вместо 128MB
+      KAFKA_NUM_IO_THREADS: "2"  # По умолчанию 8
       KAFKA_NUM_NETWORK_THREADS: "2"  # По умолчанию 3
-      KAFKA_QUEUED_MAX_REQUESTS: "100"  # По умолчанию 500 (можно уменьшить)
+      KAFKA_QUEUED_MAX_REQUESTS: "50"  # По умолчанию 500 (можно уменьшить)
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"  # Запретить автосоздание топиков
+      KAFKA_ENABLE_IDEMPOTENCE: "false"  # Отключить идемпотентность (если не нужно)
     restart: always
     logging:
       driver: "json-file"
@@ -81,7 +84,7 @@ services:
     container_name: spaced-repetition-bot
     restart: unless-stopped
     environment:
-      _JAVA_OPTIONS: -Xmx64m -Xms32m
+      _JAVA_OPTIONS: -Xmx128m -Xms32m -XX:+UseContainerSupport -XX:MaxRAMPercentage=30.0
       TELEGRAM_BOT_DB_HOST: spaced-repetition-bot-db
       TELEGRAM_BOT_DB_PORT: 5432
       TELEGRAM_BOT_DB_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
