@@ -26,6 +26,7 @@ public class GitHubWebhookController {
         log.debug("Received GitHub webhook with event: {}", event);
         try {
             gitHubWebhookService.processWebhook(event, signature, rawPayload);
+            log.info("Webhook processed successfully");
             return ResponseEntity.ok("Webhook processed successfully");
         } catch (IOException e) {
             return ResponseEntity.badRequest().body("Invalid payload");

@@ -48,14 +48,14 @@ public class GitHubWebhookService {
         AppProperties.DefaultDeckConfig defaultDeck = appProperties.getDefaultDeck();
 
         if (!isExpectedRepoAndBranch(payload, defaultDeck)) {
-            log.debug("Webhook ignored for repository: {}, branch: {}", payload.repository().fullName(), payload.ref());
+            log.info("Webhook ignored for repository: {}, branch: {}", payload.repository().fullName(), payload.ref());
             return;
         }
 
         if (PUSH_EVENT.equals(event)) {
             handlePushEvent(payload, defaultDeck);
         } else {
-            log.debug("Unhandled event type: {}", event);
+            log.info("Unhandled event type: {}", event);
         }
     }
 
