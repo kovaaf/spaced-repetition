@@ -42,7 +42,7 @@ public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
         Long cardId = Long.valueOf(getCallbackDataByIndex(callbackQuery.getData(), 1));
 
         try {
-            return "Ответ:\n" + learningService.getCardAnswerById(cardId);
+            return learningService.getCardAnswerById(cardId);
         } catch (EntityNotFoundException e) {
             return "Карточка не найдена";
         }

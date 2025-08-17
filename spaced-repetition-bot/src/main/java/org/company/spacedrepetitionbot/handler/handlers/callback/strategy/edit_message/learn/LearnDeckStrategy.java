@@ -58,7 +58,7 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
             return getDeckName(deckId) + " не содержит карточек для изучения";
         }
 
-        return String.format("Карточка для изучения:\n\nВопрос:\n%s", nextCard.getFront());
+        return String.format("Вопрос:\n%s", nextCard.getFront());
     }
 
     @Override

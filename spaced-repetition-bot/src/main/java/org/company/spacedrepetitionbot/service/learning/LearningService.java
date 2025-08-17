@@ -67,9 +67,9 @@ public class LearningService {
 
     @Transactional(readOnly = true)
     public String getCardAnswerById(Long cardId) {
-        return cardRepository.findById(cardId)
-                .map(Card::getBack)
+        Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new EntityNotFoundException("Card not found"));
+        return "Вопрос:\n" + card.getFront() + "\n\nОтвет:\n" + card.getBack();
     }
 
     @Transactional
