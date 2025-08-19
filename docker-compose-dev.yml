@@ -27,7 +27,7 @@ services:
 #    environment:
 #      ZOOKEEPER_CLIENT_PORT: 2181
 #      ZOOKEEPER_TICK_TIME: 2000
-#      ZOO_HEAP_SIZE: "48m"  # По умолчанию 1G; использует около 130mb
+#      ZOO_HEAP_SIZE: "48m"  # По умолчанию 1G
 #      ZOO_MAX_CLIENT_CNXNS: 20  # По умолчанию 60
 #    restart: always
 #    logging:
@@ -50,7 +50,7 @@ services:
 #      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 #      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
 #      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-#      KAFKA_HEAP_OPTS: "-Xmx192m -Xms64m"  # По умолчанию 1G; использует около 330mb
+#      KAFKA_HEAP_OPTS: "-Xmx192m -Xms64m"  # По умолчанию 1G
 #      KAFKA_NUM_PARTITIONS: "1"
 #      KAFKA_DEFAULT_REPLICATION_FACTOR: "1"
 #      KAFKA_LOG_RETENTION_BYTES: "26214400"  # 25MB максимум на топик
@@ -84,11 +84,9 @@ services:
       context: .
       dockerfile: spaced-repetition-bot/Dockerfile
     container_name: spaced-repetition-bot
-    labels:
-      - "maintainer=ouidockeruser"
     restart: unless-stopped
     environment:
-      _JAVA_OPTIONS: -Xmx128m -Xms32m -XX:+UseContainerSupport -XX:MaxRAMPercentage=30.0 # использует около 430mb
+      _JAVA_OPTIONS: -Xmx128m -Xms32m -XX:+UseContainerSupport -XX:MaxRAMPercentage=30.0
       TELEGRAM_BOT_DB_HOST: spaced-repetition-bot-db
       TELEGRAM_BOT_DB_PORT: 5432
       TELEGRAM_BOT_DB_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
@@ -110,3 +108,4 @@ services:
         max-size: 10m
     depends_on:
       - spaced-repetition-bot-db
+#      - kafka

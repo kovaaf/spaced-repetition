@@ -17,13 +17,15 @@ public class ExecutedCommand {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "command_seq")
     @SequenceGenerator(name = "command_seq", sequenceName = "command_seq", allocationSize = 1)
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_chat_id", referencedColumnName = "userChatId")
     private UserInfo userInfo;
 
     private String commandIdentifier;
 
-    @Convert(converter = StringArrayConverter.class) private String[] arguments;
+    @Convert(converter = StringArrayConverter.class)
+    private String[] arguments;
 
     private LocalDateTime executedAt;
 }

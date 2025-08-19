@@ -12,7 +12,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaSyncEventProducer {
     private final KafkaTemplate<String, SyncEventDTO> kafkaTemplate;
-    @Value("${spring.kafka.topic.sync.events}") private String syncTopic;
+    @Value("${spring.kafka.topic.sync.events}")
+    private String syncTopic;
 
     public void sendSyncEvent(SyncEventDTO event) {
         String key = event.getDeckId() != null ? event.getDeckId().toString() : "global-sync";

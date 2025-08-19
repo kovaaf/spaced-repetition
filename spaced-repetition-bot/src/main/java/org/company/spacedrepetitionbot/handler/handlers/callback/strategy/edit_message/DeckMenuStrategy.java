@@ -3,8 +3,10 @@ package org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.handler.handlers.callback.Callback;
 import org.company.spacedrepetitionbot.model.Deck;
+import org.company.spacedrepetitionbot.model.LearningSession;
 import org.company.spacedrepetitionbot.service.DeckService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -16,15 +18,18 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class DeckMenuStrategy extends BaseEditCallbackStrategy {
     private final DeckService deckService;
     private final KeyboardManager keyboardManager;
+    private final LearningSessionService learningSessionService;
 
     public DeckMenuStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
             DeckService deckService,
-            KeyboardManager keyboardManager) {
+            KeyboardManager keyboardManager,
+            LearningSessionService learningSessionService) {
         super(telegramClient, messageStateService);
         this.deckService = deckService;
         this.keyboardManager = keyboardManager;
+        this.learningSessionService = learningSessionService;
     }
 
     @Override
@@ -38,7 +43,13 @@ public class DeckMenuStrategy extends BaseEditCallbackStrategy {
     @Override
     protected InlineKeyboardMarkup getKeyboard(CallbackQuery callbackQuery) {
         long deckId = getLastDataElementFromCallback(callbackQuery.getData());
-        return keyboardManager.getDeckMenuKeyboard(deckId);
+        LearningSession session = learningSessionService.getOrCreateSession(deckId);
+
+        int newCards = learningSessionService.countNewCardsInSession(session.getSessionId());
+        int reviewCards = learningSessionService.countReviewCardsInSession(session.getSessionId());
+
+        // Возвращаемся в меню колоды
+        return keyboardManager.getDeckMenuKeyboard(deckId, newCards, reviewCards);
     }
 
     @Override

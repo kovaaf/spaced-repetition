@@ -19,9 +19,12 @@ public class GitHubWebhookController {
 
     @PostMapping
     public ResponseEntity<String> handleWebhook(
-            @RequestHeader(value = "X-GitHub-Event", required = false) String event,
-            @RequestHeader(value = "X-Hub-Signature", required = false) String signature,
-            @RequestBody String rawPayload) {
+            @RequestHeader(value = "X-GitHub-Event", required = false)
+            String event,
+            @RequestHeader(value = "X-Hub-Signature", required = false)
+            String signature,
+            @RequestBody
+            String rawPayload) {
 
         log.debug("Received GitHub webhook with event: {}", event);
         try {

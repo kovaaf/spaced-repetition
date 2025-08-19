@@ -3,8 +3,10 @@ package org.company.spacedrepetitionbot.handler.handlers.text.edit_message.edit_
 import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.handler.handlers.text.MessageState;
 import org.company.spacedrepetitionbot.handler.handlers.text.edit_message.BaseEditTextStrategy;
+import org.company.spacedrepetitionbot.model.LearningSession;
 import org.company.spacedrepetitionbot.service.CardService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -15,15 +17,18 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class EditExistingCardFrontTextStrategy extends BaseEditTextStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
+    private final LearningSessionService learningSessionService;
 
     public EditExistingCardFrontTextStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
             CardService cardService,
-            KeyboardManager keyboardManager) {
+            KeyboardManager keyboardManager,
+            LearningSessionService learningSessionService) {
         super(telegramClient, messageStateService);
         this.cardService = cardService;
         this.keyboardManager = keyboardManager;
+        this.learningSessionService = learningSessionService;
     }
 
     @Override
@@ -39,7 +44,13 @@ public class EditExistingCardFrontTextStrategy extends BaseEditTextStrategy {
                     .orElseThrow(() -> new IllegalStateException("Deck not found for card: " + cardId));
 
             clearPreviousMenu(chatId);
-            sendNewMenu(chatId, result, keyboardManager.getDeckMenuKeyboard(deckId));
+
+            LearningSession session = learningSessionService.getOrCreateSession(deckId);
+
+            int newCards = learningSessionService.countNewCardsInSession(session.getSessionId());
+            int reviewCards = learningSessionService.countReviewCardsInSession(session.getSessionId());
+
+            sendNewMenu(chatId, result, keyboardManager.getDeckMenuKeyboard(deckId, newCards, reviewCards));
         } catch (Exception e) {
             log.error("Ошибка обновления вопроса карты {}: {}", cardId, e.getMessage());
             sendErrorMessage(chatId, "Ошибка при обновлении вопроса");

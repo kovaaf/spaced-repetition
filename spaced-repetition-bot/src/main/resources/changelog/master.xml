@@ -6,4 +6,6 @@
 
     <include file="changelogs/2025.05.25--initialCreateTablesUserInfoAndDeckAndCard.xml"
              relativeToChangelogFile="true"/>
+    <include file="changelogs/2025.05.30--createLearningSessionAndSessionCardsTable.xml"
+             relativeToChangelogFile="true"/>
 </databaseChangeLog>

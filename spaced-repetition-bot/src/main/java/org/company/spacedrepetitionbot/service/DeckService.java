@@ -34,7 +34,8 @@ public class DeckService {
     private final AppProperties appProperties;
     private final UserInfoService userInfoService;
     private final CardRepository cardRepository;
-    @Value("${app.deck.max-cards-display:10}") private int maxCardsToDisplay;
+    @Value("${app.deck.max-cards-display:10}")
+    private int maxCardsToDisplay;
 
     private static String formatErrorMessage(MessageConstants template, Object... args) {
         return String.format(template.getMessage(), args);

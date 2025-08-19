@@ -12,8 +12,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Value("${encryption.password}") private String password;
-    @Value("${encryption.salt}") private String salt;
+    @Value("${encryption.password}")
+    private String password;
+    @Value("${encryption.salt}")
+    private String salt;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

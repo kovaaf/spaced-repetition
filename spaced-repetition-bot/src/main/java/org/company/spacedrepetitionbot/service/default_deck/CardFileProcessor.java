@@ -1,4 +1,4 @@
-package org.company.spacedrepetitionbot.service;
+package org.company.spacedrepetitionbot.service.default_deck;
 
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;

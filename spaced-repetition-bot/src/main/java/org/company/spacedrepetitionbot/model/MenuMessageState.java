@@ -17,15 +17,20 @@ public class MenuMessageState {
     @SequenceGenerator(name = "menu_message_seq", sequenceName = "menu_message_seq", allocationSize = 1)
     private Long id;
 
-    @Column(unique = true, nullable = false) private Long chatId;
+    @Column(unique = true, nullable = false)
+    private Long chatId;
 
-    @Column(nullable = false) private Integer messageId;
+    @Column(nullable = false)
+    private Integer messageId;
 
-    @Column(nullable = false) private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    @Column(nullable = false) private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    @Column private String userState;
+    @Column
+    private String userState;
 
     @PreUpdate
     public void preUpdate() {

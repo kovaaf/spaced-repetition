@@ -15,10 +15,16 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 public class UserInfo {
-    @Id private Long userChatId;
+    @Id
+    private Long userChatId;
+
     private String userName;
-    @OneToMany(mappedBy = "owner") private Set<Deck> decks;
-    @Builder.Default private boolean hasCopiedDefaultDeck = false;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Deck> decks;
+
+    @Builder.Default
+    private boolean hasCopiedDefaultDeck = false;
 
     @Override
     public final boolean equals(Object o) {

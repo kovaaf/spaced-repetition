@@ -72,11 +72,11 @@ public class KeyboardManager {
         return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(allButtons, List.of(1, 1, 1, 4))).build();
     }
 
-    public InlineKeyboardMarkup getDeckMenuKeyboard(Long deckId) {
+    public InlineKeyboardMarkup getDeckMenuKeyboard(Long deckId, int newCards, int reviewCards) {
         List<InlineKeyboardButton> buttons = List.of(
                 // TODO добавить кнопку настроек колоды
                 button(
-                        Callback.LEARN_DECK.getText(),
+                        String.format("%s (%d+%d)", Callback.LEARN_DECK.getText(), newCards, reviewCards),
                         Callback.LEARN_DECK.getAlias() + CALLBACK_DELIMITER.getAlias() + deckId),
                 button(
                         Callback.ADD_CARD.getText(),
@@ -118,7 +118,7 @@ public class KeyboardManager {
         return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1))).build();
     }
 
-    public InlineKeyboardMarkup getLearnDeckKeyboard(Long cardId, Long deckId, Status currentStatus) {
+    public InlineKeyboardMarkup getLearnDeckKeyboard(Long cardId, Long deckId, Long sessionId, Status currentStatus) {
         List<InlineKeyboardButton> buttons = new ArrayList<>(List.of(
                 button(
                         Callback.SHOW_ANSWER.getText(),
@@ -126,7 +126,9 @@ public class KeyboardManager {
                                 CALLBACK_DELIMITER.getAlias() +
                                 cardId +
                                 CALLBACK_DELIMITER.getAlias() +
-                                deckId),
+                                deckId +
+                                CALLBACK_DELIMITER.getAlias() +
+                                sessionId),
                 button(
                         Callback.PREVIOUS.getText(),
                         Callback.PREVIOUS.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId),
@@ -157,7 +159,7 @@ public class KeyboardManager {
         return InlineKeyboardMarkup.builder().keyboard(createDynamicRows(buttons, List.of(1, 2, 2, 1))).build();
     }
 
-    public InlineKeyboardMarkup getShowAnswerKeyboard(Long cardId, Long deckId, Status currentStatus) {
+    public InlineKeyboardMarkup getShowAnswerKeyboard(Long cardId, Long deckId, Long sessionId, Status currentStatus) {
         List<InlineKeyboardButton> buttons = new ArrayList<>(List.of(
                 button(
                         Callback.AGAIN.getText(),
@@ -165,28 +167,36 @@ public class KeyboardManager {
                                 CALLBACK_DELIMITER.getAlias() +
                                 cardId +
                                 CALLBACK_DELIMITER.getAlias() +
-                                deckId),
+                                deckId +
+                                CALLBACK_DELIMITER.getAlias() +
+                                sessionId),
                 button(
                         Callback.HARD.getText(),
                         Callback.HARD.getAlias() +
                                 CALLBACK_DELIMITER.getAlias() +
                                 cardId +
                                 CALLBACK_DELIMITER.getAlias() +
-                                deckId),
+                                deckId +
+                                CALLBACK_DELIMITER.getAlias() +
+                                sessionId),
                 button(
                         Callback.GOOD.getText(),
                         Callback.GOOD.getAlias() +
                                 CALLBACK_DELIMITER.getAlias() +
                                 cardId +
                                 CALLBACK_DELIMITER.getAlias() +
-                                deckId),
+                                deckId +
+                                CALLBACK_DELIMITER.getAlias() +
+                                sessionId),
                 button(
                         Callback.EASY.getText(),
                         Callback.EASY.getAlias() +
                                 CALLBACK_DELIMITER.getAlias() +
                                 cardId +
                                 CALLBACK_DELIMITER.getAlias() +
-                                deckId),
+                                deckId +
+                                CALLBACK_DELIMITER.getAlias() +
+                                sessionId),
                 button(
                         Callback.PREVIOUS.getText(),
                         Callback.PREVIOUS.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId),

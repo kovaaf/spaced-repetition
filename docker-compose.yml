@@ -27,7 +27,7 @@ services:
 #    environment:
 #      ZOOKEEPER_CLIENT_PORT: 2181
 #      ZOOKEEPER_TICK_TIME: 2000
-#      ZOO_HEAP_SIZE: "48m"  # По умолчанию 1G; использует около 130mb
+#      ZOO_HEAP_SIZE: "48m"  # По умолчанию 1G
 #      ZOO_MAX_CLIENT_CNXNS: 20  # По умолчанию 60
 #    restart: always
 #    logging:

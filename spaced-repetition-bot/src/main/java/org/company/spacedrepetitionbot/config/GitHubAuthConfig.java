@@ -8,7 +8,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GitHubAuthConfig {
 
-    @Value("${app.default-deck.repo.token}") private String githubToken;
+    @Value("${app.default-deck.repo.token}")
+    private String githubToken;
 
     @Bean
     public UsernamePasswordCredentialsProvider gitCredentials() {

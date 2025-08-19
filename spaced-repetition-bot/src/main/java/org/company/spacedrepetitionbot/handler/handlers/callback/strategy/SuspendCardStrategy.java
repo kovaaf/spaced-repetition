@@ -4,8 +4,10 @@ import org.company.spacedrepetitionbot.constants.Status;
 import org.company.spacedrepetitionbot.handler.handlers.callback.Callback;
 import org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_message.BaseEditCallbackStrategy;
 import org.company.spacedrepetitionbot.model.Card;
+import org.company.spacedrepetitionbot.model.LearningSession;
 import org.company.spacedrepetitionbot.service.CardService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -15,15 +17,18 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class SuspendCardStrategy extends BaseEditCallbackStrategy {
     private final CardService cardService;
     private final KeyboardManager keyboardManager;
+    private final LearningSessionService learningSessionService;
 
     public SuspendCardStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
             CardService cardService,
-            KeyboardManager keyboardManager) {
+            KeyboardManager keyboardManager,
+            LearningSessionService learningSessionService) {
         super(telegramClient, messageStateService);
         this.keyboardManager = keyboardManager;
         this.cardService = cardService;
+        this.learningSessionService = learningSessionService;
     }
 
     @Override
@@ -44,8 +49,13 @@ public class SuspendCardStrategy extends BaseEditCallbackStrategy {
         card.setStatus(card.getStatus() == Status.SUSPENDED ? Status.REVIEW_YOUNG : Status.SUSPENDED);
         cardService.save(card);
 
+        LearningSession session = learningSessionService.getOrCreateSession(deckId);
+
+        int newCards = learningSessionService.countNewCardsInSession(session.getSessionId());
+        int reviewCards = learningSessionService.countReviewCardsInSession(session.getSessionId());
+
         // Возвращаемся в меню колоды
-        return keyboardManager.getDeckMenuKeyboard(deckId);
+        return keyboardManager.getDeckMenuKeyboard(deckId, newCards, reviewCards);
     }
 
     @Override

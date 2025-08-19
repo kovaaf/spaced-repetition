@@ -8,6 +8,10 @@ telegram:
       url: https://api.telegram.org
 
 app:
+  session:
+    max-new-cards: 20
+    max-review-cards: 100
+    reset-cron: "0 0 3 * * ?" # ежедневно в 3:00
   sync:
     mode: direct # kafka или direct
   deck:

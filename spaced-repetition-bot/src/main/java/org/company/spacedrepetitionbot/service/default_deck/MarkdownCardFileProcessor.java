@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.company.spacedrepetitionbot.exception.FileProcessingException;
 import org.company.spacedrepetitionbot.model.Card;
 import org.company.spacedrepetitionbot.model.Deck;
-import org.company.spacedrepetitionbot.service.CardFileProcessor;
 import org.company.spacedrepetitionbot.service.CardService;
 import org.company.spacedrepetitionbot.service.DeckService;
 import org.springframework.stereotype.Component;
