@@ -36,8 +36,12 @@ public abstract class BaseAnswerStrategy extends BaseEditCallbackStrategy {
         Long cardId = Long.valueOf(getCallbackDataByIndex(callbackQuery.getData(), 1));
         Long sessionId = Long.valueOf(getCallbackDataByIndex(callbackQuery.getData(), 3));
 
-        learningSessionService.updateCardWithAnswer(cardId, getQuality());
-        learningSessionService.removeCardFromSession(sessionId, cardId);
+        Card updatedCard = learningSessionService.updateCardWithAnswer(cardId, getQuality());
+        if (updatedCard.getStatus() != Status.NEW &&
+                updatedCard.getStatus() != Status.LEARNING &&
+                updatedCard.getStatus() != Status.RELEARNING) {
+            learningSessionService.removeCardFromSession(sessionId, cardId);
+        }
 
         super.executeCallbackQuery(callbackQuery);
     }

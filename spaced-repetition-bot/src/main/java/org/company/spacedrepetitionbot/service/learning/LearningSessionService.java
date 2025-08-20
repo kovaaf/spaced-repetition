@@ -41,20 +41,6 @@ public class LearningSessionService {
     //                .orElseThrow(() -> new EntityNotFoundException("No cards found"));
     //    }
 
-    //    @Transactional
-    //    public String updateCardWithAnswer(Long chatId, String deckName, String cardFront, Quality quality) {
-    //        Card card = getCardByFrontAndDeckNameAndUserIdOrThrow(chatId, deckName, cardFront);
-    //        if (card.getStatus() == Status.BURIED || card.getStatus() == Status.SUSPENDED) {
-    //            return "Карточка приостановлена"; // Игнорируем обработку
-    //        }
-    //        String front = card.getFront();
-    //
-    //        card = sm2Algorithm.updateCardWithSMTwoAlgorithm(card, quality);
-    //        cardRepository.save(card);
-    //
-    //        return String.format(ANSWER.getMessage(), front, LEARN_NEXT.getAlias(), deckName, PREV_CARD.getAlias());
-    //    }
-
     //    @Scheduled(cron = "0 0 0 * * ?")
     //    public void resetBuriedCards() {
     //        cardRepository.findByStatus(Status.BURIED).forEach(card -> {
@@ -71,15 +57,15 @@ public class LearningSessionService {
     }
 
     @Transactional
-    public void updateCardWithAnswer(Long cardId, Quality quality) {
+    public Card updateCardWithAnswer(Long cardId, Quality quality) {
         Card card = cardRepository.findById(cardId).orElseThrow(() -> new EntityNotFoundException("Card not found"));
 
         if (card.getStatus() == Status.BURIED || card.getStatus() == Status.SUSPENDED) {
-            return; // Игнорируем обработку
+            return card; // Игнорируем обработку
         }
 
         sm2Algorithm.updateCardWithSMTwoAlgorithm(card, quality);
-        cardRepository.save(card);
+        return cardRepository.save(card);
     }
 
     @Transactional(readOnly = true)
@@ -134,7 +120,6 @@ public class LearningSessionService {
             if (session.getCards().isEmpty()) {
                 throw new SessionCompletedException("Сессия завершена! Все карточки изучены.");
             }
-            // Возвращаем первую карточку в списке
             return session.getCards().get(0);
         }).orElseThrow(() -> new EntityNotFoundException("Session not found"));
     }
@@ -148,10 +133,8 @@ public class LearningSessionService {
     @Transactional
     public void removeCardFromSession(Long sessionId, Long cardId) {
         learningSessionRepository.findById(sessionId).ifPresent(session -> {
-            if (!session.getCards().isEmpty() && session.getCards().get(0).getCardId().equals(cardId)) {
-                session.getCards().remove(0);
-                learningSessionRepository.save(session);
-            }
+            session.getCards().removeIf(card -> card.getCardId().equals(cardId));
+            learningSessionRepository.save(session);
         });
     }
 
