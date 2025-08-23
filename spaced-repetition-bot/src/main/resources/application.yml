@@ -2,15 +2,13 @@ telegram:
   bot:
     name: ${TELEGRAM_BOT_NAME}
     token: ${TELEGRAM_BOT_TOKEN}
-    creator:
-      id: ${TELEGRAM_BOT_CREATOR_ID}
     api:
       url: https://api.telegram.org
 
 app:
   session:
-    max-new-cards: 20
-    max-review-cards: 100
+    max-new-cards: 10
+    max-review-cards: 50
     reset-cron: "0 0 3 * * ?" # ежедневно в 3:00
   sync:
     mode: direct # kafka или direct
@@ -22,7 +20,7 @@ app:
       url: https://github.com/kovaaf/obsidian-git-sync.git
       branch: main
       path: ./local-repo
-      #            Пути должны быть полными относительно корня репозитория
+      # Пути должны быть полными относительно корня репозитория
       source-folders:
         - Interview/Java Core
         - Interview/JVM
@@ -37,7 +35,7 @@ app:
         - Interview/Микросервисы
         - Interview/Прочие вопросы
       exclude-folders:
-      #                - Прочие шаблоны
+#        - Прочие шаблоны
       webhook-secret: ${GIT_WEBHOOK_SECRET}
       token: ${GIT_TOKEN}
     sync:
