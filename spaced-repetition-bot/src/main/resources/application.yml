@@ -7,8 +7,8 @@ telegram:
 
 app:
   session:
-    max-new-cards: 10
-    max-review-cards: 50
+    max-new-cards: 3
+    max-review-cards: 15
     reset-cron: "0 0 3 * * ?" # ежедневно в 3:00
   sync:
     mode: direct # kafka или direct
