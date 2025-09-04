@@ -2,6 +2,7 @@ package org.company.spacedrepetitionbot.service.learning;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.config.SessionProperties;
 import org.company.spacedrepetitionbot.constants.Quality;
 import org.company.spacedrepetitionbot.constants.Status;
@@ -21,9 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LearningSessionService {
@@ -79,7 +82,17 @@ public class LearningSessionService {
         LocalDateTime now = LocalDateTime.now();
         Deck deck = deckRepository.findById(deckId).orElseThrow(() -> new DeckNotFoundException("Колода не найдена"));
 
-        return learningSessionRepository.findByDeck(deck).orElseGet(() -> createNewSession(deck, now));
+        Optional<LearningSession> existingSession = learningSessionRepository.findByDeck(deck);
+
+        // Если сессия существует и содержит карточки - возвращаем её
+        if (existingSession.isPresent() && !existingSession.get().getCards().isEmpty()) {
+            return existingSession.get();
+        }
+
+        // Если сессия существует, но пустая - удаляем и создаём новую
+        existingSession.ifPresent(learningSessionRepository::delete);
+
+        return createNewSession(deck, now);
     }
 
     private LearningSession createNewSession(Deck deck, LocalDateTime now) {
@@ -87,6 +100,9 @@ public class LearningSessionService {
         session.setDeck(deck);
         session.setCreatedAt(now);
 
+        // TODO добавлять LEARNING/RELEARNING/NEW только если
+        //  learningCards.size() < max-new-cards + max-review-cards
+        //  т.е. в приоритете повторяемые карты, а не новые
         // Получаем карточки для изучения с приоритетом: LEARNING/RELEARNING -> NEW
         List<Card> learningCards = cardRepository.findCardsForSession(
                 deck,
@@ -126,8 +142,14 @@ public class LearningSessionService {
 
     @Scheduled(cron = "${app.session.reset-cron}")
     @Transactional
-    public void resetExpiredSessions() {
-        learningSessionRepository.deleteAll();
+    public void resetSessions() {
+        try {
+            log.info("Resetting learning sessions");
+            learningSessionRepository.deleteAll();
+            log.info("All learning sessions have been reset");
+        } catch (Exception e) {
+            log.error("Error resetting learning sessions", e);
+        }
     }
 
     @Transactional

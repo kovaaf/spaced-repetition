@@ -127,7 +127,8 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
         int reviewCards = learningSessionService.countReviewCardsInSession(session.getSessionId());
 
         try {
-            String message = "🎉 Сессия завершена! Все карточки изучены.";
+            String message = "🎉 Сессия завершена! Все карточки изучены. " +
+                    "Новая сессия будет создана при следующем запуске.";
             telegramClient.execute(EditMessageText.builder()
                     .chatId(chatId)
                     .messageId(callbackQuery.getMessage().getMessageId())
