@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Spaced Repetition Data with Gradle
         working-directory: ./spaced-repetition-data
-        run: ./gradlew build -x test
+        run: ./gradlew test jacocoTestReport
 
       - name: Generate Coverage Badges for Spaced Repetition Bot
         id: jacocoSpacedRepetitionBot
