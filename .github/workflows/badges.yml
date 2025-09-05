@@ -29,13 +29,13 @@ jobs:
           coverage-badge-filename: jacoco_spaced_repetition_bot.svg
           coverage-label: coverage (Spaced Repetition Bot)
 
-      - name: Generate Coverage Badges for Spaced Repetition Web
-        id: jacocoSpacedRepetitionWeb
+      - name: Generate Coverage Badges for Spaced Repetition Data
+        id: jacocoSpacedRepetitionData
         uses: cicirello/jacoco-badge-generator@v2
         with:
-          jacoco-csv-file: spaced-repetition-web/target/jacoco-report/jacoco.csv
-          coverage-badge-filename: jacoco_spaced_repetition_web.svg
-          coverage-label: coverage (Spaced Repetition Web)
+          jacoco-csv-file: spaced-repetition-data/target/jacoco-report/jacoco.csv
+          coverage-badge-filename: jacoco_spaced_repetition_data.svg
+          coverage-label: coverage (Spaced Repetition Data)
 
       - name: Commit the badge (if it changed)
         run: |
@@ -52,9 +52,9 @@ jobs:
           gist_id: c27f99167289d841c193513031ab9a48
           file_path: .github/badges/jacoco_spaced_repetition_bot.svg
 
-      - name: Upload Spaced Repetition Web Badge to Gist
+      - name: Upload Spaced Repetition Data Badge to Gist
         uses: exuanbo/actions-deploy-gist@v1
         with:
           token: ${{ secrets.GIT_TOKEN }}
           gist_id: c27f99167289d841c193513031ab9a48
-          file_path: .github/badges/jacoco_spaced_repetition_web.svg
+          file_path: .github/badges/jacoco_spaced_repetition_data.svg
