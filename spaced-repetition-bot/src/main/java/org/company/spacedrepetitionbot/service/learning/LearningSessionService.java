@@ -109,9 +109,16 @@ public class LearningSessionService {
                 List.of(Status.LEARNING, Status.RELEARNING),
                 PageRequest.of(0, sessionProperties.getMaxNewCards()));
 
+        // Добавляем карты на ревью со следующим временем ревью меньше текущего времени
+        List<Card> reviewCardsToday = cardRepository.findOverdueReviewCards(
+                deck, LocalDateTime.now(), PageRequest.of(
+                        0,
+                        sessionProperties.getMaxReviewCards() + sessionProperties.getMaxNewCards() -
+                                learningCards.size()));
+
         // Если не набрали достаточно, добавляем NEW
-        if (learningCards.size() < sessionProperties.getMaxNewCards()) {
-            int remaining = sessionProperties.getMaxNewCards() - learningCards.size();
+        if (learningCards.size() + reviewCardsToday.size() < sessionProperties.getMaxNewCards()) {
+            int remaining = sessionProperties.getMaxNewCards() - learningCards.size() - reviewCardsToday.size();
             List<Card> newCards = cardRepository.findCardsForSession(
                     deck,
                     List.of(Status.NEW),
@@ -119,12 +126,15 @@ public class LearningSessionService {
             learningCards.addAll(newCards);
         }
 
+        // Добавляем карты на ревью по минимальному следующему времени ревью
         List<Card> reviewCards = cardRepository.findCardsForSession(
                 deck,
                 List.of(Status.REVIEW_YOUNG, Status.REVIEW_MATURE),
                 PageRequest.of(0, sessionProperties.getMaxReviewCards()));
 
-        List<Card> allCards = Stream.concat(learningCards.stream(), reviewCards.stream()).collect(Collectors.toList());
+        List<Card> allCards = Stream.of(learningCards, reviewCardsToday, reviewCards)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
         session.setCards(allCards);
         return learningSessionRepository.save(session);

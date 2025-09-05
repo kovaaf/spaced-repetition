@@ -47,7 +47,8 @@ public class SM2Algorithm {
 
     // Параметры переучивания
     // TODO пользователь может включать и настраивать - это процент от последнего интервала
-    private final static double RELEARNING_INTERVAL = 0.25;
+    //  Обратить внимание, что в текущей реализации это множитель на LocalDateTime, а не на интервал
+    private final static double RELEARNING_INTERVAL = 1.25;
     private final static boolean USER_RELEARNING_INTERVAL = false;
 
     /**
@@ -55,10 +56,11 @@ public class SM2Algorithm {
      *
      * @param card    карточка для обновления
      * @param quality качество ответа пользователя
-     * @return обновленная карточка
      * @throws IllegalArgumentException если передан недопустимый статус карточки
      */
-    public Card updateCardWithSMTwoAlgorithm(Card card, Quality quality) {
+    public void updateCardWithSMTwoAlgorithm(Card card, Quality quality) {
+        log.debug("Updating card {} with quality {}", card.getCardId(), quality);
+
         // Для новых карточек устанавливаем статус LEARNING
         if (card.getStatus() == Status.NEW) {
             card.setStatus(Status.LEARNING);
@@ -72,7 +74,13 @@ public class SM2Algorithm {
         }
 
         updateCardStatus(card);
-        return card;
+
+        log.debug(
+                "Card {} updated: status={}, nextReview={}, easiness={}",
+                card.getCardId(),
+                card.getStatus(),
+                card.getNextReviewTime(),
+                card.getEasinessFactor());
     }
 
     /**
@@ -176,12 +184,19 @@ public class SM2Algorithm {
             newInterval = (long) (previousInterval * 1.2);
         }
 
-        setNextReviewIntervalFromCurrentInterval(card, newInterval);
+        // 1 день в минутах
+        long minInterval = 24 * 60;
+        if (newInterval < minInterval) {
+            newInterval = minInterval;
+        }
+
+        setNextReviewIntervalFromNow(card, newInterval);
     }
 
     private void updateCardStatus(Card card) {
         if (card.getStatus() == Status.REVIEW_YOUNG || card.getStatus() == Status.REVIEW_MATURE) {
             long days = Duration.between(LocalDateTime.now(), card.getNextReviewTime()).toDays();
+
             if (days >= MATURE_THRESHOLD_DAYS) {
                 card.setStatus(Status.REVIEW_MATURE);
             } else {
@@ -197,17 +212,26 @@ public class SM2Algorithm {
     }
 
     private void setNextReviewIntervalFromNow(Card card, long minutes) {
+        if (minutes < 0) {
+            log.warn(
+                    "Attempt to set negative interval for card {}: {} minutes. Using default 1 day.",
+                    card.getCardId(),
+                    minutes);
+            minutes = 24 * 60; // 1 день по умолчанию
+        }
         card.setNextReviewTime(LocalDateTime.now().plusMinutes(minutes));
     }
 
-    private void setNextReviewIntervalFromCurrentInterval(Card card, long minutes) {
-        card.setNextReviewTime(card.getNextReviewTime().plusMinutes(minutes));
-    }
-
     private long getPreviousInterval(Card card) {
-        return card.getNextReviewTime() != null ?
-                Duration.between(LocalDateTime.now(), card.getNextReviewTime()).toMinutes() :
-                0;
+        if (card.getNextReviewTime() == null) {
+            return 0;
+        }
+
+        Duration duration = Duration.between(LocalDateTime.now(), card.getNextReviewTime());
+        long minutes = duration.toMinutes();
+
+        // Если карточка просрочена, возвращаем минимальный положительный интервал
+        return minutes < 0 ? 0 : minutes;
     }
 
     /**

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,4 +44,11 @@ public interface CardRepository extends JpaRepository<Card, Long> {
             "   WHEN c.status = org.company.spacedrepetitionbot.constants.Status.NEW THEN 2 " +
             "   ELSE 3 END, c.nextReviewTime ASC")
     List<Card> findCardsForSession(Deck deck, List<Status> statuses, Pageable pageable);
+
+    @Query("SELECT c FROM Card c " +
+            "WHERE c.deck = :deck " +
+            "AND c.status IN ('REVIEW_YOUNG', 'REVIEW_MATURE') " +
+            "AND c.nextReviewTime <= :now " +
+            "ORDER BY c.nextReviewTime ASC")
+    List<Card> findOverdueReviewCards(Deck deck, LocalDateTime now, Pageable pageable);
 }
