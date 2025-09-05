@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: spaced-repetition-data
+
+server:
+  port: 8081
