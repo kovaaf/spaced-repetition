@@ -18,6 +18,7 @@ services:
       driver: "json-file"
       options:
         max-size: 10m
+        max-file: 3
 
 #  zookeeper:
 #    image: confluentinc/cp-zookeeper:7.0.0
@@ -105,23 +106,29 @@ services:
       driver: "json-file"
       options:
         max-size: 10m
+        max-file: 3
     depends_on:
       - spaced-repetition-bot-db
 #      - kafka
 
-#  spaced-repetition-data:
-#    image: ouidockeruser/spaced-repetition-data:latest
-#    container_name: spaced-repetition-data
-#    restart: unless-stopped
-#    environment:
-#      _JAVA_OPTIONS: -Xmx256m -Xms64m -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0
+  spaced-repetition-data:
+    build:
+      context: .
+      dockerfile: spaced-repetition-data/Dockerfile
+    container_name: spaced-repetition-data
+    restart: unless-stopped
+    environment:
+      _JAVA_OPTIONS: -Xmx256m -Xms64m -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0
 #      CLICKHOUSE_URL: jdbc:clickhouse://clickhouse:8123/default
-#      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
-#    ports:
-#      - "9090:9090"  # gRPC порт
+    ports:
+      - "9090:9090"  # gRPC порт
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 10m
+        max-file: 3
 #    depends_on:
 #      - clickhouse
-#      - kafka
 #
 #  clickhouse:
 #    image: clickhouse/clickhouse-server:latest

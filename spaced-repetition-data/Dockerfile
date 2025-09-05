@@ -20,6 +20,6 @@ RUN ./gradlew build -x test --no-daemon
 
 # Финальный образ
 FROM openjdk:21-jdk-slim
-EXPOSE 8080
+EXPOSE 9090
 COPY --from=build /workspace/spaced-repetition-data/build/libs/*.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]
