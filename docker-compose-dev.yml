@@ -108,3 +108,33 @@ services:
     depends_on:
       - spaced-repetition-bot-db
 #      - kafka
+
+#  spaced-repetition-data:
+#    image: ouidockeruser/spaced-repetition-data:latest
+#    container_name: spaced-repetition-data
+#    restart: unless-stopped
+#    environment:
+#      _JAVA_OPTIONS: -Xmx256m -Xms64m -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0
+#      CLICKHOUSE_URL: jdbc:clickhouse://clickhouse:8123/default
+#      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+#    ports:
+#      - "9090:9090"  # gRPC порт
+#    depends_on:
+#      - clickhouse
+#      - kafka
+#
+#  clickhouse:
+#    image: clickhouse/clickhouse-server:latest
+#    container_name: clickhouse
+#    ports:
+#      - "8123:8123"
+#    volumes:
+#      - clickhouse_data:/var/lib/clickhouse
+#    environment:
+#      CLICKHOUSE_DB: spaced_repetition
+#      CLICKHOUSE_USER: admin
+#      CLICKHOUSE_PASSWORD: admin
+#    restart: unless-stopped
+#
+#volumes:
+#  clickhouse_data:

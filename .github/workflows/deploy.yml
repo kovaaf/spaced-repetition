@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       spaced-repetition-bot: ${{ steps.filter.outputs.spaced-repetition-bot }}
-      spaced-repetition-web: ${{ steps.filter.outputs.spaced-repetition-web }}
+      spaced-repetition-data: ${{ steps.filter.outputs.spaced-repetition-data }}
       docker-compose: ${{ steps.filter.outputs.docker-compose }}
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
           base: ${{ github.ref }}
           filters: |
             spaced-repetition-bot: ['spaced-repetition-bot/**']
-            spaced-repetition-web: ['spaced-repetition-web/**']
+            spaced-repetition-data: ['spaced-repetition-data/**']
             docker-compose: ['docker-compose.yml']
 
   push-docker-compose-to-remote-server:
@@ -63,13 +63,13 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-#      - name: Build and Push Web Image
-#        if: ${{ needs.detect-changes.outputs.spaced-repetition-web == 'true' }}
+#      - name: Build and Push Data Image
+#        if: ${{ needs.detect-changes.outputs.spaced-repetition-data == 'true' }}
 #        uses: docker/build-push-action@v3
 #        with:
-#          file: spaced-repetition-web/Dockerfile
+#          file: spaced-repetition-data/Dockerfile
 #          push: true
-#          tags: ouidockeruser/spaced-repetition-web:latest
+#          tags: ouidockeruser/spaced-repetition-data:latest
 #          cache-from: type=gha
 #          cache-to: type=gha,mode=max
 
@@ -128,7 +128,7 @@ jobs:
               echo "Partial update"
               services_to_update=()
               [ '${{ needs.detect-changes.outputs.spaced-repetition-bot }}' = 'true' ] && services_to_update+=("spaced-repetition-bot")
-              [ '${{ needs.detect-changes.outputs.spaced-repetition-web }}' = 'true' ] && services_to_update+=("spaced-repetition-web")
+#              [ '${{ needs.detect-changes.outputs.spaced-repetition-data }}' = 'true' ] && services_to_update+=("spaced-repetition-data")
             
               for service in "${services_to_update[@]}"; do
                 echo "Updating $service"

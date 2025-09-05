@@ -18,7 +18,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>spaced-repetition-web</module>
 		<module>spaced-repetition-bot</module>
 	</modules>
 
