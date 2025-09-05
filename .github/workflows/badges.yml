@@ -18,11 +18,11 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Make gradlew executable
-        run: chmod +x ./spaced-repetition-data/gradlew
+      - name: Build with Maven (excluding data module)
+        run: mvn -B verify -pl !spaced-repetition-data
 
-      - name: Build with Maven
-        run: mvn -B verify
+      - name: Build Spaced Repetition Data with Gradle
+        run: cd spaced-repetition-data && chmod +x gradlew && ./gradlew build -x test
 
       - name: Generate Coverage Badges for Spaced Repetition Bot
         id: jacocoSpacedRepetitionBot
@@ -36,7 +36,7 @@ jobs:
         id: jacocoSpacedRepetitionData
         uses: cicirello/jacoco-badge-generator@v2
         with:
-          jacoco-csv-file: spaced-repetition-data/target/jacoco-report/jacoco.csv
+          jacoco-csv-file: spaced-repetition-data/build/jacoco-report/jacoco.csv
           coverage-badge-filename: jacoco_spaced_repetition_data.svg
           coverage-label: coverage (Spaced Repetition Data)
 

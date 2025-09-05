@@ -19,7 +19,6 @@
 
 	<modules>
 		<module>spaced-repetition-bot</module>
-        <module>spaced-repetition-data</module>
     </modules>
 
     <properties>
