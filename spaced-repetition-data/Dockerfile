@@ -5,7 +5,6 @@ WORKDIR /workspace
 # Копируем файлы Gradle
 COPY ./spaced-repetition-data/gradle ./spaced-repetition-data/gradle
 COPY ./spaced-repetition-data/gradlew ./spaced-repetition-data/
-COPY ./spaced-repetition-data/gradle.properties ./spaced-repetition-data/
 COPY ./spaced-repetition-data/build.gradle.kts ./spaced-repetition-data/
 COPY ./spaced-repetition-data/settings.gradle.kts ./spaced-repetition-data/
 
