@@ -19,6 +19,8 @@ services:
       options:
         max-size: 10m
         max-file: 3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 #  zookeeper:
 #    image: confluentinc/cp-zookeeper:7.0.0
@@ -141,3 +143,6 @@ services:
 #
 #volumes:
 #  clickhouse_data:
+
+volumes:
+  postgres_data:
