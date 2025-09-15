@@ -20,9 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -96,6 +98,7 @@ public class LearningSessionService {
     }
 
     private LearningSession createNewSession(Deck deck, LocalDateTime now) {
+        log.debug("Creating new session for deck: {}", deck.getDeckId());
         LearningSession session = new LearningSession();
         session.setDeck(deck);
         session.setCreatedAt(now);
@@ -134,9 +137,18 @@ public class LearningSessionService {
 
         List<Card> allCards = Stream.of(learningCards, reviewCardsToday, reviewCards)
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(
+                                Card::getCardId,
+                                Function.identity(),
+                                (existing, replacement) -> existing
+                        ),
+                        map -> new ArrayList<>(map.values())
+                ));
 
         session.setCards(allCards);
+        log.debug("Session created with {} cards ({} learning, {} review today, {} review)",
+                allCards.size(), learningCards.size(), reviewCardsToday.size(), reviewCards.size());
         return learningSessionRepository.save(session);
     }
 
