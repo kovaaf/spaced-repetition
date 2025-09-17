@@ -12,6 +12,7 @@ import org.company.spacedrepetitionbot.service.DeckService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
 import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -29,10 +30,11 @@ public class LearnDeckStrategy extends BaseEditCallbackStrategy {
     public LearnDeckStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             KeyboardManager keyboardManager,
             DeckService deckService,
             LearningSessionService learningSessionService) {
-        super(telegramClient, messageStateService);
+        super(telegramClient, messageStateService, markdownEscaper);
         this.keyboardManager = keyboardManager;
         this.deckService = deckService;
         this.learningSessionService = learningSessionService;

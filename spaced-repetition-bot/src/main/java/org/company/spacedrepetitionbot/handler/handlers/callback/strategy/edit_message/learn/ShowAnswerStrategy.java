@@ -8,13 +8,11 @@ import org.company.spacedrepetitionbot.service.CardService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
 import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
@@ -25,10 +23,11 @@ public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
     public ShowAnswerStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             LearningSessionService learningSessionService,
             KeyboardManager keyboardManager,
             CardService cardService) {
-        super(telegramClient, messageStateService);
+        super(telegramClient, messageStateService, markdownEscaper);
         this.learningSessionService = learningSessionService;
         this.keyboardManager = keyboardManager;
         this.cardService = cardService;
@@ -46,42 +45,36 @@ public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
 
         try {
             String answer = learningSessionService.getCardAnswerById(cardId);
-            // Экранируем специальные символы Markdown
 
             if (answer.length() > 4096) {
-                // TODO добавить обработчик
                 String errorMessage = "Сообщение слишком длинное для отображения в Telegram\n\n";
-                return errorMessage + answer.substring(0, 4096 - errorMessage.length());
+                int maxLength = 4096 - errorMessage.length();
+
+                // Проверяем, не обрезаем ли мы середину блока кода
+                String truncated = answer.substring(0, maxLength);
+
+                // Ищем последний полный блок кода
+                int lastCompleteCodeBlock = findLastCompleteCodeBlock(truncated);
+
+                if (lastCompleteCodeBlock != -1) {
+                    // Обрезаем до конца последнего полного блока кода
+                    truncated = truncated.substring(0, lastCompleteCodeBlock);
+                } else {
+                    // Если нет полных блоков кода, ищем начало незавершенного блока
+                    int lastCodeBlockStart = truncated.lastIndexOf("```");
+                    if (lastCodeBlockStart != -1) {
+                        // Удаляем незавершенный блок кода
+                        truncated = truncated.substring(0, lastCodeBlockStart);
+                    }
+                }
+
+                return errorMessage + truncated + "\n\n⚠️ *Текст обрезан, так как не помещается в сообщение Telegram*";
             }
 
-            return escapeMarkdownOutsideCodeBlocks(answer);
+            return answer;
         } catch (EntityNotFoundException e) {
             return "Карточка не найдена";
         }
-    }
-
-    private String escapeMarkdownOutsideCodeBlocks(String text) {
-        // Разделяем текст на части: code blocks и обычный текст
-        Pattern pattern = Pattern.compile("(```.*?```)|([^`]+)");
-        Matcher matcher = pattern.matcher(text);
-        StringBuilder result = new StringBuilder();
-
-        while (matcher.find()) {
-            if (matcher.group(1) != null) {
-                // Это code block - оставляем как есть
-                matcher.appendReplacement(result, Matcher.quoteReplacement(matcher.group(1)));
-            } else {
-                // Это обычный текст - экранируем специальные символы
-                String escaped = matcher.group(2)
-                        .replace("*", "\\*")
-                        .replace("_", "\\_")
-                        .replace("[", "\\[")
-                        .replace("]", "\\]");
-                matcher.appendReplacement(result, Matcher.quoteReplacement(escaped));
-            }
-        }
-        matcher.appendTail(result);
-        return result.toString();
     }
 
     @Override
@@ -96,5 +89,23 @@ public class ShowAnswerStrategy extends BaseEditCallbackStrategy {
     @Override
     public Callback getPrefix() {
         return Callback.SHOW_ANSWER;
+    }
+
+    private int findLastCompleteCodeBlock(String text) {
+        int lastCompleteEnd = -1;
+        int currentPos = 0;
+
+        while (currentPos < text.length()) {
+            int codeBlockStart = text.indexOf("```", currentPos);
+            if (codeBlockStart == -1) break;
+
+            int codeBlockEnd = text.indexOf("```", codeBlockStart + 3);
+            if (codeBlockEnd == -1) break;
+
+            lastCompleteEnd = codeBlockEnd + 3; // включая закрывающие ```
+            currentPos = lastCompleteEnd;
+        }
+
+        return lastCompleteEnd;
     }
 }

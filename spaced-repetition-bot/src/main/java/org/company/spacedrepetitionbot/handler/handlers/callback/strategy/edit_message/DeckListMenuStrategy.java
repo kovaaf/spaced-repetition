@@ -6,6 +6,7 @@ import org.company.spacedrepetitionbot.service.DeckService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
 import org.company.spacedrepetitionbot.service.UserInfoService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -23,10 +24,11 @@ public class DeckListMenuStrategy extends BaseEditCallbackStrategy {
     public DeckListMenuStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             KeyboardManager keyboardManager,
             DeckService deckService,
             UserInfoService userInfoService) {
-        super(telegramClient, messageStateService);
+        super(telegramClient, messageStateService, markdownEscaper);
         this.keyboardManager = keyboardManager;
         this.deckService = deckService;
         this.userInfoService = userInfoService;

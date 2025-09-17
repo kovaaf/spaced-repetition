@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.company.spacedrepetitionbot.handler.handlers.callback.Callback;
 import org.company.spacedrepetitionbot.handler.handlers.callback.strategy.CallbackStrategy;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -17,10 +18,13 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
     protected final TelegramClient telegramClient;
     protected final MessageStateService messageStateService;
+    protected final MarkdownEscaper markdownEscaper;
 
-    protected BaseEditCallbackStrategy(TelegramClient telegramClient, MessageStateService messageStateService) {
+    protected BaseEditCallbackStrategy(TelegramClient telegramClient, MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper) {
         this.telegramClient = telegramClient;
         this.messageStateService = messageStateService;
+        this.markdownEscaper = markdownEscaper;
     }
 
     protected abstract String getMessageText(CallbackQuery callbackQuery);
@@ -59,11 +63,19 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
     protected void editMenuMessage(Long chatId, Integer messageId, CallbackQuery callbackQuery) throws
             TelegramApiException {
 
+        String messageText = getMessageText(callbackQuery);
+        String escapedText = markdownEscaper.escapeMarkdownV2(messageText);
+
+        log.debug("Original text: {}", messageText);
+        log.debug("Escaped text: {}", escapedText);
+        log.debug("Contains '(': {}", messageText.contains("("));
+        log.debug("Contains '\\(': {}", escapedText.contains("\\("));
+
         EditMessageText editMessage = EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)
-                .text(getMessageText(callbackQuery))
-                .parseMode("Markdown")
+                .text(escapedText)
+                .parseMode("MarkdownV2")
                 .replyMarkup(getKeyboard(callbackQuery))
                 .build();
 
@@ -82,9 +94,13 @@ public abstract class BaseEditCallbackStrategy implements CallbackStrategy {
         try {
             clearPreviousMenu(chatId);
 
+            String messageText = getMessageText(callbackQuery);
+            String escapedText = markdownEscaper.escapeMarkdownV2(messageText);
+
             Message sentMessage = telegramClient.execute(SendMessage.builder()
                     .chatId(chatId)
-                    .text(getMessageText(callbackQuery))
+                    .text(escapedText)
+                    .parseMode("MarkdownV2")
                     .replyMarkup(getKeyboard(callbackQuery))
                     .build());
 

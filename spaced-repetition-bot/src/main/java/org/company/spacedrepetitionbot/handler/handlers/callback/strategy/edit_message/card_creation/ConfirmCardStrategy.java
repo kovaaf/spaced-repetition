@@ -10,6 +10,7 @@ import org.company.spacedrepetitionbot.service.CardService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
 import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -28,11 +29,12 @@ public class ConfirmCardStrategy extends BaseEditCallbackStrategy {
     public ConfirmCardStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             CardDraftService cardDraftService,
             CardService cardService,
             KeyboardManager keyboardManager,
             LearningSessionService learningSessionService) {
-        super(telegramClient, messageStateService);
+        super(telegramClient, messageStateService, markdownEscaper);
         this.cardDraftService = cardDraftService;
         this.cardService = cardService;
         this.keyboardManager = keyboardManager;

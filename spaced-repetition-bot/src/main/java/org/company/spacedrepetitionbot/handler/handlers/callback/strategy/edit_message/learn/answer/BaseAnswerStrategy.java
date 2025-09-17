@@ -11,6 +11,7 @@ import org.company.spacedrepetitionbot.model.LearningSession;
 import org.company.spacedrepetitionbot.service.MessageStateService;
 import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -24,9 +25,10 @@ public abstract class BaseAnswerStrategy extends BaseEditCallbackStrategy {
     protected BaseAnswerStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             LearningSessionService learningSessionService,
             KeyboardManager keyboardManager) {
-        super(telegramClient, messageStateService);
+        super(telegramClient, messageStateService, markdownEscaper);
         this.learningSessionService = learningSessionService;
         this.keyboardManager = keyboardManager;
     }

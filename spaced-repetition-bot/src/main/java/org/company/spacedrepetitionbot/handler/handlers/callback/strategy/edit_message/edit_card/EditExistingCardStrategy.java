@@ -5,6 +5,7 @@ import org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_m
 import org.company.spacedrepetitionbot.service.CardService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -18,9 +19,10 @@ public class EditExistingCardStrategy extends BaseEditCallbackStrategy {
     public EditExistingCardStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             CardService cardService,
             KeyboardManager keyboardManager) {
-        super(telegramClient, messageStateService);
+        super(telegramClient, messageStateService, markdownEscaper);
         this.cardService = cardService;
         this.keyboardManager = keyboardManager;
     }

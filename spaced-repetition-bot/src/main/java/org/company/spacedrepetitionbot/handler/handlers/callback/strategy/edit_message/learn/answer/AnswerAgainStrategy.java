@@ -5,6 +5,7 @@ import org.company.spacedrepetitionbot.handler.handlers.callback.Callback;
 import org.company.spacedrepetitionbot.service.MessageStateService;
 import org.company.spacedrepetitionbot.service.learning.LearningSessionService;
 import org.company.spacedrepetitionbot.utils.KeyboardManager;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
@@ -15,9 +16,10 @@ public class AnswerAgainStrategy extends BaseAnswerStrategy {
     protected AnswerAgainStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             LearningSessionService learningSessionService,
             KeyboardManager keyboardManager) {
-        super(telegramClient, messageStateService, learningSessionService, keyboardManager);
+        super(telegramClient, messageStateService, markdownEscaper, learningSessionService, keyboardManager);
     }
 
     @Override

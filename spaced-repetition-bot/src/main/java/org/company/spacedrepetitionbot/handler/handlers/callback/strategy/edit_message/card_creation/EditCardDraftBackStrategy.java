@@ -6,6 +6,7 @@ import org.company.spacedrepetitionbot.handler.handlers.callback.strategy.edit_m
 import org.company.spacedrepetitionbot.handler.handlers.text.MessageState;
 import org.company.spacedrepetitionbot.service.CardDraftService;
 import org.company.spacedrepetitionbot.service.MessageStateService;
+import org.company.spacedrepetitionbot.utils.MarkdownEscaper;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -22,8 +23,9 @@ public class EditCardDraftBackStrategy extends BaseEditCallbackStrategy {
     public EditCardDraftBackStrategy(
             TelegramClient telegramClient,
             MessageStateService messageStateService,
+            MarkdownEscaper markdownEscaper,
             CardDraftService cardDraftService) {
-        super(telegramClient, messageStateService);
+        super(telegramClient, messageStateService, markdownEscaper);
         this.cardDraftService = cardDraftService;
         this.messageStateService = messageStateService;
     }
