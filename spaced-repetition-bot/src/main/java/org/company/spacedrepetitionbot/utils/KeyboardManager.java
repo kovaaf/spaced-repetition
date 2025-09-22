@@ -129,9 +129,10 @@ public class KeyboardManager {
                                 deckId +
                                 CALLBACK_DELIMITER.getAlias() +
                                 sessionId),
-                button(
-                        Callback.PREVIOUS.getText(),
-                        Callback.PREVIOUS.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId),
+// TODO разработать функционал возврата к предыдущей карте
+//                button(
+//                        Callback.PREVIOUS.getText(),
+//                        Callback.PREVIOUS.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId),
                 button(
                         Callback.EDIT_EXISTING_CARD.getText(),
                         Callback.EDIT_EXISTING_CARD.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId)
@@ -197,9 +198,10 @@ public class KeyboardManager {
                                 deckId +
                                 CALLBACK_DELIMITER.getAlias() +
                                 sessionId),
-                button(
-                        Callback.PREVIOUS.getText(),
-                        Callback.PREVIOUS.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId),
+// TODO разработать функционал возврата к предыдущей карте
+//                button(
+//                        Callback.PREVIOUS.getText(),
+//                        Callback.PREVIOUS.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId),
                 button(
                         Callback.EDIT_EXISTING_CARD.getText(),
                         Callback.EDIT_EXISTING_CARD.getAlias() + CALLBACK_DELIMITER.getAlias() + cardId)
