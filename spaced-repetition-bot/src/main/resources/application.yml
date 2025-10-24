@@ -7,7 +7,7 @@ telegram:
 
 app:
   session:
-    max-new-cards: 3
+    max-new-cards: 5
     max-review-cards: 15
     reset-cron: "0 0 3 * * ?" # ежедневно в 3:00
   sync:
@@ -30,7 +30,7 @@ app:
         - Interview/Stream API
         - Interview/БД
         - Interview/Hibernate & JPA
-        - Interview/Spring
+#        - Interview/Spring/Модули Spring
         - Interview/Design Patterns
         - Interview/Микросервисы
         - Interview/Прочие вопросы
@@ -95,3 +95,10 @@ server:
 encryption:
   password: ${ENCRYPTION_PASSWORD}
   salt: ${ENCRYPTION_SALT}
+
+grpc:
+  client:
+    myGrpcService:
+      address: 'static://localhost:9091'
+      negotiation-type: plaintext
+
