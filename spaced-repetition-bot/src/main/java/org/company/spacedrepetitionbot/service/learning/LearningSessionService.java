@@ -20,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -103,10 +100,7 @@ public class LearningSessionService {
         session.setDeck(deck);
         session.setCreatedAt(now);
 
-        // TODO добавлять LEARNING/RELEARNING/NEW только если
-        //  learningCards.size() < max-new-cards + max-review-cards
-        //  т.е. в приоритете повторяемые карты, а не новые
-        // Получаем карточки для изучения с приоритетом: LEARNING/RELEARNING -> NEW
+        // Получаем карточки для изучения с приоритетом: LEARNING/RELEARNING
         List<Card> learningCards = cardRepository.findCardsForSession(
                 deck,
                 List.of(Status.LEARNING, Status.RELEARNING),
@@ -119,21 +113,26 @@ public class LearningSessionService {
                         sessionProperties.getMaxReviewCards() + sessionProperties.getMaxNewCards() -
                                 learningCards.size()));
 
-        // Если не набрали достаточно, добавляем NEW
-        if (learningCards.size() + reviewCardsToday.size() < sessionProperties.getMaxNewCards()) {
-            int remaining = sessionProperties.getMaxNewCards() - learningCards.size() - reviewCardsToday.size();
-            List<Card> newCards = cardRepository.findCardsForSession(
+        // Добавляем NEW карточки
+        int remainingNewCards = sessionProperties.getMaxNewCards() - learningCards.size();
+        List<Card> newCards = Collections.emptyList();
+        if (remainingNewCards > 0) {
+            newCards = cardRepository.findCardsForSession(
                     deck,
                     List.of(Status.NEW),
-                    PageRequest.of(0, remaining));
-            learningCards.addAll(newCards);
+                    PageRequest.of(0, remainingNewCards));
         }
+        learningCards.addAll(newCards);
 
-        // Добавляем карты на ревью по минимальному следующему времени ревью
-        List<Card> reviewCards = cardRepository.findCardsForSession(
-                deck,
-                List.of(Status.REVIEW_YOUNG, Status.REVIEW_MATURE),
-                PageRequest.of(0, sessionProperties.getMaxReviewCards()));
+        // Добавляем карты на ревью по минимальному следующему времени ревью, если осталось место
+        int remainingReviewSlots = sessionProperties.getMaxReviewCards() - reviewCardsToday.size();
+        List<Card> reviewCards = Collections.emptyList();
+        if (remainingReviewSlots > 0) {
+            reviewCards = cardRepository.findCardsForSession(
+                    deck,
+                    List.of(Status.REVIEW_YOUNG, Status.REVIEW_MATURE),
+                    PageRequest.of(0, remainingReviewSlots));
+        }
 
         List<Card> allCards = Stream.of(learningCards, reviewCardsToday, reviewCards)
                 .flatMap(List::stream)
@@ -141,14 +140,17 @@ public class LearningSessionService {
                         Collectors.toMap(
                                 Card::getCardId,
                                 Function.identity(),
-                                (existing, replacement) -> existing
-                        ),
-                        map -> new ArrayList<>(map.values())
-                ));
+                                (existing, replacement) -> existing),
+                        map -> new ArrayList<>(map.values())));
 
         session.setCards(allCards);
-        log.debug("Session created with {} cards ({} learning, {} review today, {} review)",
-                allCards.size(), learningCards.size(), reviewCardsToday.size(), reviewCards.size());
+        log.debug(
+                "Session created with {} cards ({} learning, {} review today, {} new, {} review)",
+                allCards.size(),
+                learningCards.size(),
+                reviewCardsToday.size(),
+                newCards.size(),
+                reviewCards.size());
         return learningSessionRepository.save(session);
     }
 
