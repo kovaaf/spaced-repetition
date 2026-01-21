@@ -121,7 +121,6 @@ services:
     restart: unless-stopped
     environment:
       _JAVA_OPTIONS: -Xmx256m -Xms64m -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0
-#      CLICKHOUSE_URL: jdbc:clickhouse://clickhouse:8123/default
     ports:
       - "9090:9090"  # gRPC порт
     logging:
@@ -129,24 +128,6 @@ services:
       options:
         max-size: 10m
         max-file: 3
-#    depends_on:
-#      - clickhouse
-#
-#  clickhouse:
-#    image: clickhouse/clickhouse-server:latest
-#    container_name: clickhouse
-#    ports:
-#      - "8123:8123"
-#    volumes:
-#      - clickhouse_data:/var/lib/clickhouse
-#    environment:
-#      CLICKHOUSE_DB: spaced_repetition
-#      CLICKHOUSE_USER: admin
-#      CLICKHOUSE_PASSWORD: admin
-#    restart: unless-stopped
-#
-#volumes:
-#  clickhouse_data:
 
 volumes:
   postgres_data:

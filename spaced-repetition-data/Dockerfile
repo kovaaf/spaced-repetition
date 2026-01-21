@@ -16,10 +16,10 @@ RUN chmod +x gradlew
 COPY ./spaced-repetition-data/src ./src
 
 # Собираем приложение
-RUN ./gradlew build -x test --no-daemon
+RUN ./gradlew bootJar -x test --no-daemon
 
 # Финальный образ
 FROM openjdk:21-jdk-slim
 EXPOSE 9090
-COPY --from=build /workspace/spaced-repetition-data/build/libs/*.jar app.jar
+COPY --from=build /workspace/spaced-repetition-data/build/libs/*-boot.jar app.jar
 ENTRYPOINT ["java","-jar","app.jar"]

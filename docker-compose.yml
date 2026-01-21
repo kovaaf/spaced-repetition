@@ -5,6 +5,8 @@ services:
     image: postgres:17.5-alpine
     ports:
       - '5429:5432'
+    mem_limit: 256m
+    mem_reservation: 128m
     environment:
       POSTGRES_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
       POSTGRES_PASSWORD: ${TELEGRAM_BOT_DB_PASSWORD:-postgres}
@@ -86,8 +88,28 @@ services:
     image: ouidockeruser/spaced-repetition-bot:latest
     container_name: spaced-repetition-bot
     restart: unless-stopped
+    mem_limit: 512m
+    mem_reservation: 256m
+    healthcheck:
+      test: [ "CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
     environment:
-      _JAVA_OPTIONS: -Xmx128m -Xms32m -XX:+UseContainerSupport -XX:MaxRAMPercentage=30.0
+      _JAVA_OPTIONS: >- 
+        -Xmx256m 
+        -Xms64m 
+        -XX:+UseContainerSupport 
+        -XX:MaxRAMPercentage=50.0 
+        -XX:+HeapDumpOnOutOfMemoryError 
+        -XX:HeapDumpPath=/tmp/heapdump.hprof 
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+PrintGC 
+        -XX:+PrintGCDetails 
+        -XX:+PrintGCDateStamps 
+        -XX:+PrintHeapAtGC 
+        -XX:+PrintTenuringDistribution
       TELEGRAM_BOT_DB_HOST: spaced-repetition-bot-db
       TELEGRAM_BOT_DB_PORT: 5432
       TELEGRAM_BOT_DB_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
