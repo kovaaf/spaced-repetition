@@ -88,6 +88,27 @@ spring:
         max-attempts: 3
         initial-delay: 1000
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics  # Доступные endpoints
+      base-path: /actuator            # Базовый путь (по умолчанию)
+    health:
+      probes:
+        enabled: true                  # Включить health probes для k8s/containers
+      show-details: when_authorized   # Детали только для авторизованных
+  endpoint:
+    health:
+      show-components: always         # Показывать компоненты
+      enabled: true
+    metrics:
+      enabled: true
+    info:
+      enabled: true
+  info:
+    env:
+      enabled: true                   # Показывать env info
 
 server:
   port: ${TELEGRAM_BOT_PORT:8080}
