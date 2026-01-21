@@ -97,19 +97,15 @@ services:
       retries: 3
       start_period: 120s  # Spring Boot с ограниченной памятью может долго стартовать
     environment:
-      _JAVA_OPTIONS: >- 
-        -Xmx256m 
-        -Xms64m 
-        -XX:+UseContainerSupport 
-        -XX:MaxRAMPercentage=50.0 
-        -XX:+HeapDumpOnOutOfMemoryError 
-        -XX:HeapDumpPath=/tmp/heapdump.hprof 
+      _JAVA_OPTIONS: >-
+        -Xmx256m
+        -Xms64m
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=50.0
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/tmp/heapdump.hprof
         -XX:+ExitOnOutOfMemoryError
-        -XX:+PrintGC 
-        -XX:+PrintGCDetails 
-        -XX:+PrintGCDateStamps 
-        -XX:+PrintHeapAtGC 
-        -XX:+PrintTenuringDistribution
+        -Xlog:gc*,heap*:file=/tmp/gc.log:time,level:filecount=3,filesize=10m
       TELEGRAM_BOT_DB_HOST: spaced-repetition-bot-db
       TELEGRAM_BOT_DB_PORT: 5432
       TELEGRAM_BOT_DB_USER: ${TELEGRAM_BOT_DB_USER:-postgres}
